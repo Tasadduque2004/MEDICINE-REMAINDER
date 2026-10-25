@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dawa Sahayak Pro - Senior Care Hub</title>
+    <style>
+        :root {
+            --primary: #2874f0;
+            --primary-dark: #1259c7;
+            --fk-yellow: #ffe500;
+            --amazon-orange: #ff9900;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f1f3f6;
+            --card-bg: #ffffff;
+            --text-dark: #212121;
+            --text-muted: #878787;
+            --font-base: 15px;
+        }
+
+        body.large-font { --font-base: 18px; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: var(--font-base);
+        }
+
+        body {
+            background: #cbd5e1;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* FLIPKART STYLE MANDATORY LOGIN WALL */
+        #mandatoryLoginWall {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card-fk {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .fk-header-banner {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-brand {
+            font-size: 19px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .app-brand span { color: var(--fk-yellow); font-style: italic; }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-switch-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .auth-status-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .sub-header {
+            background: #1c5ec7;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .clock-badge {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 14px;
+            padding-bottom: 95px;
+            overflow-y: auto;
+        }
+
+        .window {
+            display: none;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .window.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Voice Test Banner */
+        .voice-test-banner {
+            background: #e6f4ea;
+            border: 1.5px solid #34a853;
+            color: #137333;
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 12px;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            z-index: 50;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.2s;
+        }
+
+        .nav-btn .icon { font-size: 20px; }
+
+        .nav-btn.active {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Cards & Buttons */
+        .med-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border: 1px solid #e8e8e8;
+        }
+
+        .med-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .time-pill-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .time-pill {
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            border: 1px solid #d2e3fc;
+        }
+
+        .stock-indicator {
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .stock-ok { background: #e6f4ea; color: #137333; }
+        .stock-alert { background: #fce8e6; color: #c5221f; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.15s;
+        }
+
+        .btn-take {
+            background: #fb641b;
+            color: white;
+            flex: 2;
+            padding: 13px;
+            font-size: 15px;
+            box-shadow: 0 2px 6px rgba(251, 100, 27, 0.3);
+        }
+
+        .btn-edit {
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+            flex: 1;
+            padding: 13px;
+            font-size: 14px;
+        }
+
+        .btn-fk {
+            background: #fb641b;
+            color: white;
+            width: 100%;
+            padding: 13px;
+            font-size: 15px;
+            box-shadow: 0 2px 6px rgba(251, 100, 27, 0.3);
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            width: 100%;
+            padding: 13px;
+            font-size: 15px;
+        }
+
+        .btn-pdf {
+            background: #d93025;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+        }
+
+        .btn-voice {
+            background: #10b981;
+            color: white;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .btn-refill { background: #e8f0fe; color: var(--primary); font-size: 13px; }
+        .btn-delete { background: #fce8e6; color: #c5221f; font-size: 13px; }
+
+        .form-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 14px;
+        }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.5px solid #c2c2c2;
+            outline: none;
+            background: #fff;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.15);
+        }
+
+        /* 6 Stores Grid */
+        .stores-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .store-tile {
+            background: white;
+            border: 1.5px solid #e0e0e0;
+            padding: 14px 10px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #212121;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .store-tile:hover { border-color: var(--primary); }
+        .s-name { font-weight: 800; font-size: 14px; }
+        .s-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+        .tag-amz { background: #fff3e0; color: #b45309; }
+        .tag-fk { background: #e0f2fe; color: #0369a1; }
+        .tag-1mg { background: #ffe4e6; color: #be123c; }
+        .tag-apollo { background: #dbeafe; color: #1d4ed8; }
+        .tag-pharmeasy { background: #dcfce7; color: #15803d; }
+        .tag-netmeds { background: #ccfbf1; color: #0f766e; }
+
+        /* Language Grid */
+        .lang-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-height: 380px;
+            overflow-y: auto;
+            margin: 15px 0;
+            padding-right: 4px;
+        }
+
+        .lang-card-fk {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .lang-card-fk:hover {
+            border-color: var(--primary);
+            background: #f4f8ff;
+        }
+
+        .lang-card-fk.selected {
+            border-color: var(--primary);
+            background: #e8f0fe;
+        }
+
+        .lang-card-fk .fk-check {
+            display: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .lang-card-fk.selected .fk-check { display: block; }
+        .lang-title-native { font-size: 17px; font-weight: 800; display: block; color: #212121; }
+        .lang-title-en { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        /* Toast & Modals */
+        .sms-toast {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 440px;
+            background: #212121;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000;
+            border-left: 6px solid var(--fk-yellow);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { top: -80px; opacity: 0; }
+            to { top: 12px; opacity: 1; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 999;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 24px 20px;
+        }
+
+        /* Speaking Visual Indicator Popup */
+        #voiceSpeakingBanner {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 10001;
+            border: 2px solid #10b981;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            animation: pulse 1s infinite;
+        }
+
+        /* Print PDF */
+        #printableReport { display: none; }
+        @media print {
+            body { background: white !important; }
+            .app-shell, .bottom-nav, .modal, .sms-toast, #mandatoryLoginWall, #voiceSpeakingBanner { display: none !important; }
+            #printableReport {
+                display: block !important;
+                width: 100%;
+                padding: 20px;
+                color: black;
+            }
+            .pdf-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            .pdf-table th, .pdf-table td {
+                border: 1px solid #334155;
+                padding: 10px;
+                text-align: left;
+            }
+            .pdf-table th { background: #f1f5f9; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Voice Speaking Toast -->
+<div id="voiceSpeakingBanner">
+    <span style="font-size:22px;">🗣️</span>
+    <span id="voiceSpeakingText">Dawa Reminder Bol Raha Hai...</span>
+</div>
+
+<!-- SIMULATED SMS TOAST -->
+<div class="sms-toast" id="smsToast">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <span style="font-size:12px; color:var(--fk-yellow); font-weight:800;">📩 SMS NOTIFICATION (NOW)</span>
+        <span style="font-size:11px; color:#c2c2c2;">DawaSahayak Verify</span>
+    </div>
+    <div style="font-size:14px; font-weight:600;" id="smsBody">
+        OTP Code: <b style="font-size:18px; color:var(--fk-yellow); letter-spacing:1px;" id="smsOtpValue">----</b>
+    </div>
+</div>
+
+<!-- ================= FLIPKART STYLE MANDATORY LOGIN WALL ================= -->
+<div id="mandatoryLoginWall" style="display: none;">
+    <div class="login-card-fk">
+        <div class="fk-header-banner">
+            <h2 style="font-size: 22px; font-weight: 800;">Dawa<span>Sahayak</span></h2>
+            <p style="font-size: 13px; margin-top: 4px; opacity: 0.9;">Sign in to continue</p>
+        </div>
+
+        <div id="wallStep1">
+            <div class="form-group">
+                <label>Mobile Number (10 Digits):</label>
+                <input type="tel" id="wallMobile" class="form-control" placeholder="Enter 10 digit number">
+            </div>
+            <div class="form-group">
+                <label>Patient Name:</label>
+                <input type="text" id="wallName" class="form-control" placeholder="Ex: Ramesh Sharma">
+            </div>
+            <div class="form-group">
+                <label>Delivery Address:</label>
+                <input type="text" id="wallAddress" class="form-control" placeholder="House no, street, city, pin">
+            </div>
+
+            <button class="btn btn-fk" onclick="wallSendOtp()">
+                Continue (आगे बढ़ें) ➔
+            </button>
+            <button class="btn btn-whatsapp" style="margin-top: 8px;" onclick="wallSendWhatsAppOtp()">
+                💬 Verify via WhatsApp
+            </button>
+        </div>
+
+        <div id="wallStep2" style="display: none; text-align: center;">
+            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">Enter OTP Code</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">
+                Code sent to <b id="wallSentNumber">+91 XXXXXXXX</b>:
+            </p>
+
+            <div style="margin: 16px 0;">
+                <input type="text" id="wallEnteredOtp" maxlength="4" class="form-control" style="font-size: 26px; font-weight: 800; text-align: center; letter-spacing: 8px;" placeholder="____">
+            </div>
+
+            <button class="btn btn-fk" onclick="wallValidateOtp()">
+                Verify & Continue
+            </button>
+
+            <div style="margin-top: 12px; display:flex; justify-content:space-around;">
+                <a href="javascript:void(0)" onclick="wallSendOtp()" style="font-size: 13px; color: var(--primary); font-weight: 700; text-decoration: none;">
+                    🔄 Resend OTP
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-shell">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="header-top">
+            <a href="#" class="app-brand">
+                💊 Dawa<span>Sahayak</span>
+            </a>
+            <div class="top-actions">
+                <button class="lang-switch-btn" onclick="openLanguageModal()">
+                    🌐 <span id="currentLangLabel">English</span> ▾
+                </button>
+                <button class="auth-status-btn" onclick="openAccountModal()" id="btnUserStatus">
+                    User ▾
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub Header -->
+    <div class="sub-header">
+        <div style="display:flex; align-items:center; gap:4px; font-size:12px;">
+            <span data-i18n="deliver_to">📍 Deliver to:</span>
+            <b id="lblDeliverAddress" style="max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</b>
+        </div>
+        <div class="clock-badge">
+            ⏰ <span id="liveClock">00:00:00</span>
+        </div>
+    </div>
+
+    <!-- Main Screens -->
+    <div class="content-area">
+
+        <!-- ================= TAB 1: SCHEDULE ================= -->
+        <div id="win-schedule" class="window active">
+            <!-- Voice Alarm Test Banner -->
+            <div class="voice-test-banner">
+                <div>
+                    <span style="font-weight:800; font-size:14px;">🗣️ Bolne Wala Voice Alarm</span>
+                    <div style="font-size:12px; opacity:0.9;">Dawa ka naam lekar Hindi & English me bolega</div>
+                </div>
+                <button class="btn btn-voice" onclick="testVoiceAlarmSample()">
+                    ▶️ Aawaz Sunein
+                </button>
+            </div>
+
+            <div id="lowStockWarning"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="font-weight: 800; font-size: 18px;" data-i18n="today_schedule">📋 Today's Schedule</h2>
+                <span id="medCountBadge" style="font-weight: 700; color: var(--text-muted); font-size: 13px;">0 Medicines</span>
+            </div>
+
+            <div id="scheduleList"></div>
+        </div>
+
+        <!-- ================= TAB 2: ADD MEDICINE ================= -->
+        <div id="win-add" class="window">
+            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;" data-i18n="add_new_title">➕ Add New Medicine</h2>
+            
+            <div class="form-card">
+                <div class="form-group">
+                    <label data-i18n="lbl_med_name">Medicine Name:</label>
+                    <input type="text" id="addName" class="form-control" placeholder="Ex: Paracetamol, Telma 40, Aciloc">
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="lbl_how_many_times">How many times a day?:</label>
+                    <select id="addFreq" class="form-control" onchange="toggleAddTimes()">
+                        <option value="1" data-i18n="opt_1_time">1 Time a day</option>
+                        <option value="2" data-i18n="opt_2_times">2 Times (Morning & Night)</option>
+                        <option value="3" data-i18n="opt_3_times">3 Times (Morning, Afternoon, Night)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="lbl_timings">Timings:</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="time" id="addTime1" class="form-control">
+                        <input type="time" id="addTime2" class="form-control" style="display: none;">
+                        <input type="time" id="addTime3" class="form-control" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="lbl_stock_qty">Stock Quantity (Tablets count):</label>
+                    <input type="number" id="addStock" class="form-control" placeholder="Ex: 30" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="lbl_instructions">Instructions:</label>
+                    <select id="addInstruction" class="form-control">
+                        <option value="Khane ke baad (After Food)" data-i18n="inst_after">After Food</option>
+                        <option value="Khane se pehle (Before Food)" data-i18n="inst_before">Before Food (Empty Stomach)</option>
+                        <option value="Raat ko sote samay (At Bedtime)" data-i18n="inst_bedtime">At Bedtime</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-fk" onclick="saveNewMedicine()" data-i18n="btn_save_med">Save Medicine ✨</button>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: PHARMACY STORE & STOCK ================= -->
+        <div id="win-pharmacy" class="window">
+            <h2 style="font-weight: 800; margin-bottom: 8px; font-size: 18px;" data-i18n="stores_title">🛒 Pharmacy Hub (6 Stores)</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" data-i18n="stores_desc">
+                Tap on any pharmacy to order medicines online:
+            </p>
+
+            <div class="stores-grid" id="allSixStores"></div>
+
+            <div style="margin-top: 16px;">
+                <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder()" data-i18n="btn_wa_slip">
+                    💬 Send Order List on WhatsApp
+                </button>
+            </div>
+
+            <h3 style="font-weight: 800; font-size: 15px; margin: 18px 0 10px;" data-i18n="stock_list_title">📦 Medicines In Stock:</h3>
+            <div id="stockList"></div>
+        </div>
+
+        <!-- ================= TAB 4: PDF & ACCOUNT ================= -->
+        <div id="win-settings" class="window">
+            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;" data-i18n="settings_title">⚙️ Medical PDF & Account</h2>
+
+            <!-- Voice Alarm Test in Settings -->
+            <div class="form-card" style="border-left: 5px solid #10b981;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 800; color:#047857;">🗣️ Bolne Wala Voice Alarm Test</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:2px;">Dawa ka naam lekar Hindi & English dono me bolega</p>
+                    </div>
+                    <button class="btn btn-voice" onclick="testVoiceAlarmSample()">Sun Kar Dekhein</button>
+                </div>
+            </div>
+
+            <!-- Language Switch Card -->
+            <div class="form-card" style="border-left: 5px solid var(--primary);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 800;" data-i18n="lang_setting_title">🌐 App Language</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-top:2px;" id="lblSelectedLangDisplay">English</p>
+                    </div>
+                    <button class="btn btn-refill" onclick="openLanguageModal()" data-i18n="btn_change">Change</button>
+                </div>
+            </div>
+
+            <!-- Real Hospital Prescription PDF -->
+            <div class="form-card" style="border-left: 5px solid #d93025;">
+                <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color:#d93025;" data-i18n="pdf_title">📄 Doctor Prescription PDF</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" data-i18n="pdf_desc">
+                    Download printable prescription report with complete schedule:
+                </p>
+                <button class="btn btn-pdf" onclick="generateMedicalPdf()" data-i18n="btn_download_pdf">
+                    📥 Download Medical PDF Slip
+                </button>
+            </div>
+
+            <!-- Account Card -->
+            <div class="form-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="font-size: 15px; font-weight: 800;" data-i18n="acc_title">👤 Patient Profile</h3>
+                    <span style="font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #e6f4ea; color: #137333; font-weight:800;" data-i18n="verified_tag">Verified</span>
+                </div>
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+                    <span data-i18n="lbl_name">Name</span>: <b id="lblAccountName" style="color:#212121;">-</b><br>
+                    <span data-i18n="lbl_mobile">Mobile</span>: <b id="lblAccountMobile" style="color:#212121;">-</b><br>
+                    <span data-i18n="lbl_address">Address</span>: <b id="lblAccountAddr" style="color:#212121;">-</b>
+                </p>
+                <button class="btn btn-delete" style="width:100%;" onclick="logoutUser()" data-i18n="btn_logout">
+                    🚪 Log Out
+                </button>
+            </div>
+
+            <div class="form-card">
+                <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 8px;" data-i18n="lbl_font_size">👓 Text Size</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-refill" style="flex:1;" onclick="setFontSize(false)" data-i18n="btn_font_normal">Normal</button>
+                    <button class="btn btn-refill" style="flex:1;" onclick="setFontSize(true)" data-i18n="btn_font_large">Large</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" id="btnNavSchedule" onclick="switchWindow('win-schedule', this)">
+            <span class="icon">🕒</span>
+            <span data-i18n="nav_schedule">Schedule</span>
+        </button>
+        <button class="nav-btn" id="btnNavAdd" onclick="switchWindow('win-add', this)">
+            <span class="icon">➕</span>
+            <span data-i18n="nav_add">Add Dawa</span>
+        </button>
+        <button class="nav-btn" id="btnNavStores" onclick="switchWindow('win-pharmacy', this)">
+            <span class="icon">🛒</span>
+            <span data-i18n="nav_stores">Stores</span>
+        </button>
+        <button class="nav-btn" id="btnNavSettings" onclick="switchWindow('win-settings', this)">
+            <span class="icon">⚙️</span>
+            <span data-i18n="nav_account">Account</span>
+        </button>
+    </div>
+
+</div>
+
+<!-- ================= FLIPKART STYLE LANGUAGE SELECTION POPUP ================= -->
+<div class="modal" id="languageModal">
+    <div class="modal-content" style="max-width: 440px;">
+        <div style="text-align: center; margin-bottom: 12px;">
+            <h2 style="font-size: 20px; font-weight: 800; color: #212121;">Choose Language</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">अपनी भाषा चुनें | Select preferred language</p>
+        </div>
+
+        <div class="lang-grid" id="fkLangGrid"></div>
+
+        <button class="btn btn-fk" onclick="confirmLanguageSelection()">
+            Apply & Continue
+        </button>
+    </div>
+</div>
+
+<!-- ================= COMPLETE EDIT MEDICINE MODAL ================= -->
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <h2 style="font-size: 19px; font-weight: 800; margin-bottom: 14px; color: #212121;" data-i18n="edit_med_title">✏️ Edit Medicine</h2>
+        <input type="hidden" id="editIndex">
+
+        <div class="form-group">
+            <label data-i18n="lbl_med_name">Medicine Name:</label>
+            <input type="text" id="editName" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label data-i18n="lbl_how_many_times">How many times a day?:</label>
+            <select id="editFreq" class="form-control" onchange="toggleEditTimes()">
+                <option value="1" data-i18n="opt_1_time">1 Time a day</option>
+                <option value="2" data-i18n="opt_2_times">2 Times (Morning & Night)</option>
+                <option value="3" data-i18n="opt_3_times">3 Times (Morning, Afternoon, Night)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label data-i18n="lbl_timings">Timings:</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="time" id="editTime1" class="form-control">
+                <input type="time" id="editTime2" class="form-control" style="display: none;">
+                <input type="time" id="editTime3" class="form-control" style="display: none;">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label data-i18n="lbl_stock_qty">Stock Quantity:</label>
+            <input type="number" id="editStock" class="form-control" min="0">
+        </div>
+
+        <div class="form-group">
+            <label data-i18n="lbl_instructions">Instructions:</label>
+            <select id="editInstruction" class="form-control">
+                <option value="Khane ke baad (After Food)" data-i18n="inst_after">After Food</option>
+                <option value="Khane se pehle (Before Food)" data-i18n="inst_before">Before Food (Empty Stomach)</option>
+                <option value="Raat ko sote samay (At Bedtime)" data-i18n="inst_bedtime">At Bedtime</option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+            <button class="btn btn-fk" style="flex: 2; margin-top:0;" onclick="saveEditedMedicine()" data-i18n="btn_save_changes">
+                💾 Save Changes
+            </button>
+            <button class="btn btn-delete" style="flex: 1;" onclick="closeEditModal()" data-i18n="btn_cancel">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= LOGGED-IN ACCOUNT MODAL ================= -->
+<div class="modal" id="accountProfileModal">
+    <div class="modal-content">
+        <div style="text-align: center; margin-bottom: 14px;">
+            <span style="font-size: 38px;">👤</span>
+            <h2 style="font-size: 19px; font-weight: 800; margin-top: 4px;" id="modalAccName">User Name</h2>
+            <span style="font-size: 12px; background: #e6f4ea; color: #137333; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Active Account</span>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e0e0e0; border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 14px; line-height: 1.6;">
+            📱 <b>Mobile:</b> <span id="modalAccMobile">-</span><br>
+            📍 <b>Delivery Address:</b> <span id="modalAccAddress">-</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            <button class="btn btn-refill" onclick="closeAccountModal(); openLanguageModal();">
+                🌐 Change Language
+            </button>
+            <button class="btn btn-delete" style="padding:14px;" onclick="confirmLogoutFromModal()">
+                🚪 Log Out
+            </button>
+            <button class="btn btn-refill" onclick="closeAccountModal()">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= PRINTABLE MEDICAL PRESCRIPTION PDF ================= -->
+<div id="printableReport">
+    <div style="border-bottom: 3px solid #212121; padding-bottom: 12px; margin-bottom: 20px;">
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">🏥 DAWA SAHAYAK - PRESCRIPTION REPORT</h1>
+        <p style="font-size: 14px; color: #5f6368;">Senior Care Medication Chart & Stock Summary</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 14px;">
+        <div>
+            <b>Patient Name:</b> <span id="pdfPatientName">-</span><br>
+            <b>Contact Mobile:</b> <span id="pdfPatientMobile">-</span><br>
+            <b>Address:</b> <span id="pdfPatientAddress">-</span>
+        </div>
+        <div style="text-align: right;">
+            <b>Date:</b> <span id="pdfDate">-</span><br>
+            <b>Report ID:</b> MED-<span id="pdfReportId">1029</span><br>
+            <b>Total Medicines:</b> <span id="pdfMedCount">0</span>
+        </div>
+    </div>
+
+    <table class="pdf-table">
+        <thead>
+            <tr>
+                <th>Sr.</th>
+                <th>Medicine Name</th>
+                <th>Timings</th>
+                <th>Instructions</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody id="pdfTableBody"></tbody>
+    </table>
+
+    <div style="margin-top: 35px; font-size: 13px; color: #5f6368; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+        <p>⚠️ <b>Doctor Verification:</b> Follow prescribed doses only. Consult doctor in case of side effects.</p>
+        <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+            <span>Doctor Signature: _______________________</span>
+            <span>Date: _______________________</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Native Translations
+    const I18N_DICTIONARY = {
+        en: {
+            langName: "English",
+            deliver_to: "📍 Deliver to:",
+            today_schedule: "📋 Today's Schedule",
+            add_new_title: "➕ Add New Medicine",
+            lbl_med_name: "Medicine Name:",
+            lbl_how_many_times: "How many times a day?:",
+            opt_1_time: "1 Time a day",
+            opt_2_times: "2 Times (Morning & Night)",
+            opt_3_times: "3 Times (Morning, Afternoon, Night)",
+            lbl_timings: "Timings:",
+            lbl_stock_qty: "Stock Quantity (Tablets count):",
+            lbl_instructions: "Instructions:",
+            inst_after: "After Food",
+            inst_before: "Before Food (Empty Stomach)",
+            inst_bedtime: "At Bedtime",
+            btn_save_med: "Save Medicine ✨",
+            stores_title: "🛒 Pharmacy Hub (6 Stores)",
+            stores_desc: "Tap on any pharmacy to order medicines online:",
+            btn_wa_slip: "💬 Send Order List on WhatsApp",
+            stock_list_title: "📦 Medicines In Stock:",
+            settings_title: "⚙️ Medical PDF & Account",
+            lang_setting_title: "🌐 App Language",
+            btn_change: "Change",
+            pdf_title: "📄 Doctor Prescription PDF",
+            pdf_desc: "Download printable prescription report with complete schedule:",
+            btn_download_pdf: "📥 Download Medical PDF Slip",
+            acc_title: "👤 Patient Profile",
+            verified_tag: "Verified",
+            lbl_name: "Name",
+            lbl_mobile: "Mobile",
+            lbl_address: "Address",
+            btn_logout: "🚪 Log Out",
+            lbl_font_size: "👓 Text Size",
+            btn_font_normal: "Normal",
+            btn_font_large: "Large",
+            nav_schedule: "Schedule",
+            nav_add: "Add Dawa",
+            nav_stores: "Stores",
+            nav_account: "Account",
+            edit_med_title: "✏️ Edit Medicine",
+            btn_save_changes: "💾 Save Changes",
+            btn_cancel: "Cancel",
+            take_pill: "✅ Taken (-1)",
+            edit_pill: "✏️ Edit",
+            pills_left: "Tablets Left",
+            refill_btn: "➕ 10 Refill",
+            delete_btn: "🗑️ Delete",
+            low_stock_msg: "Running Low (5 or fewer left)!"
+        },
+        hi: {
+            langName: "हिंदी",
+            deliver_to: "📍 डिलीवरी पता:",
+            today_schedule: "📋 आज का शेड्यूल",
+            add_new_title: "➕ नई दवा जोड़ें",
+            lbl_med_name: "दवा का नाम:",
+            lbl_how_many_times: "दिन में कितनी बार लेनी है?:",
+            opt_1_time: "1 बार (दिन में एक बार)",
+            opt_2_times: "2 बार (सुबह और रात)",
+            opt_3_times: "3 बार (सुबह, दोपहर, रात)",
+            lbl_timings: "समय (Timings):",
+            lbl_stock_qty: "बची हुई गोलियां (स्टॉक):",
+            lbl_instructions: "कब खानी है?:",
+            inst_after: "खाने के बाद",
+            inst_before: "खाने से पहले (खाली पेट)",
+            inst_bedtime: "रात को सोते समय",
+            btn_save_med: "दवा सेव करें ✨",
+            stores_title: "🛒 फार्मेसी हब (6 दुकानें)",
+            stores_desc: "दवा ऑनलाइन मंगाने के लिए किसी भी स्टोर पर टैप करें:",
+            btn_wa_slip: "💬 केमिस्ट को व्हाट्सएप पर्ची भेजें",
+            stock_list_title: "📦 बची हुई गोलियां (स्टॉक):",
+            settings_title: "⚙️ मेडिकल PDF और अकाउंट",
+            lang_setting_title: "🌐 ऐप की भाषा",
+            btn_change: "बदलें",
+            pdf_title: "📄 डॉक्टर प्रिस्क्रिप्शन PDF",
+            pdf_desc: "शेड्यूल और निर्देशों के साथ प्रिंट करने योग्य PDF डाउनलोड करें:",
+            btn_download_pdf: "📥 मेडिकल PDF डाउनलोड करें",
+            acc_title: "👤 मरीज का प्रोफाइल",
+            verified_tag: "सत्यापित",
+            lbl_name: "नाम",
+            lbl_mobile: "मोबाइल",
+            lbl_address: "पता",
+            btn_logout: "🚪 लॉग आउट",
+            lbl_font_size: "👓 अक्षरों का साइज",
+            btn_font_normal: "सामान्य",
+            btn_font_large: "बड़ा",
+            nav_schedule: "शेड्यूल",
+            nav_add: "दवा जोड़ें",
+            nav_stores: "स्टोर्स",
+            nav_account: "अकाउंट",
+            edit_med_title: "✏️ दवा बदलें (Edit)",
+            btn_save_changes: "💾 बदलाव सेव करें",
+            btn_cancel: "रद्द करें",
+            take_pill: "✅ दवा खा ली (-1)",
+            edit_pill: "✏️ बदलें",
+            pills_left: "गोली बची",
+            refill_btn: "➕ 10 रिफिल",
+            delete_btn: "🗑️ हटाएं",
+            low_stock_msg: "खत्म होने वाली है (5 या कम बची)!"
+        },
+        ta: {
+            langName: "தமிழ்",
+            deliver_to: "📍 டெலிவரி முகவரி:",
+            today_schedule: "📋 இன்றைய அட்டவணை",
+            add_new_title: "➕ புதிய மருந்து",
+            lbl_med_name: "மருந்தின் பெயர்:",
+            lbl_how_many_times: "ஒரு நாளில் எத்தனை முறை?:",
+            opt_1_time: "1 முறை",
+            opt_2_times: "2 முறை",
+            opt_3_times: "3 முறை",
+            lbl_timings: "நேரம்:",
+            lbl_stock_qty: "மீதமுள்ள மாத்திரைகள்:",
+            lbl_instructions: "எப்போது எடுக்க வேண்டும்?:",
+            inst_after: "சாப்பிட்ட பின்",
+            inst_before: "சாப்பிடுவதற்கு முன்",
+            inst_bedtime: "இரவு தூங்கும் முன்",
+            btn_save_med: "சேமிக்கவும் ✨",
+            stores_title: "🛒 மருந்தகங்கள் (6 கடைகள்)",
+            stores_desc: "ஆன்லைனில் ஆர்டர் செய்ய கிளிக் செய்யவும்:",
+            btn_wa_slip: "💬 வாட்ஸ்அப் சீட்டு அனுப்பவும்",
+            stock_list_title: "📦 கையிருப்பு விவரம்:",
+            settings_title: "⚙️ மருத்துவ PDF & கணக்கு",
+            lang_setting_title: "🌐 செயலி மொழி",
+            btn_change: "மாற்றவும்",
+            pdf_title: "📄 மருத்துவர் பரிந்துரை PDF",
+            pdf_desc: "PDF-ஐ பதிவிறக்கவும்:",
+            btn_download_pdf: "📥 PDF பதிவிறக்கம்",
+            acc_title: "👤 சுயவிவரம்",
+            verified_tag: "சரிபார்க்கப்பட்டது",
+            lbl_name: "பெயர்",
+            lbl_mobile: "அலைபேசி",
+            lbl_address: "முகவரி",
+            btn_logout: "🚪 வெளியேறு",
+            lbl_font_size: "👓 எழுத்து அளவு",
+            btn_font_normal: "சாதாரண",
+            btn_font_large: "பெரியது",
+            nav_schedule: "அட்டவணை",
+            nav_add: "சேர்க்க",
+            nav_stores: "கடைகள்",
+            nav_account: "கணக்கு",
+            edit_med_title: "✏️ திருத்தவும்",
+            btn_save_changes: "💾 சேமிக்கவும்",
+            btn_cancel: "ரத்து செய்",
+            take_pill: "✅ சாப்பிட்டேன் (-1)",
+            edit_pill: "✏️ திருத்து",
+            pills_left: "மாத்திரை உள்ளது",
+            refill_btn: "➕ 10 சேர்",
+            delete_btn: "🗑️ நீக்கு",
+            low_stock_msg: "தீர்ந்துவிட்டது (5 மட்டுமே உள்ளது)!"
+        },
+        te: {
+            langName: "తెలుగు",
+            deliver_to: "📍 డెలివరీ చిరునామా:",
+            today_schedule: "📋 నేటి షెడ్యూల్",
+            add_new_title: "➕ కొత్త మందు",
+            lbl_med_name: "మందు పేరు:",
+            lbl_how_many_times: "రోజుకు ఎన్ని సార్లు?:",
+            opt_1_time: "1 సారి",
+            opt_2_times: "2 సార్లు",
+            opt_3_times: "3 సార్లు",
+            lbl_timings: "సమయం:",
+            lbl_stock_qty: "మిగిలిన మాత్రలు:",
+            lbl_instructions: "ఎప్పుడు వేసుకోవాలి?:",
+            inst_after: "భోజనం తర్వాత",
+            inst_before: "భోజనానికి ముందు",
+            inst_bedtime: "రాత్రి పడుకునే ముందు",
+            btn_save_med: "సేవ్ చేయండి ✨",
+            stores_title: "🛒 ఫార్మసీ స్టోర్స్",
+            stores_desc: "ఆన్‌లైన్ ఆర్డర్ కోసం క్లిక్ చేయండి:",
+            btn_wa_slip: "💬 వాట్సాప్‌లో పంపండి",
+            stock_list_title: "📦 మాత్రల నిల్వ:",
+            settings_title: "⚙️ ప్రిస్క్రిప్షన్ & ఖాతా",
+            lang_setting_title: "🌐 యాప్ భాష",
+            btn_change: "మార్చండి",
+            pdf_title: "📄 డాక్టర్ ప్రిస్క్రిప్షన్ PDF",
+            pdf_desc: "PDF డౌన్‌లోడ్ చేయండి:",
+            btn_download_pdf: "📥 PDF డౌన్‌లోడ్",
+            acc_title: "👤 ప్రొఫైల్",
+            verified_tag: "ధృవీకరించబడింది",
+            lbl_name: "పేరు",
+            lbl_mobile: "మొబైల్",
+            lbl_address: "చిరునామా",
+            btn_logout: "🚪 లాగ్ అవుట్",
+            lbl_font_size: "👓 పరిమాణం",
+            btn_font_normal: "సాధారణ",
+            btn_font_large: "పెద్దది",
+            nav_schedule: "షెడ్యూల్",
+            nav_add: "జోడించు",
+            nav_stores: "స్టోర్స్",
+            nav_account: "ఖాతా",
+            edit_med_title: "✏️ మార్చండి",
+            btn_save_changes: "💾 సేవ్ చేయండి",
+            btn_cancel: "రద్దు",
+            take_pill: "✅ వేసుకున్నాను (-1)",
+            edit_pill: "✏️ మార్చు",
+            pills_left: "మాత్రలు మిగిలాయి",
+            refill_btn: "➕ 10 కలపండి",
+            delete_btn: "🗑️ తొలగించు",
+            low_stock_msg: "అయిపోవచ్చింది (5 మాత్రమే మిగిలాయి)!"
+        },
+        bn: {
+            langName: "বাংলা",
+            deliver_to: "📍 ডেলিভারির ঠিকানা:",
+            today_schedule: "📋 আজকের ওষুধ",
+            add_new_title: "➕ নতুন ওষুধ",
+            lbl_med_name: "ওষুধের নাম:",
+            lbl_how_many_times: "দিনে কতবার?:",
+            opt_1_time: "১ বার",
+            opt_2_times: "২ বার",
+            opt_3_times: "৩ বার",
+            lbl_timings: "সময়:",
+            lbl_stock_qty: "ট্যাবলেট সংখ্যা:",
+            lbl_instructions: "কখন খাবেন?:",
+            inst_after: "খাওয়ার পর",
+            inst_before: "খাওয়ার আগে",
+            inst_bedtime: "ঘুমানোর সময়",
+            btn_save_med: "সংরক্ষণ করুন ✨",
+            stores_title: "🛒 ফার্মেসি",
+            stores_desc: "অনলাইনে অর্ডার করতে ট্যাপ করুন:",
+            btn_wa_slip: "💬 হোয়াটসঅ্যাপে পাঠান",
+            stock_list_title: "📦 মজুত ওষুধ:",
+            settings_title: "⚙️ প্রেসক্রিপশন ও অ্যাকাউন্ট",
+            lang_setting_title: "🌐 ভাষা",
+            btn_change: "বদলান",
+            pdf_title: "📄 প্রেসক্রিপশন PDF",
+            pdf_desc: "PDF ডাউনলোড করুন:",
+            btn_download_pdf: "📥 PDF ডাউনলোড",
+            acc_title: "👤 প্রোফাইল",
+            verified_tag: "যাচাইকৃত",
+            lbl_name: "নাম",
+            lbl_mobile: "মোবাইল",
+            lbl_address: "ঠিকানা",
+            btn_logout: "🚪 লগ আউট",
+            lbl_font_size: "👓 লেখার সাইজ",
+            btn_font_normal: "সাধারণ",
+            btn_font_large: "বড়",
+            nav_schedule: "তালিকা",
+            nav_add: "ওষুধ যোগ",
+            nav_stores: "দোকান",
+            nav_account: "অ্যাকাউন্ট",
+            edit_med_title: "✏️ পরিবর্তন",
+            btn_save_changes: "💾 সংরক্ষণ করুন",
+            btn_cancel: "বাতিল",
+            take_pill: "✅ খেয়েছি (-১)",
+            edit_pill: "✏️ বদলান",
+            pills_left: "টি বাকি",
+            refill_btn: "➕ ১০টি যোগ",
+            delete_btn: "🗑️ মুছুন",
+            low_stock_msg: "শেষ হতে চলেছে (৫টি বাকি)!"
+        }
+    };
+
+    const FLIPKART_LANG_OPTIONS = [
+        { code: 'en', native: 'English', en: 'English' },
+        { code: 'hi', native: 'हिन्दी', en: 'Hindi' },
+        { code: 'ta', native: 'தமிழ்', en: 'Tamil' },
+        { code: 'te', native: 'తెలుగు', en: 'Telugu' },
+        { code: 'bn', native: 'বাংলা', en: 'Bengali' }
+    ];
+
+    let medicines = JSON.parse(localStorage.getItem('my_medicines')) || [];
+    let userAccount = JSON.parse(localStorage.getItem('user_account')) || {
+        isLoggedIn: false,
+        name: '',
+        mobile: '',
+        address: '',
+        lang: 'en'
+    };
+
+    let tempSelectedLang = userAccount.lang || 'en';
+    let activeGeneratedOtp = null;
+    let availableVoices = [];
+
+    // Pre-load device voices (fixes silence issue in Chrome/Android)
+    function preloadVoices() {
+        if ('speechSynthesis' in window) {
+            availableVoices = window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => {
+                availableVoices = window.speechSynthesis.getVoices();
+            };
+        }
+    }
+    preloadVoices();
+
+    function checkLoginGate() {
+        const wall = document.getElementById('mandatoryLoginWall');
+        if (!userAccount.isLoggedIn) {
+            wall.style.display = 'flex';
+        } else {
+            wall.style.display = 'none';
+        }
+    }
+
+    if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
+
+    // ================= ROBUST VOICE REMINDER ENGINE =================
+    function playPleasantChime() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const now = ctx.currentTime;
+            [523.25, 659.25, 783.99].forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(freq, now + idx * 0.2);
+                gain.gain.setValueAtTime(0, now + idx * 0.2);
+                gain.gain.linearRampToValueAtTime(0.35, now + idx * 0.2 + 0.04);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.2 + 0.5);
+                osc.start(now + idx * 0.2);
+                osc.stop(now + idx * 0.2 + 0.55);
+            });
+        } catch(e) {}
+    }
+
+    // Direct Voice Speech: Speaks Hindi first, then English clearly
+    function triggerVoiceAlarm(medName, instruction) {
+        playPleasantChime();
+
+        const banner = document.getElementById('voiceSpeakingBanner');
+        const bannerText = document.getElementById('voiceSpeakingText');
+        bannerText.innerText = `📢 Dawa Ka Waqt: ${medName}`;
+        banner.style.display = 'flex';
+
+        if (!('speechSynthesis' in window)) {
+            setTimeout(() => { banner.style.display = 'none'; }, 5000);
+            return;
+        }
+
+        window.speechSynthesis.cancel(); // Reset any hung voice
+
+        setTimeout(() => {
+            preloadVoices();
+
+            // 1. Clear Hindi Speech
+            const hindiSpeech = new SpeechSynthesisUtterance(`ध्यान दें, आपकी दवा ${medName} लेने का समय हो गया है। कृपया दवा खा लें।`);
+            
+            // Try to assign a native Hindi voice if available
+            const hiVoice = availableVoices.find(v => v.lang.includes('hi') || v.lang.includes('Hindi'));
+            if (hiVoice) {
+                hindiSpeech.voice = hiVoice;
+            }
+            hindiSpeech.lang = 'hi-IN';
+            hindiSpeech.rate = 0.85; // Clean & clear for elderly
+            hindiSpeech.pitch = 1.0;
+
+            // 2. Clear English Announcement
+            const engSpeech = new SpeechSynthesisUtterance(`Attention please, it is time to take your medicine ${medName}. Please take your medicine.`);
+            const enVoice = availableVoices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-GB') || v.lang.includes('en-US'));
+            if (enVoice) {
+                engSpeech.voice = enVoice;
+            }
+            engSpeech.lang = 'en-IN';
+            engSpeech.rate = 0.90;
+
+            // Hide banner once speech finishes
+            engSpeech.onend = () => {
+                banner.style.display = 'none';
+            };
+            engSpeech.onerror = () => {
+                banner.style.display = 'none';
+            };
+
+            // Speak both sequentially
+            window.speechSynthesis.speak(hindiSpeech);
+            window.speechSynthesis.speak(engSpeech);
+
+            // Safety timeout to hide banner
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 12000);
+
+        }, 700);
+    }
+
+    // Test Voice Alarm Function
+    function testVoiceAlarmSample() {
+        const testMed = medicines.length > 0 ? medicines[0].name : "Paracetamol";
+        triggerVoiceAlarm(testMed, "Khane ke baad");
+    }
+
+    // Live Clock & Trigger
+    function startClock() {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('liveClock').innerText = `${hrs}:${mins}:${secs}`;
+
+        if (secs === "00") {
+            const currentTime = `${hrs}:${mins}`;
+            medicines.forEach(m => {
+                const times = m.times || (m.time ? [m.time] : []);
+                if (times.includes(currentTime)) {
+                    // 1. Bolkar aawaz sunayega (Hindi + English)
+                    triggerVoiceAlarm(m.name, m.instruction);
+
+                    // 2. Browser push notification
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification("⏰ DAWA KA WAQT HO GAYA!", {
+                            body: `💊 ${m.name} | ${m.instruction} | Bachi: ${m.stock} goliyaan`
+                        });
+                    }
+
+                    // 3. Screen par banner popup (Aawaz bajne ke 3 second baad taaki aawaz mute na ho)
+                    setTimeout(() => {
+                        alert(`⏰ DAWA KA WAQT HO GAYA!\n\n💊 Dawa: ${m.name}\n📌 Nirdesh: ${m.instruction}\n📦 Bachi: ${m.stock} goliyaan`);
+                    }, 3000);
+                }
+            });
+        }
+    }
+    setInterval(startClock, 1000);
+    startClock();
+
+    // ================= LANGUAGE SELECTION & TRANSLATION =================
+    function renderFlipkartLanguageCards() {
+        const grid = document.getElementById('fkLangGrid');
+        grid.innerHTML = '';
+
+        FLIPKART_LANG_OPTIONS.forEach(opt => {
+            const isSelected = opt.code === tempSelectedLang;
+            grid.innerHTML += `
+                <div class="lang-card-fk ${isSelected ? 'selected' : ''}" onclick="selectLanguageCard('${opt.code}', this)">
+                    <span class="fk-check">✓</span>
+                    <span class="lang-title-native">${opt.native}</span>
+                    <span class="lang-title-en">${opt.en}</span>
+                </div>
+            `;
+        });
+    }
+
+    function selectLanguageCard(langCode, el) {
+        tempSelectedLang = langCode;
+        document.querySelectorAll('.lang-card-fk').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function openLanguageModal() {
+        tempSelectedLang = userAccount.lang || 'en';
+        renderFlipkartLanguageCards();
+        document.getElementById('languageModal').classList.add('active');
+    }
+
+    function closeLanguageModal() {
+        document.getElementById('languageModal').classList.remove('active');
+    }
+
+    function confirmLanguageSelection() {
+        userAccount.lang = tempSelectedLang;
+        localStorage.setItem('user_account', JSON.stringify(userAccount));
+        applyAppTranslations(userAccount.lang);
+        closeLanguageModal();
+        renderAll();
+    }
+
+    function applyAppTranslations(langCode) {
+        const dict = I18N_DICTIONARY[langCode] || I18N_DICTIONARY['en'];
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (dict[key]) {
+                el.innerText = dict[key];
+            }
+        });
+
+        document.getElementById('currentLangLabel').innerText = dict.langName;
+        document.getElementById('lblSelectedLangDisplay').innerText = `${dict.langName} (${langCode.toUpperCase()})`;
+    }
+
+    function switchWindow(windowId, btnElement) {
+        document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+        document.getElementById(windowId).classList.add('active');
+        btnElement.classList.add('active');
+
+        renderAll();
+    }
+
+    function toggleAddTimes() {
+        const f = parseInt(document.getElementById('addFreq').value);
+        document.getElementById('addTime2').style.display = f >= 2 ? 'block' : 'none';
+        document.getElementById('addTime3').style.display = f >= 3 ? 'block' : 'none';
+    }
+
+    function toggleEditTimes() {
+        const f = parseInt(document.getElementById('editFreq').value);
+        document.getElementById('editTime2').style.display = f >= 2 ? 'block' : 'none';
+        document.getElementById('editTime3').style.display = f >= 3 ? 'block' : 'none';
+    }
+
+    function renderAll() {
+        const schedList = document.getElementById('scheduleList');
+        const lowBanner = document.getElementById('lowStockWarning');
+        const badge = document.getElementById('medCountBadge');
+        const storesDiv = document.getElementById('allSixStores');
+        const stockList = document.getElementById('stockList');
+        const dict = I18N_DICTIONARY[userAccount.lang || 'en'] || I18N_DICTIONARY['en'];
+
+        document.getElementById('btnUserStatus').innerText = `${(userAccount.name || 'User').split(' ')[0]} ▾`;
+        document.getElementById('lblDeliverAddress').innerText = userAccount.address || userAccount.name || '-';
+        document.getElementById('lblAccountName').innerText = userAccount.name || '-';
+        document.getElementById('lblAccountMobile').innerText = userAccount.mobile || '-';
+        document.getElementById('lblAccountAddr').innerText = userAccount.address || '-';
+
+        schedList.innerHTML = "";
+        stockList.innerHTML = "";
+        lowBanner.innerHTML = "";
+        badge.innerText = `${medicines.length}`;
+
+        let lowStockItems = [];
+
+        if (medicines.length === 0) {
+            schedList.innerHTML = `<div style="text-align: center; color: var(--text-muted); background: white; padding: 40px 20px; border-radius: 12px; border:1px solid #e0e0e0;">
+                <span style="font-size: 38px;">🩺</span>
+                <p style="margin-top: 10px; font-weight: 700;">No medicines added yet.</p>
+            </div>`;
+            storesDiv.innerHTML = renderAllSixStores("Medicine");
+            return;
+        }
+
+        medicines.forEach((med, i) => {
+            const times = med.times || (med.time ? [med.time] : []);
+            const isLow = med.stock <= 5;
+            if (isLow) lowStockItems.push(med);
+
+            const timesPills = times.map(t => `<span class="time-pill">⏰ ${t}</span>`).join('');
+
+            // Schedule Card
+            schedList.innerHTML += `
+                <div class="med-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div class="med-name">${med.name}</div>
+                            <div class="time-pill-group">${timesPills}</div>
+                        </div>
+                        <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
+                            ${med.stock} ${dict.pills_left}
+                        </span>
+                    </div>
+
+                    <div style="margin: 10px 0; font-size: 13.5px; color: var(--text-muted);">
+                        📌 ${med.instruction}
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button class="btn btn-take" onclick="takeMedicine(${i})">
+                            ${dict.take_pill}
+                        </button>
+                        <button class="btn btn-edit" onclick="openEditModal(${i})">
+                            ${dict.edit_pill}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Stock Card
+            stockList.innerHTML += `
+                <div class="med-card">
+                    <div style="display: flex; justify-content: space-between;">
+                        <div class="med-name">${med.name}</div>
+                        <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
+                            ${med.stock} ${dict.pills_left}
+                        </span>
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button class="btn btn-refill" style="flex:2;" onclick="refillStock(${i}, 10)">${dict.refill_btn}</button>
+                        <button class="btn btn-edit" style="flex:1;" onclick="openEditModal(${i})">${dict.edit_pill}</button>
+                        <button class="btn btn-delete" style="flex:1;" onclick="deleteMed(${i})">${dict.delete_btn}</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        const targetSearchMed = lowStockItems.length > 0 ? lowStockItems[0].name : medicines[0].name;
+        storesDiv.innerHTML = renderAllSixStores(targetSearchMed);
+
+        if (lowStockItems.length > 0) {
+            const lowNames = lowStockItems.map(m => m.name).join(', ');
+            lowBanner.innerHTML = `
+                <div style="background: #fce8e6; border: 1px solid #fad2cf; color: #c5221f; padding: 12px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 700; margin-bottom: 12px;">
+                    ⚠️ <b>${dict.low_stock_msg}</b>: ${lowNames}
+                </div>
+            `;
+        }
+    }
+
+    function renderAllSixStores(medName) {
+        const q = encodeURIComponent(medName);
+        return `
+            <a class="store-tile" target="_blank" href="https://www.amazon.in/s?k=${q}&i=hpc">
+                <span class="s-name">🛒 Amazon</span>
+                <span class="s-tag tag-amz">Amazon Pharmacy</span>
+            </a>
+            <a class="store-tile" target="_blank" href="https://www.flipkart.com/search?q=${q}+medicine">
+                <span class="s-name">🛍️ Flipkart</span>
+                <span class="s-tag tag-fk">Flipkart Health+</span>
+            </a>
+            <a class="store-tile" target="_blank" href="https://www.1mg.com/search/all?name=${q}">
+                <span class="s-name">🔴 Tata 1mg</span>
+                <span class="s-tag tag-1mg">Discount Verified</span>
+            </a>
+            <a class="store-tile" target="_blank" href="https://www.apollopharmacy.in/search-medicines/${q}">
+                <span class="s-name">🔵 Apollo</span>
+                <span class="s-tag tag-apollo">Apollo Pharmacy</span>
+            </a>
+            <a class="store-tile" target="_blank" href="https://pharmeasy.in/search/all?name=${q}">
+                <span class="s-name">🟢 PharmEasy</span>
+                <span class="s-tag tag-pharmeasy">Fast Delivery</span>
+            </a>
+            <a class="store-tile" target="_blank" href="https://www.netmeds.com/catalogsearch/result/${q}/all">
+                <span class="s-name">💊 Netmeds</span>
+                <span class="s-tag tag-netmeds">India Ki Pharmacy</span>
+            </a>
+        `;
+    }
+
+    function takeMedicine(i) {
+        if (medicines[i].stock > 0) {
+            medicines[i].stock -= 1;
+            saveAndRefresh();
+            if (medicines[i].stock <= 5) {
+                alert(`⚠️ Warning: "${medicines[i].name}" only ${medicines[i].stock} tablets left!`);
+            }
+        } else {
+            alert("Out of stock! Please refill or reorder.");
+        }
+    }
+
+    function refillStock(i, qty) {
+        medicines[i].stock += qty;
+        saveAndRefresh();
+    }
+
+    function deleteMed(i) {
+        if (confirm(`Delete "${medicines[i].name}"?`)) {
+            medicines.splice(i, 1);
+            saveAndRefresh();
+        }
+    }
+
+    function saveNewMedicine() {
+        const name = document.getElementById('addName').value.trim();
+        const freq = parseInt(document.getElementById('addFreq').value);
+        const stock = parseInt(document.getElementById('addStock').value);
+        const instruction = document.getElementById('addInstruction').value;
+
+        let times = [];
+        const t1 = document.getElementById('addTime1').value;
+        const t2 = document.getElementById('addTime2').value;
+        const t3 = document.getElementById('addTime3').value;
+
+        if (t1) times.push(t1);
+        if (freq >= 2 && t2) times.push(t2);
+        if (freq >= 3 && t3) times.push(t3);
+
+        if (!name || times.length < freq || isNaN(stock)) {
+            alert("Please fill all details!");
+            return;
+        }
+
+        medicines.push({ name, times, stock, instruction, frequency: freq });
+        saveAndRefresh();
+
+        document.getElementById('addName').value = '';
+        document.getElementById('addTime1').value = '';
+        document.getElementById('addTime2').value = '';
+        document.getElementById('addTime3').value = '';
+        document.getElementById('addStock').value = '';
+
+        switchWindow('win-schedule', document.getElementById('btnNavSchedule'));
+    }
+
+    function openEditModal(i) {
+        const med = medicines[i];
+        const times = med.times || (med.time ? [med.time] : []);
+        const freq = med.frequency || times.length || 1;
+
+        document.getElementById('editIndex').value = i;
+        document.getElementById('editName').value = med.name;
+        document.getElementById('editFreq').value = freq;
+        document.getElementById('editStock').value = med.stock;
+        document.getElementById('editInstruction').value = med.instruction;
+
+        document.getElementById('editTime1').value = times[0] || '';
+        document.getElementById('editTime2').value = times[1] || '';
+        document.getElementById('editTime3').value = times[2] || '';
+
+        toggleEditTimes();
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+    }
+
+    function saveEditedMedicine() {
+        const i = document.getElementById('editIndex').value;
+        const name = document.getElementById('editName').value.trim();
+        const freq = parseInt(document.getElementById('editFreq').value);
+        const stock = parseInt(document.getElementById('editStock').value);
+        const instruction = document.getElementById('editInstruction').value;
+
+        let times = [];
+        const t1 = document.getElementById('editTime1').value;
+        const t2 = document.getElementById('editTime2').value;
+        const t3 = document.getElementById('editTime3').value;
+
+        if (t1) times.push(t1);
+        if (freq >= 2 && t2) times.push(t2);
+        if (freq >= 3 && t3) times.push(t3);
+
+        if (!name || times.length < freq || isNaN(stock)) {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        medicines[i] = { name, times, stock, instruction, frequency: freq };
+        saveAndRefresh();
+        closeEditModal();
+    }
+
+    function getOrCreateRandomOtp() {
+        activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        return activeGeneratedOtp;
+    }
+
+    function wallSendOtp() {
+        const mob = document.getElementById('wallMobile').value.trim();
+        const name = document.getElementById('wallName').value.trim();
+
+        if (!mob || mob.length < 10 || !name) {
+            alert("Please enter valid mobile and name!");
+            return;
+        }
+
+        const otp = getOrCreateRandomOtp();
+        document.getElementById('smsOtpValue').innerText = otp;
+        const toast = document.getElementById('smsToast');
+        toast.style.display = 'block';
+        playPleasantChime();
+
+        setTimeout(() => { toast.style.display = 'none'; }, 15000);
+
+        document.getElementById('wallSentNumber').innerText = `+91 ${mob}`;
+        document.getElementById('wallStep1').style.display = 'none';
+        document.getElementById('wallStep2').style.display = 'block';
+        document.getElementById('wallEnteredOtp').value = '';
+    }
+
+    function wallSendWhatsAppOtp() {
+        const mob = document.getElementById('wallMobile').value.trim();
+        const name = document.getElementById('wallName').value.trim();
+
+        if (!mob || mob.length < 10 || !name) {
+            alert("Please enter 10 digit number & name!");
+            return;
+        }
+
+        const otp = getOrCreateRandomOtp();
+        const msg = `*DawaSahayak Verification OTP*\nHello ${name},\nYour OTP is: *${otp}*.`;
+        const waUrl = `https://api.whatsapp.com/send?phone=91${mob}&text=${encodeURIComponent(msg)}`;
+
+        window.open(waUrl, '_blank');
+
+        document.getElementById('wallSentNumber').innerText = `+91 ${mob} (WhatsApp)`;
+        document.getElementById('wallStep1').style.display = 'none';
+        document.getElementById('wallStep2').style.display = 'block';
+    }
+
+    function wallValidateOtp() {
+        const entered = document.getElementById('wallEnteredOtp').value.trim();
+
+        if (!entered) {
+            alert("Please enter 4-digit OTP!");
+            return;
+        }
+
+        if (entered !== activeGeneratedOtp) {
+            alert("❌ Invalid OTP! Check the notification banner.");
+            return;
+        }
+
+        const mob = document.getElementById('wallMobile').value.trim();
+        const name = document.getElementById('wallName').value.trim();
+        const addr = document.getElementById('wallAddress').value.trim() || 'Home Delivery';
+
+        userAccount = {
+            isLoggedIn: true,
+            name: name,
+            mobile: mob,
+            address: addr,
+            lang: userAccount.lang || 'en'
+        };
+
+        localStorage.setItem('user_account', JSON.stringify(userAccount));
+        
+        document.getElementById('mandatoryLoginWall').style.display = 'none';
+        applyAppTranslations(userAccount.lang);
+        renderAll();
+
+        setTimeout(() => {
+            openLanguageModal();
+        }, 200);
+    }
+
+    function openAccountModal() {
+        document.getElementById('modalAccName').innerText = userAccount.name;
+        document.getElementById('modalAccMobile').innerText = userAccount.mobile || '-';
+        document.getElementById('modalAccAddress').innerText = userAccount.address || '-';
+        document.getElementById('accountProfileModal').classList.add('active');
+    }
+
+    function closeAccountModal() {
+        document.getElementById('accountProfileModal').classList.remove('active');
+    }
+
+    function confirmLogoutFromModal() {
+        closeAccountModal();
+        logoutUser();
+    }
+
+    function logoutUser() {
+        if (confirm("Log out?")) {
+            userAccount = {
+                isLoggedIn: false,
+                name: '',
+                mobile: '',
+                address: '',
+                lang: 'en'
+            };
+            localStorage.setItem('user_account', JSON.stringify(userAccount));
+            document.getElementById('wallStep1').style.display = 'block';
+            document.getElementById('wallStep2').style.display = 'none';
+            document.getElementById('wallMobile').value = '';
+            document.getElementById('wallName').value = '';
+            document.getElementById('wallAddress').value = '';
+            checkLoginGate();
+        }
+    }
+
+    function generateMedicalPdf() {
+        if (medicines.length === 0) {
+            alert("Add at least one medicine first!");
+            return;
+        }
+
+        document.getElementById('pdfPatientName').innerText = userAccount.name;
+        document.getElementById('pdfPatientMobile').innerText = userAccount.mobile || '-';
+        document.getElementById('pdfPatientAddress').innerText = userAccount.address || '-';
+        document.getElementById('pdfDate').innerText = new Date().toLocaleDateString();
+        document.getElementById('pdfReportId').innerText = Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('pdfMedCount').innerText = medicines.length;
+
+        const tbody = document.getElementById('pdfTableBody');
+        tbody.innerHTML = '';
+
+        medicines.forEach((m, idx) => {
+            const times = m.times || (m.time ? [m.time] : []);
+            tbody.innerHTML += `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td><b>${m.name}</b></td>
+                    <td>⏰ ${times.join(', ')}</td>
+                    <td>${m.instruction}</td>
+                    <td>${m.stock}</td>
+                </tr>
+            `;
+        });
+
+        window.print();
+    }
+
+    function sendWhatsAppOrder() {
+        const lowItems = medicines.filter(m => m.stock <= 5);
+        const itemsToOrder = lowItems.length > 0 ? lowItems : medicines;
+
+        let msg = `*MEDICINE ORDER LIST*\nPatient: ${userAccount.name}\nAddress: ${userAccount.address}\n\nRequired Medicines:\n`;
+
+        itemsToOrder.forEach((m, idx) => {
+            msg += `${idx + 1}. *${m.name}* (Remaining: ${m.stock} tablets)\n`;
+        });
+
+        const phoneParam = userAccount.mobile ? `phone=${encodeURIComponent(userAccount.mobile)}&` : '';
+        const url = `https://api.whatsapp.com/send?${phoneParam}text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
+
+    function setFontSize(isLarge) {
+        if (isLarge) {
+            document.body.classList.add('large-font');
+        } else {
+            document.body.classList.remove('large-font');
+        }
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem('my_medicines', JSON.stringify(medicines));
+        renderAll();
+    }
+
+    // Initialize
+    checkLoginGate();
+    if (userAccount.isLoggedIn) {
+        applyAppTranslations(userAccount.lang || 'en');
+        renderAll();
+    }
+</script>
+
+</body>
+</html>
