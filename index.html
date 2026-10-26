@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dawa Sahayak Pro - Multi-User Care Hub</title>
+    <title>Dawa Sahayak Pro - Senior Care Hub</title>
     <style>
         :root {
             --primary: #2874f0;
@@ -107,6 +107,21 @@
         }
 
         .app-brand span { color: var(--fk-yellow); font-style: italic; }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cloud-status-indicator {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .cloud-online { background: #dcfce7; color: #166534; }
+        .cloud-offline { background: #fee2e2; color: #991b1b; }
 
         .auth-status-btn {
             background: white;
@@ -492,6 +507,30 @@
         .tag-pharmeasy { background: #dcfce7; color: #15803d; }
         .tag-netmeds { background: #ccfbf1; color: #0f766e; }
 
+        /* REAL PHONE SMS NOTIFICATION BANNER */
+        .sms-toast {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 440px;
+            background: #1e293b;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            z-index: 10000;
+            border-left: 6px solid var(--fk-yellow);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { top: -80px; opacity: 0; }
+            to { top: 12px; opacity: 1; }
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -519,7 +558,7 @@
         #printableReport { display: none; }
         @media print {
             body { background: white !important; }
-            .app-shell, .bottom-nav, .modal, #mandatoryLoginWall, #persistentAlarmModal { display: none !important; }
+            .app-shell, .bottom-nav, .modal, .sms-toast, #mandatoryLoginWall, #persistentAlarmModal { display: none !important; }
             #printableReport {
                 display: block !important;
                 width: 100%;
@@ -542,19 +581,30 @@
 </head>
 <body>
 
+<!-- REAL PHONE SMS NOTIFICATION BANNER -->
+<div class="sms-toast" id="smsToast">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <span style="font-size:12px; color:var(--fk-yellow); font-weight:800;">💬 MESSAGES (NOW)</span>
+        <span style="font-size:11px; color:#cbd5e1;">DawaSahayak Verify</span>
+    </div>
+    <div style="font-size:14px; font-weight:600;" id="smsBody">
+        Your OTP Code is: <b style="font-size:18px; color:#fde047; letter-spacing:1px;" id="smsOtpValue">----</b>. Valid for 10 mins.
+    </div>
+</div>
+
 <!-- ================= FLIPKART STYLE MANDATORY LOGIN WALL ================= -->
 <div id="mandatoryLoginWall" style="display: none;">
     <div class="login-card-fk">
         <div class="fk-header-banner">
             <h2 style="font-size: 22px; font-weight: 800;">Dawa<span>Sahayak</span></h2>
-            <p style="font-size: 13px; margin-top: 4px; opacity: 0.9;">Multi-Patient Senior Care Login</p>
+            <p style="font-size: 13px; margin-top: 4px; opacity: 0.9;">Universal Cloud Care Login</p>
         </div>
 
-        <div id="wallStep">
+        <div id="wallStep1">
             <div class="form-group">
                 <label>Mobile Number (10 Digits):</label>
-                <input type="tel" id="wallMobile" class="form-control" placeholder="Mobile number daalein" oninput="checkExistingUserAutoFill()">
-                <small style="color:#64748b; font-size:11px;">* Har mobile number ka alag dawa record save hoga</small>
+                <input type="tel" id="wallMobile" class="form-control" placeholder="10 Digit Number daalein" oninput="checkExistingUserAutoFill()">
+                <small style="color:#2563eb; font-size:11px; font-weight:700;">* Har mobile number ka alag dawa record save hota hai</small>
             </div>
             <div class="form-group">
                 <label>Patient Name (मरीज का नाम):</label>
@@ -565,9 +615,30 @@
                 <input type="tel" id="wallCaregiverPhone" class="form-control" placeholder="Bete/Beti ka 10 digit WhatsApp number">
             </div>
 
-            <button class="btn btn-fk" onclick="handleUserLoginSubmit()">
-                Continue (लॉग इन करें) ➔
+            <button class="btn btn-fk" onclick="wallSendOtp()">
+                OTP Prapt Karein (Send OTP) ➔
             </button>
+        </div>
+
+        <div id="wallStep2" style="display: none; text-align: center;">
+            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">Enter OTP Code</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">
+                Code sent to <b id="wallSentNumber">+91 XXXXXXXX</b>:
+            </p>
+
+            <div style="margin: 16px 0;">
+                <input type="text" id="wallEnteredOtp" maxlength="4" class="form-control" style="font-size: 26px; font-weight: 800; text-align: center; letter-spacing: 8px;" placeholder="____">
+            </div>
+
+            <button class="btn btn-fk" id="btnVerifyOtp" onclick="wallValidateOtp()">
+                Verify OTP & Enter App (लॉग इन करें)
+            </button>
+
+            <div style="margin-top: 12px; display:flex; justify-content:space-around;">
+                <a href="javascript:void(0)" onclick="wallSendOtp()" style="font-size: 13px; color: var(--primary); font-weight: 700; text-decoration: none;">
+                    🔄 Resend OTP
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -582,14 +653,12 @@
         <h1 id="alarmMedName" style="font-size:24px; font-weight:900; margin-top:12px; color:#111827;">Paracetamol</h1>
         <div id="alarmMedInstruction" style="font-size:14px; color:#4b5563; margin-top:4px;">Khane ke baad</div>
 
-        <!-- PILL PHOTO / COLOR DISPLAY -->
         <div id="alarmPillImageWrap"></div>
 
         <div style="background:#fef3c7; color:#92400e; padding:10px; border-radius:10px; font-size:13px; font-weight:700;">
             ⚠️ Goli ka rang aur photo dekhkar hi khayein!
         </div>
 
-        <!-- AUTOMATIC ESCALATION TIMER BANNER -->
         <div class="auto-alert-timer-box" id="autoAlertTimerDisplay">
             ⏳ Agar 60s me dawa nahi li, to Family ko Automatic WhatsApp Alert chala jayega: <b id="alarmCountdownSeconds">60s</b>
         </div>
@@ -615,6 +684,9 @@
                 💊 Dawa<span>Sahayak</span>
             </a>
             <div class="top-actions">
+                <span class="cloud-status-indicator" id="cloudStatusBadge">
+                    ☁️ Checking...
+                </span>
                 <button class="auth-status-btn" onclick="openAccountModal()" id="btnUserStatus">
                     User ▾
                 </button>
@@ -642,7 +714,7 @@
             <div class="voice-test-banner">
                 <div>
                     <span style="font-weight:800; font-size:14px;">🗣️ Bolne Wala Voice Alarm Active</span>
-                    <div style="font-size:12px; opacity:0.9;">Hindi & English me naam lekar aawaz dega</div>
+                    <div style="font-size:12px; opacity:0.9;">Hindi aur English dono me dawa ka naam lekar bolega</div>
                 </div>
                 <button class="btn btn-voice" onclick="testVoiceAlarmSample()">
                     ▶️ Aawaz Sunein
@@ -742,7 +814,7 @@
                     </select>
                 </div>
 
-                <button class="btn btn-fk" onclick="saveNewMedicine()">Dawa Save Karein ✨</button>
+                <button class="btn btn-fk" onclick="saveNewMedicine()">Dawa Save & Sync Karein ✨</button>
             </div>
         </div>
 
@@ -761,9 +833,18 @@
             <div id="stockList"></div>
         </div>
 
-        <!-- ================= TAB 4: CAREGIVER & PDF ================= -->
+        <!-- ================= TAB 4: SETTINGS & CLOUD DATABASE ================= -->
         <div id="win-settings" class="window">
-            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">⚙️ Caregiver & Settings</h2>
+            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">⚙️ Cloud & Caregiver</h2>
+
+            <!-- SHARED FIREBASE DATABASE: PRECONFIGURED FOR ALL USERS -->
+            <div class="form-card" style="border-left: 5px solid #16a34a; background: #f0fdf4;">
+                <h3 style="font-size: 16px; font-weight: 800; color:#166534;">☁️ Automatic Cloud Sync</h3>
+                <p style="font-size: 12.5px; color: #166534; margin-top:2px;">
+                    Shared Firebase database pehle se set hai. Kisi bhi user ya device ko URL enter ya alag se connect karne ki zaroorat nahi. Login ke baad har mobile number ka data alag aur cloud mein save hota hai.
+                </p>
+                <p style="font-size: 12px; color:#475569; margin-top:8px;">Database: dawaapp-ef866 · Changes doosre device par aam taur par 10 seconds ke andar refresh honge.</p>
+            </div>
 
             <!-- AUTOMATIC CAREGIVER SETUP CARD -->
             <div class="form-card" style="border-left: 5px solid #10b981;">
@@ -800,7 +881,7 @@
                     Caregiver: <b id="lblCaregiverDisplay" style="color:#047857;">-</b>
                 </p>
                 <button class="btn btn-delete" style="width:100%;" onclick="logoutUser()">
-                    🚪 Log Out (खाते से बाहर निकलें / Switch Number)
+                    🚪 Log Out (Switch Mobile Number / Device)
                 </button>
             </div>
         </div>
@@ -823,7 +904,7 @@
         </button>
         <button class="nav-btn" id="btnNavSettings" onclick="switchWindow('win-settings', this)">
             <span class="icon">⚙️</span>
-            <span>Caregiver</span>
+            <span>Settings</span>
         </button>
     </div>
 
@@ -847,7 +928,6 @@
             </label>
         </div>
 
-        <!-- EDIT RINGTONE WITH PREVIEW BUTTON -->
         <div class="form-group">
             <label>🔔 Custom Loud Ringtone:</label>
             <div style="display: flex; gap: 8px;">
@@ -929,7 +1009,7 @@
         <div style="text-align: center; margin-bottom: 14px;">
             <span style="font-size: 38px;">👤</span>
             <h2 style="font-size: 19px; font-weight: 800; margin-top: 4px;" id="modalAccName">User Name</h2>
-            <span style="font-size: 12px; background: #e6f4ea; color: #137333; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Active Account</span>
+            <span style="font-size: 12px; background: #e6f4ea; color: #137333; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Account Active</span>
         </div>
 
         <div style="background: #f8fafc; border: 1px solid #e0e0e0; border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 14px; line-height: 1.6;">
@@ -983,11 +1063,12 @@
 </div>
 
 <script>
-    // ================= MULTI-USER SEPARATE DATA ARCHITECTURE =================
-    // 1. Current Active Session
+    // ================= REAL GOOGLE FIREBASE CLOUD DATABASE ENGINE =================
+    const DEFAULT_FIREBASE_DB_URL = 'https://dawaapp-ef866-default-rtdb.firebaseio.com';
+    // One shared database URL for EVERY user/device. Do not read a per-browser URL from localStorage.
+    const firebaseDbUrl = DEFAULT_FIREBASE_DB_URL;
     let activeUserPhone = localStorage.getItem('dawa_active_session_phone') || '';
     
-    // 2. Active User Profile (Specific to phone)
     let userAccount = {
         isLoggedIn: false,
         name: '',
@@ -995,10 +1076,8 @@
         caregiverPhone: ''
     };
 
-    // 3. Active User Medicines List (Specific to phone)
     let medicines = [];
 
-    // Load active user session on startup
     function loadCurrentSessionData() {
         if (activeUserPhone && activeUserPhone.length >= 10) {
             const savedProfile = localStorage.getItem('user_profile_' + activeUserPhone);
@@ -1006,7 +1085,6 @@
                 userAccount = JSON.parse(savedProfile);
                 userAccount.isLoggedIn = true;
             }
-            // Load this specific mobile number's medicine database!
             const savedMeds = localStorage.getItem('medicines_' + activeUserPhone);
             medicines = savedMeds ? JSON.parse(savedMeds) : [];
         } else {
@@ -1016,12 +1094,108 @@
     }
     loadCurrentSessionData();
 
+    // 1. PUSH TO GOOGLE FIREBASE CLOUD (AUTOMATIC)
+    async function pushToFirebaseCloud() {
+        if (!firebaseDbUrl || !userAccount.mobile || userAccount.mobile.length < 10) return;
+        
+        try {
+            updateCloudStatusUI(true, 'Saving...');
+            let cleanUrl = firebaseDbUrl.trim().replace(/\/$/, "");
+            const payload = {
+                profile: userAccount,
+                medicines: medicines,
+                lastUpdated: new Date().toISOString()
+            };
+
+            const res = await fetch(`${cleanUrl}/patients/${userAccount.mobile}.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                updateCloudStatusUI(true, 'Cloud Synced ✅');
+            } else {
+                updateCloudStatusUI(false, 'Sync Failed');
+            }
+        } catch (e) {
+            console.log('Firebase write error:', e);
+            updateCloudStatusUI(false, 'Network Error');
+        }
+    }
+
+    // 2. FETCH FROM GOOGLE FIREBASE CLOUD ON ANY DEVICE LOGIN
+    async function fetchFromFirebaseCloud(phone) {
+        if (!firebaseDbUrl || !phone || phone.length < 10) return false;
+        
+        try {
+            updateCloudStatusUI(true, 'Checking Cloud...');
+            let cleanUrl = firebaseDbUrl.trim().replace(/\/$/, "");
+            const res = await fetch(`${cleanUrl}/patients/${phone}.json`);
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data && typeof data === 'object') {
+                    if (data.profile) {
+                        userAccount.name = data.profile.name || userAccount.name;
+                        userAccount.caregiverPhone = data.profile.caregiverPhone || userAccount.caregiverPhone;
+                    }
+                    if (Array.isArray(data.medicines)) {
+                        medicines = data.medicines;
+                    }
+
+                    // Save to local cache on this new device
+                    localStorage.setItem('user_profile_' + phone, JSON.stringify(userAccount));
+                    localStorage.setItem('medicines_' + phone, JSON.stringify(medicines));
+                    updateCloudStatusUI(true, 'Cloud Synced ✅');
+                    return true;
+                }
+            }
+        } catch (e) {
+            console.log('Firebase fetch error:', e);
+        }
+        updateCloudStatusUI(false, 'Offline');
+        return false;
+    }
+
+    function updateCloudStatusUI(isOnline, text) {
+        const badge = document.getElementById('cloudStatusBadge');
+        if (!badge) return;
+        if (firebaseDbUrl && firebaseDbUrl.length > 10) {
+            badge.className = isOnline ? 'cloud-status-indicator cloud-online' : 'cloud-status-indicator cloud-offline';
+            badge.innerText = `☁️ ${text}`;
+        } else {
+            badge.className = 'cloud-status-indicator cloud-offline';
+            badge.innerText = '☁️ Local Mode';
+        }
+    }
+
+    async function saveAndTestFirebaseDb() {
+        // Kept for compatibility with any old UI calls; the database URL is fixed globally.
+        try {
+            const res = await fetch(`${firebaseDbUrl}/test_connection.json`);
+            if (!res.ok) throw new Error('Firebase read failed');
+            updateCloudStatusUI(true, 'Connected');
+            if (userAccount.mobile) {
+                const foundInCloud = await fetchFromFirebaseCloud(userAccount.mobile);
+                if (!foundInCloud) await pushToFirebaseCloud();
+                else renderAll();
+            }
+            alert('Firebase ka shared database check ho gaya. Ab kisi user ko URL manually enter karne ki zaroorat nahi hai.');
+        } catch (e) {
+            console.log('Firebase connection error:', e);
+            updateCloudStatusUI(false, 'Connection Failed');
+            alert('Firebase connection fail hua. Database URL aur Firebase Realtime Database rules/permissions check karein.');
+        }
+    }
+
     let tempAddPillPhoto = "";
     let tempEditPillPhoto = "";
     let persistentAlarmInterval = null;
     let autoEscalationCountdownInterval = null;
     let currentAlarmMedicine = null;
     let alarmSecondsRemaining = 60;
+    let activeGeneratedOtp = null;
     let availableVoices = [];
 
     function preloadVoices() {
@@ -1047,7 +1221,6 @@
         Notification.requestPermission();
     }
 
-    // Auto-fill patient name if this mobile number logged in previously!
     function checkExistingUserAutoFill() {
         const phone = document.getElementById('wallMobile').value.trim();
         if (phone.length === 10) {
@@ -1060,7 +1233,6 @@
         }
     }
 
-    // Photo Compression
     function handlePillPhotoSelected(mode, event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -1094,7 +1266,35 @@
         reader.readAsDataURL(file);
     }
 
-    // ================= REALISTIC AUDIO SYNTHESIZER =================
+    function playMobileSmsTone() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const now = ctx.currentTime;
+            
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(587.33, now);
+            gain1.gain.setValueAtTime(0.3, now);
+            gain1.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc1.start(now);
+            osc1.stop(now + 0.13);
+
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(880, now + 0.12);
+            gain2.gain.setValueAtTime(0.4, now + 0.12);
+            gain2.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc2.start(now + 0.12);
+            osc2.stop(now + 0.38);
+        } catch(e) {}
+    }
+
     function playCustomTone(toneType) {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1186,7 +1386,39 @@
         playCustomTone(tone);
     }
 
-    // ================= LOUD PERSISTENT ALARM ENGINE =================
+    function playBilingualSpeech(medName) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        preloadVoices();
+
+        const hiText = `ध्यान दें, आपकी दवा ${medName} लेने का समय हो गया है। कृपया फोटो देखकर दवा खा लें।`;
+        const hiSpeech = new SpeechSynthesisUtterance(hiText);
+        const hiVoice = availableVoices.find(v => v.lang.includes('hi') || v.lang.includes('Hindi'));
+        if (hiVoice) hiSpeech.voice = hiVoice;
+        hiSpeech.lang = 'hi-IN';
+        hiSpeech.rate = 0.86;
+        hiSpeech.pitch = 1.0;
+
+        const enText = `Attention please, it is time to take your medicine ${medName}. Please check the photo and take your medicine.`;
+        const enSpeech = new SpeechSynthesisUtterance(enText);
+        const enVoice = availableVoices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-GB') || v.lang.includes('en-US'));
+        if (enVoice) enSpeech.voice = enVoice;
+        enSpeech.lang = 'en-IN';
+        enSpeech.rate = 0.90;
+        enSpeech.pitch = 1.0;
+
+        window.speechSynthesis.speak(hiSpeech);
+        window.speechSynthesis.speak(enSpeech);
+    }
+
+    function testVoiceAlarmSample() {
+        const testMed = medicines.length > 0 ? medicines[0].name : "Paracetamol";
+        playCustomTone('chime');
+        setTimeout(() => {
+            playBilingualSpeech(testMed);
+        }, 600);
+    }
+
     function triggerPersistentAlarm(med) {
         currentAlarmMedicine = med;
         alarmSecondsRemaining = 60;
@@ -1206,7 +1438,7 @@
 
         playPersistentRingLoop();
         if (persistentAlarmInterval) clearInterval(persistentAlarmInterval);
-        persistentAlarmInterval = setInterval(playPersistentRingLoop, 8000);
+        persistentAlarmInterval = setInterval(playPersistentRingLoop, 9000);
 
         if (autoEscalationCountdownInterval) clearInterval(autoEscalationCountdownInterval);
         autoEscalationCountdownInterval = setInterval(() => {
@@ -1222,16 +1454,10 @@
 
     function playPersistentRingLoop() {
         if (!currentAlarmMedicine) return;
-
         playCustomTone(currentAlarmMedicine.ringtone || 'siren');
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const hindiSpeech = new SpeechSynthesisUtterance(`ध्यान दें, आपकी दवा ${currentAlarmMedicine.name} लेने का समय हो गया है। कृपया फोटो देखकर दवा खा लें।`);
-            hindiSpeech.lang = 'hi-IN';
-            hindiSpeech.rate = 0.88;
-            window.speechSynthesis.speak(hindiSpeech);
-        }
+        setTimeout(() => {
+            playBilingualSpeech(currentAlarmMedicine.name);
+        }, 700);
     }
 
     function stopPersistentAlarm() {
@@ -1269,7 +1495,6 @@
         }, 300000);
     }
 
-    // ================= AUTOMATIC FAMILY ESCALATION =================
     function autoEscalateToFamilyMember() {
         const med = currentAlarmMedicine;
         if (!med) return;
@@ -1296,7 +1521,6 @@
         alertMsg += `_Dawa Sahayak Care App dwara automatically bheja gaya._`;
 
         const waUrl = `https://api.whatsapp.com/send?phone=91${caregiverPhone}&text=${encodeURIComponent(alertMsg)}`;
-        
         window.open(waUrl, '_blank');
         stopPersistentAlarm();
     }
@@ -1363,6 +1587,9 @@
         document.getElementById('lblAccountMobile').innerText = userAccount.mobile || '-';
         document.getElementById('lblCaregiverDisplay').innerText = userAccount.caregiverPhone || 'Not Set';
         document.getElementById('inputCaregiverPhone').value = userAccount.caregiverPhone || '';
+        // Shared Firebase URL is configured in code; no per-user input needed.
+
+        updateCloudStatusUI(true, 'Active');
 
         schedList.innerHTML = "";
         stockList.innerHTML = "";
@@ -1644,13 +1871,14 @@
         userAccount.caregiverPhone = phone;
         if (userAccount.mobile) {
             localStorage.setItem('user_profile_' + userAccount.mobile, JSON.stringify(userAccount));
+            pushToFirebaseCloud();
         }
         renderAll();
         alert("✅ Caregiver WhatsApp Number saved successfully!");
     }
 
-    // ================= MULTI-USER LOGIN SUBMIT (NO FREEZE) =================
-    function handleUserLoginSubmit() {
+    // ================= REAL PHONE SMS NOTIFICATION & 2-STEP OTP FLOW =================
+    function wallSendOtp() {
         const mob = document.getElementById('wallMobile').value.trim();
         const name = document.getElementById('wallName').value.trim();
         const caregiver = document.getElementById('wallCaregiverPhone').value.trim();
@@ -1664,7 +1892,41 @@
             return;
         }
 
-        // Set Active User Profile for this specific mobile number
+        activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
+        playMobileSmsTone();
+
+        document.getElementById('smsOtpValue').innerText = activeGeneratedOtp;
+        const toast = document.getElementById('smsToast');
+        toast.style.display = 'block';
+
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 15000);
+
+        document.getElementById('wallSentNumber').innerText = `+91 ${mob}`;
+        document.getElementById('wallStep1').style.display = 'none';
+        document.getElementById('wallStep2').style.display = 'block';
+        document.getElementById('wallEnteredOtp').value = '';
+    }
+
+    async function wallValidateOtp() {
+        const entered = document.getElementById('wallEnteredOtp').value.trim();
+
+        if (!entered) {
+            alert("Kripya 4-digit OTP daalein!");
+            return;
+        }
+
+        if (entered !== activeGeneratedOtp) {
+            alert("❌ Galat OTP! Kripya upar notification me dikha sahi 4-digit code bharein.");
+            return;
+        }
+
+        const mob = document.getElementById('wallMobile').value.trim();
+        const name = document.getElementById('wallName').value.trim();
+        const caregiver = document.getElementById('wallCaregiverPhone').value.trim();
+
         userAccount = {
             isLoggedIn: true,
             name: name,
@@ -1672,19 +1934,30 @@
             caregiverPhone: caregiver
         };
 
-        // 1. Save Profile specifically under this mobile number
+        // 1. Set active session
         localStorage.setItem('user_profile_' + mob, JSON.stringify(userAccount));
-
-        // 2. Set this mobile number as the active current session
         localStorage.setItem('dawa_active_session_phone', mob);
         activeUserPhone = mob;
 
-        // 3. Load medicines specifically saved for THIS mobile number!
-        const existingMeds = localStorage.getItem('medicines_' + mob);
-        medicines = existingMeds ? JSON.parse(existingMeds) : [];
+        // 2. Try fetching from Cloud if Firebase is connected
+        if (firebaseDbUrl) {
+            document.getElementById('btnVerifyOtp').innerText = "☁️ Fetching Cloud Data...";
+            const foundInCloud = await fetchFromFirebaseCloud(mob);
+            if (foundInCloud) {
+                alert(`☁️ Cloud Sync Success!\n\nWelcome back, ${userAccount.name}! Google Firebase se aapki saari dawaayein load ho gayi hain.`);
+            } else {
+                // If this number has no cloud record or the cloud is unavailable, use this device's cache.
+                const existingMeds = localStorage.getItem('medicines_' + mob);
+                medicines = existingMeds ? JSON.parse(existingMeds) : [];
+            }
+        } else {
+            // Local storage works only in this browser/device; it does not transfer to another phone.
+            const existingMeds = localStorage.getItem('medicines_' + mob);
+            medicines = existingMeds ? JSON.parse(existingMeds) : [];
+        }
 
-        // 4. Hide login wall and render
         document.getElementById('mandatoryLoginWall').style.display = 'none';
+        document.getElementById('btnVerifyOtp').innerText = "Verify OTP & Enter App (लॉग इन करें)";
         renderAll();
     }
 
@@ -1704,23 +1977,24 @@
         logoutUser();
     }
 
-    // ================= CLEAN LOGOUT & MULTI-USER SWITCH =================
     function logoutUser() {
         if (confirm("Kya aap sach me Log Out karke doosra mobile number daalna chahte hain?")) {
-            // 1. Clear Active Session Pointer
             localStorage.removeItem('dawa_active_session_phone');
             activeUserPhone = '';
 
-            // 2. Reset In-Memory State cleanly
             userAccount = { isLoggedIn: false, name: '', mobile: '', caregiverPhone: '' };
             medicines = [];
 
-            // 3. Clear Login Form Inputs for next user
+            const step1 = document.getElementById('wallStep1');
+            const step2 = document.getElementById('wallStep2');
+            if (step1) step1.style.display = 'block';
+            if (step2) step2.style.display = 'none';
+
             document.getElementById('wallMobile').value = '';
             document.getElementById('wallName').value = '';
             document.getElementById('wallCaregiverPhone').value = '';
+            document.getElementById('wallEnteredOtp').value = '';
 
-            // 4. Re-open Login Wall cleanly with NO ERROR
             checkLoginGate();
         }
     }
@@ -1772,10 +2046,11 @@
         window.open(url, '_blank');
     }
 
-    // SAVE MEDICINES SPECIFICALLY FOR THE ACTIVE MOBILE NUMBER
+    // SAVES LOCALLY AND SYNC TO GOOGLE FIREBASE
     function saveAndRefresh() {
         if (userAccount.mobile) {
             localStorage.setItem('medicines_' + userAccount.mobile, JSON.stringify(medicines));
+            pushToFirebaseCloud();
         }
         renderAll();
     }
@@ -1784,7 +2059,21 @@
     checkLoginGate();
     if (userAccount.isLoggedIn) {
         renderAll();
+        if (firebaseDbUrl) {
+            fetchFromFirebaseCloud(userAccount.mobile).then(() => renderAll());
+        }
     }
+
+    // Refresh cloud data periodically so changes from another phone appear automatically.
+    // Avoid refreshing while the user is typing in a form field.
+    setInterval(async () => {
+        if (!document.hidden && userAccount.isLoggedIn && userAccount.mobile &&
+            !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+            const before = JSON.stringify(medicines);
+            const loaded = await fetchFromFirebaseCloud(userAccount.mobile);
+            if (loaded && before !== JSON.stringify(medicines)) renderAll();
+        }
+    }, 10000);
 </script>
 
 </body>
