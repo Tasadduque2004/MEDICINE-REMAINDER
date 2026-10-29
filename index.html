@@ -21,6 +21,131 @@
         }
 
         body.large-font { --font-base: 18px; }
+        body.dark-mode { --bg:#111827; --card-bg:#1f2937; --text-dark:#f3f4f6; --text-muted:#cbd5e1; background:#030712; color:var(--text-dark); }
+        body.dark-mode .app-shell, body.dark-mode .window, body.dark-mode .modal-content { background:var(--bg); color:var(--text-dark); }
+        body.dark-mode .form-card { background:#1f2937 !important; color:#f3f4f6 !important; border-color:#374151 !important; }
+        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background:#111827 !important; color:#f9fafb !important; border-color:#4b5563 !important; }
+        body.dark-mode .schedule-card, body.dark-mode .stock-card, body.dark-mode .store-card { background:#1f2937 !important; color:#f3f4f6 !important; border-color:#374151 !important; }
+        body.dark-mode .sub-header { background:#1f2937; color:#f3f4f6; }
+        body.dark-mode .bottom-nav { background:#111827; border-color:#374151; }
+        body.dark-mode .nav-btn { color:#d1d5db; }
+        body.dark-mode .nav-btn.active { color:#60a5fa; }
+        body.dark-mode .language-card { background:#172554; }
+        body.dark-mode #emptyScheduleCard { background:#1f2937 !important; border-color:#374151 !important; color:#e5e7eb !important; }
+        body.dark-mode #mandatoryLoginWall { background:#030712 !important; color:#f3f4f6 !important; overflow-y:auto; }
+        body.dark-mode .login-card-fk { background:#111827 !important; color:#f3f4f6 !important; border-color:#374151 !important; }
+        body.dark-mode .login-card-fk label, body.dark-mode .login-card-fk p, body.dark-mode .login-card-fk small,
+        body.dark-mode .form-card label, body.dark-mode .form-card p, body.dark-mode .form-card h3,
+        body.dark-mode .form-group label, body.dark-mode .sub-header *, body.dark-mode .modal-content * { color:inherit; }
+        body.dark-mode .login-card-fk small { color:#93c5fd !important; }
+        body.dark-mode .login-slider { background:linear-gradient(135deg,#172554,#1e3a8a) !important; color:#eff6ff !important; }
+        body.dark-mode .login-slider p, body.dark-mode .login-slider h3 { color:#eff6ff !important; }
+        body.dark-mode .profile-edit-panel { background:#111827 !important; border-color:#374151 !important; }
+        body.dark-mode label { color:#e5e7eb; }
+        body.dark-mode .form-card [style*="color:#212121"], body.dark-mode .form-card [style*="color: #212121"],
+        body.dark-mode .form-card [style*="color:#475569"], body.dark-mode .form-card [style*="color: #475569"] { color:#e5e7eb !important; }
+        body.dark-mode .btn, body.dark-mode button { color:inherit; }
+        body.dark-mode .login-card-fk .btn { color:#fff !important; }
+        /* Contrast pass: fix inline light backgrounds and pale text throughout every screen/modal */
+        body.dark-mode .form-card, body.dark-mode .form-card[style*="background"],
+        body.dark-mode .profile-edit-panel, body.dark-mode #accountModal .modal-content,
+        body.dark-mode .modal-content, body.dark-mode .schedule-card, body.dark-mode .med-card,
+        body.dark-mode .stock-card, body.dark-mode .store-card { background:#1f2937 !important; color:#f8fafc !important; border-color:#475569 !important; }
+        body.dark-mode .form-card p, body.dark-mode .form-card h2, body.dark-mode .form-card h3,
+        body.dark-mode .form-card span, body.dark-mode .form-card b, body.dark-mode .form-card strong,
+        body.dark-mode .med-card p, body.dark-mode .med-card span, body.dark-mode .med-card b,
+        body.dark-mode .modal-content p, body.dark-mode .modal-content h2, body.dark-mode .modal-content h3,
+        body.dark-mode .modal-content label, body.dark-mode .modal-content span { color:#f1f5f9 !important; }
+        body.dark-mode [style*="color:#212121"], body.dark-mode [style*="color: #212121"],
+        body.dark-mode [style*="color:#475569"], body.dark-mode [style*="color: #475569"],
+        body.dark-mode [style*="color:#166534"], body.dark-mode [style*="color: #166534"],
+        body.dark-mode [style*="color:#047857"], body.dark-mode [style*="color: #047857"] { color:#e2e8f0 !important; }
+        body.dark-mode [style*="background: #f8fafc"], body.dark-mode [style*="background:#f8fafc"],
+        body.dark-mode [style*="background: #f0fdf4"], body.dark-mode [style*="background:#f0fdf4"],
+        body.dark-mode [style*="background: white"], body.dark-mode [style*="background:white"],
+        body.dark-mode [style*="background: #fff"], body.dark-mode [style*="background:#fff"] { background:#1f2937 !important; }
+        body.dark-mode .btn, body.dark-mode button { text-shadow:none; }
+        body.dark-mode .btn-delete { color:#fff !important; }
+        body.dark-mode .form-card .btn:not(.btn-take):not(.btn-fk):not(.btn-whatsapp):not(.btn-pdf):not(.btn-delete):not(.btn-refill),
+        body.dark-mode .modal-content .btn:not(.btn-take):not(.btn-fk):not(.btn-whatsapp):not(.btn-pdf):not(.btn-delete):not(.btn-refill) { background:#334155 !important; color:#f8fafc !important; border-color:#64748b !important; }
+        body.dark-mode .btn-edit { background:#334155 !important; color:#bfdbfe !important; border-color:#60a5fa !important; }
+        body.dark-mode .btn-delete { background:#7f1d1d !important; color:#fff !important; }
+
+        /* In-app sliding navigation drawer (not only the login carousel) */
+        .drawer-scrim { position:fixed; inset:0; background:rgba(2,6,23,.58); z-index:8000; opacity:0; visibility:hidden; transition:opacity .25s,visibility .25s; }
+        .app-drawer { position:fixed; z-index:8001; top:0; bottom:0; left:0; width:min(84vw,340px); padding:20px 16px 28px; overflow-y:auto; background:#fff; color:#172033; box-shadow:16px 0 45px rgba(0,0,0,.22); transform:translateX(-105%); transition:transform .28s cubic-bezier(.2,.8,.2,1); border-radius:0 20px 20px 0; }
+        body.drawer-open .app-drawer { transform:translateX(0); }
+        body.drawer-open .drawer-scrim { opacity:1; visibility:visible; }
+        .drawer-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 4px 18px; border-bottom:1px solid #e5e7eb; margin-bottom:14px; }
+        .drawer-brand { font-size:20px; font-weight:900; color:#2563eb; }
+        .drawer-close { border:0; border-radius:10px; background:#eef2ff; color:#1e40af; width:38px; height:38px; font-size:22px; }
+        .drawer-section-title { color:#64748b; font-size:11px; font-weight:900; letter-spacing:.09em; text-transform:uppercase; margin:18px 8px 8px; }
+        .drawer-item { width:100%; display:flex; align-items:center; gap:12px; padding:13px 12px; border:0; border-radius:12px; margin:4px 0; text-align:left; background:transparent; color:#1f2937; font-weight:750; cursor:pointer; }
+        .drawer-item:hover,.drawer-item:focus { background:#eff6ff; color:#1d4ed8; outline:none; }
+        .drawer-item .drawer-icon { width:28px; text-align:center; font-size:20px; }
+        .drawer-mini-card { margin-top:18px; border-radius:15px; padding:14px; background:linear-gradient(135deg,#eff6ff,#f5f3ff); color:#1e3a8a; }
+        .drawer-mini-card p { font-size:12px; line-height:1.5; margin-top:5px; }
+        .top-bar .menu-trigger { border:1px solid rgba(255,255,255,.42); background:rgba(255,255,255,.15); color:#fff; border-radius:10px; width:38px; height:38px; font-size:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .header-top { gap:10px; }
+        body.dark-mode .app-drawer { background:#111827; color:#f8fafc; border-right:1px solid #374151; }
+        body.dark-mode .drawer-head { border-color:#374151; }
+        body.dark-mode .drawer-item { color:#e5e7eb; }
+        body.dark-mode .drawer-item:hover, body.dark-mode .drawer-item:focus { background:#1e3a8a; color:#fff; }
+        body.dark-mode .drawer-close { background:#1e3a8a; color:#fff; }
+        body.dark-mode .drawer-mini-card { background:#172554; color:#dbeafe; }
+        .app-drawer .drawer-item { font-size:14px; }
+        .app-drawer .drawer-section-title { margin-top:20px; }
+        body.dark-mode .app-drawer .form-control { background:#111827 !important; color:#f8fafc !important; border-color:#475569 !important; }
+        body.dark-mode #accountProfileModal .modal-content > div[style*="background: #f8fafc"] { background:#111827 !important; border-color:#475569 !important; }
+        body.dark-mode #accountProfileModal .modal-content .btn-refill { background:#1e3a8a !important; color:#fff !important; }
+        /* Final contrast fixes for account modal, alert instructions, and badges */
+        body.dark-mode #accountProfileModal .modal-content { background:#1f2937 !important; color:#f8fafc !important; }
+        body.dark-mode #accountProfileModal .modal-content > div { color:#f8fafc !important; }
+        body.dark-mode #accountProfileModal .modal-content span,
+        body.dark-mode #accountProfileModal .modal-content b,
+        body.dark-mode #accountProfileModal .modal-content strong,
+        body.dark-mode #accountProfileModal .modal-content h2 { color:#f8fafc !important; }
+        body.dark-mode #accountProfileModal .modal-content span[style*="background: #e6f4ea"] { background:#14532d !important; color:#dcfce7 !important; }
+        body.dark-mode #accountProfileModal .modal-content > div[style*="background: #f8fafc"] { background:#111827 !important; border-color:#64748b !important; }
+        body.dark-mode #accountProfileModal .btn-refill { background:#334155 !important; color:#f8fafc !important; }
+        body.dark-mode #alarmMedInstruction { color:#f8fafc !important; }
+        body.dark-mode .critical-badge { background:#7f1d1d !important; color:#fee2e2 !important; }
+        body.dark-mode .stock-ok { background:#14532d !important; color:#dcfce7 !important; }
+        body.dark-mode .stock-alert { background:#7f1d1d !important; color:#fee2e2 !important; }
+        body.dark-mode .time-pill, body.dark-mode .time-pill-group span { background:#1e3a8a !important; color:#dbeafe !important; }
+        body.dark-mode .med-card div[style*="color:#475569"], body.dark-mode .med-card div[style*="color: #475569"] { color:#e2e8f0 !important; }
+
+        /* Accessibility contrast override: ensure no inherited/inline pale text disappears in dark mode */
+        body.dark-mode .app-shell, body.dark-mode .app-shell *:not(.btn-take):not(.btn-fk):not(.btn-delete):not(.btn-whatsapp):not(.btn-pdf) { color:#f1f5f9; }
+        body.dark-mode .app-shell a { color:#93c5fd !important; }
+        body.dark-mode .app-shell [style*="color:"] { color:#f1f5f9 !important; }
+        body.dark-mode .app-shell [style*="background: #fff"], body.dark-mode .app-shell [style*="background:#fff"],
+        body.dark-mode .app-shell [style*="background: white"], body.dark-mode .app-shell [style*="background:white"],
+        body.dark-mode .app-shell [style*="background: #f8fafc"], body.dark-mode .app-shell [style*="background:#f8fafc"],
+        body.dark-mode .app-shell [style*="background: #f1f5f9"], body.dark-mode .app-shell [style*="background:#f1f5f9"],
+        body.dark-mode .app-shell [style*="background: #e6f4ea"], body.dark-mode .app-shell [style*="background:#e6f4ea"] { background:#334155 !important; color:#f8fafc !important; }
+        body.dark-mode .app-shell input, body.dark-mode .app-shell select, body.dark-mode .app-shell textarea,
+        body.dark-mode #profileEditorOverlay input, body.dark-mode #profileEditorOverlay select { background:#0f172a !important; color:#f8fafc !important; border-color:#64748b !important; caret-color:#fff; }
+        body.dark-mode .app-shell input::placeholder, body.dark-mode #profileEditorOverlay input::placeholder { color:#cbd5e1 !important; opacity:1; }
+        body.dark-mode .stock-ok, body.dark-mode .time-pill, body.dark-mode .critical-badge { color:#f8fafc !important; }
+        body.dark-mode .app-drawer * { color:#f1f5f9; }
+        body.dark-mode .app-drawer .drawer-mini-card { background:#172554 !important; }
+        body.dark-mode .account-status, body.dark-mode .status-badge { background:#166534 !important; color:#f0fdf4 !important; }
+        /* Login language-first screen */
+        .login-language-gate { padding:30px 22px; text-align:center; background:#fff; border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,.2); width:min(100%,440px); margin:auto; }
+        .login-language-gate h2 { font-size:25px; font-weight:900; margin:12px 0 8px; color:#172033; }
+        .login-language-gate p { color:#64748b; font-size:14px; margin-bottom:20px; }
+        .login-language-options { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0 20px; }
+        .login-language-option { border:2px solid #e2e8f0; background:#f8fafc; color:#172033; padding:13px 10px; border-radius:13px; font-weight:800; cursor:pointer; }
+        .login-language-option.active { border-color:#2874f0; background:#eff6ff; color:#1d4ed8; box-shadow:0 0 0 2px rgba(40,116,240,.12); }
+        .login-language-continue { width:100%; border:0; border-radius:13px; padding:14px; color:#fff; background:#2874f0; font-weight:900; cursor:pointer; }
+        body.dark-mode .login-language-gate { background:#111827; border:1px solid #475569; }
+        body.dark-mode .login-language-gate h2, body.dark-mode .login-language-gate p { color:#f1f5f9 !important; }
+        body.dark-mode .login-language-option { background:#1f2937; border-color:#475569; color:#f8fafc; }
+        body.dark-mode .login-language-option.active { background:#1e3a8a; border-color:#60a5fa; color:#fff; }
+
+        @media(min-width:700px) { .app-shell { max-width:560px; } .app-drawer { width:320px; } }
+
 
         * {
             box-sizing: border-box;
@@ -71,6 +196,19 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
         }
+
+        .login-slider { width:100%; overflow:hidden; border-radius:14px; margin:0 0 18px; background:linear-gradient(135deg,#eff6ff,#dbeafe); color:#1e3a8a; }
+        .login-slider-track { display:flex; width:300%; transition:transform .55s cubic-bezier(.22,.8,.25,1); }
+        .login-slide { flex:0 0 33.3333%; min-height:118px; padding:16px 14px 12px; text-align:center; }
+        .login-slide > span { display:block; font-size:25px; margin-bottom:5px; }
+        .login-slide h3 { font-size:15px; font-weight:800; margin-bottom:5px; color:#1e40af; }
+        .login-slide p { font-size:12px; line-height:1.45; color:#334155; }
+        .login-slider-dots { display:flex; justify-content:center; gap:6px; padding:0 0 10px; }
+        .login-slider-dots span { width:6px; height:6px; border-radius:99px; background:#93c5fd; transition:all .25s; }
+        .login-slider-dots span.active { width:18px; background:#2563eb; }
+        .profile-edit-panel { animation:profilePanelIn .22s ease-out; }
+        @keyframes profilePanelIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+        @media(max-height:760px) { #mandatoryLoginWall { justify-content:flex-start; } .login-card-fk { margin:auto 0; } }
 
         .fk-header-banner {
             background: var(--primary);
@@ -577,6 +715,70 @@
             }
             .pdf-table th { background: #f1f5f9; }
         }
+    
+        /* Modern, softer visual polish */
+        body { background: linear-gradient(145deg, #dbeafe 0%, #eef2ff 45%, #f8fafc 100%); }
+        .app-shell { box-shadow: 0 18px 55px rgba(30, 64, 175, 0.16); }
+        .top-bar { background: linear-gradient(120deg, #1d4ed8 0%, #2874f0 55%, #0ea5e9 100%); }
+        .sub-header { background: linear-gradient(120deg, #1e40af, #2563eb); }
+        .form-card, .med-card { border-radius: 18px; box-shadow: 0 7px 20px rgba(15, 23, 42, 0.055); border-color: #e5eaf3; }
+        .form-control { border-radius: 11px; border-color: #d6deeb; transition: border-color .18s ease, box-shadow .18s ease; }
+        .form-control:focus { box-shadow: 0 0 0 3px rgba(40, 116, 240, .13); }
+        .btn { border-radius: 11px; }
+        .btn-fk { background: linear-gradient(120deg, #f97316, #fb641b); box-shadow: 0 6px 14px rgba(251, 100, 27, .2); }
+        .voice-test-banner { border-radius: 16px; box-shadow: 0 5px 16px rgba(22, 101, 52, .08); }
+        .bottom-nav { border-radius: 18px 18px 0 0; border-top-color: #e8edf5; box-shadow: 0 -8px 24px rgba(15, 23, 42, .08); }
+        .language-card { border-left: 5px solid #3b82f6; background: linear-gradient(135deg, #eff6ff, #ffffff); }
+
+
+        /* Dark-mode readability pass: keep pale chips readable instead of forcing all spans white. */
+        body.dark-mode .med-card .critical-badge { background:#7f1d1d !important; color:#fee2e2 !important; border:1px solid #f87171; }
+        body.dark-mode .med-card .time-pill { background:#1e3a8a !important; color:#dbeafe !important; border-color:#60a5fa !important; }
+        body.dark-mode .med-card .stock-indicator.stock-ok { background:#14532d !important; color:#dcfce7 !important; }
+        body.dark-mode .med-card .stock-indicator.stock-alert { background:#7f1d1d !important; color:#fee2e2 !important; }
+        body.dark-mode .med-card .med-name { color:#f8fafc !important; }
+        body.dark-mode .med-card [style*="color:#475569"], body.dark-mode .med-card [style*="color: #475569"],
+        body.dark-mode .med-card [style*="color: var(--text-muted)"] { color:#d1d5db !important; }
+        body.dark-mode .med-card .btn-take { background:#f97316 !important; color:#fff !important; }
+        body.dark-mode .med-card .btn-edit { background:#334155 !important; color:#dbeafe !important; border-color:#60a5fa !important; }
+        body.dark-mode .app-drawer .drawer-mini-card p { color:#dbeafe !important; }
+        body.dark-mode .app-drawer select { background:#1f2937 !important; color:#f8fafc !important; border-color:#475569 !important; }
+        body.dark-mode .app-drawer label { color:#e5e7eb !important; }
+        body.dark-mode .app-drawer .drawer-section-title { color:#9ca3af !important; }
+
+    
+        /* Dedicated profile editor overlay and comprehensive dark-mode contrast fixes */
+        .profile-editor-overlay { display:none; position:fixed; inset:0; z-index:10050; background:rgba(2,6,23,.72); padding:18px; align-items:center; justify-content:center; overflow-y:auto; }
+        .profile-editor-overlay.active { display:flex; }
+        .profile-editor-dialog { width:min(520px,100%); max-height:90vh; overflow:auto; padding:20px; border-radius:20px; background:#fff; color:#111827; box-shadow:0 24px 80px rgba(0,0,0,.35); }
+        .profile-editor-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:19px; margin-bottom:8px; }
+        .profile-editor-x { border:0; border-radius:10px; width:38px; height:38px; font-size:26px; cursor:pointer; background:#e5e7eb; color:#111827; }
+        .profile-editor-note { margin:0 0 14px; color:#475569; font-size:14px; }
+        .profile-editor-panel-modal { background:#fff !important; color:#111827 !important; border-color:#cbd5e1 !important; }
+        .profile-editor-dialog label { display:block; color:#1f2937 !important; font-weight:700; margin-bottom:6px; }
+        .profile-editor-dialog input, .profile-editor-dialog select, .profile-editor-dialog textarea { background:#fff !important; color:#111827 !important; border:1px solid #94a3b8 !important; }
+        body.dark-mode .profile-editor-dialog { background:#111827 !important; color:#f9fafb !important; border:1px solid #475569; }
+        body.dark-mode .profile-editor-heading, body.dark-mode .profile-editor-dialog strong { color:#f9fafb !important; }
+        body.dark-mode .profile-editor-note { color:#cbd5e1 !important; }
+        body.dark-mode .profile-editor-x { background:#374151 !important; color:#fff !important; }
+        body.dark-mode .profile-editor-panel-modal { background:#1f2937 !important; color:#f9fafb !important; border-color:#475569 !important; }
+        body.dark-mode .profile-editor-dialog label { color:#f3f4f6 !important; }
+        body.dark-mode .profile-editor-dialog input, body.dark-mode .profile-editor-dialog select, body.dark-mode .profile-editor-dialog textarea { background:#0f172a !important; color:#f8fafc !important; border-color:#64748b !important; }
+        body.dark-mode .profile-editor-dialog input::placeholder { color:#cbd5e1 !important; }
+        body.dark-mode .profile-editor-dialog button { color:#fff !important; }
+        /* Badges and account-modal controls must retain contrast in dark mode. */
+        body.dark-mode .account-status, body.dark-mode .status-badge, body.dark-mode #accountProfileModal .badge { background:#166534 !important; color:#f0fdf4 !important; border:1px solid #4ade80 !important; }
+        body.dark-mode #accountProfileModal .modal-content, body.dark-mode #accountProfileModal .modal-content * { color:#f8fafc !important; }
+        body.dark-mode #accountProfileModal .modal-content input, body.dark-mode #accountProfileModal .modal-content select { background:#0f172a !important; color:#f8fafc !important; border-color:#64748b !important; }
+        body.dark-mode .med-card .instruction-line, body.dark-mode .med-card .med-instructions, body.dark-mode .med-card .ringtone-line { color:#f8fafc !important; }
+        body.dark-mode .med-card .instruction-line *, body.dark-mode .med-card .med-instructions *, body.dark-mode .med-card .ringtone-line * { color:#f8fafc !important; }
+        @media (max-width:520px) { .profile-editor-overlay { padding:10px; } .profile-editor-dialog { padding:15px; max-height:94vh; } }
+
+    /* Dark mode disabled: use reliable light surfaces until all components can be audited. */
+        body.dark-mode, body.dark-mode .app-shell, body.dark-mode .form-card, body.dark-mode .med-card, body.dark-mode .modal-content, body.dark-mode .app-drawer, body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background-color: initial; color: initial; }
+        body.dark-mode { background: linear-gradient(145deg, #dbeafe 0%, #eef2ff 45%, #f8fafc 100%) !important; color: #111827 !important; }
+        body.dark-mode .app-shell, body.dark-mode .form-card, body.dark-mode .med-card, body.dark-mode .modal-content, body.dark-mode .app-drawer { background: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
+        body.dark-mode label, body.dark-mode p, body.dark-mode span, body.dark-mode strong, body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: inherit; }
     </style>
 </head>
 <body>
@@ -594,36 +796,63 @@
 
 <!-- ================= FLIPKART STYLE MANDATORY LOGIN WALL ================= -->
 <div id="mandatoryLoginWall" style="display: none;">
-    <div class="login-card-fk">
+    <div id="loginLanguageGate" class="login-language-gate">
+        <div style="font-size:42px">💊</div>
+        <h2 data-i18n="loginGateTitle">Choose your language</h2>
+        <p data-i18n="loginGateDesc">Select your preferred language to continue to login.</p>
+        <div class="login-language-options">
+            <button type="button" class="login-language-option active" data-lang="en" onclick="chooseLoginLanguage('en',this)">English</button>
+            <button type="button" class="login-language-option" data-lang="hi" onclick="chooseLoginLanguage('hi',this)">हिन्दी</button>
+            <button type="button" class="login-language-option" data-lang="kn" onclick="chooseLoginLanguage('kn',this)">ಕನ್ನಡ</button>
+            <button type="button" class="login-language-option" data-lang="ta" onclick="chooseLoginLanguage('ta',this)">தமிழ்</button>
+            <button type="button" class="login-language-option" data-lang="te" onclick="chooseLoginLanguage('te',this)">తెలుగు</button>
+        </div>
+        <button type="button" class="login-language-continue" onclick="continueToLogin()" data-i18n="loginContinue">Continue →</button>
+    </div>
+    <div class="login-card-fk" id="loginFormCard" style="display:none;">
         <div class="fk-header-banner">
             <h2 style="font-size: 22px; font-weight: 800;">Dawa<span>Sahayak</span></h2>
-            <p style="font-size: 13px; margin-top: 4px; opacity: 0.9;">Universal Cloud Care Login</p>
+            <p data-i18n="loginSubtitle" style="font-size: 13px; margin-top: 4px; opacity: 0.9;">Your family’s medicine care, in one place</p>
+        </div>
+        <div class="form-group" style="margin-bottom:12px; display:none;">
+            <label for="loginLanguageSelect" data-i18n="appLanguageLabel">App language:</label>
+            <select id="loginLanguageSelect" class="form-control" onchange="setAppLanguage(this.value)" aria-label="Choose app language">
+                <option value="en">English</option><option value="hi">हिन्दी</option><option value="kn">ಕನ್ನಡ</option><option value="ta">தமிழ்</option><option value="te">తెలుగు</option>
+            </select>
+        </div>
+        <div class="login-slider" aria-live="polite">
+            <div class="login-slider-track" id="loginSliderTrack">
+                <div class="login-slide"><span>💊</span><h3 data-i18n="sliderOneTitle">Medicine schedule made simple</h3><p data-i18n="sliderOneDesc">Keep doses and reminders together in one place.</p></div>
+                <div class="login-slide"><span>👨‍👩‍👧</span><h3 data-i18n="sliderTwoTitle">Care for the whole family</h3><p data-i18n="sliderTwoDesc">Patient and caregiver details stay easy to find.</p></div>
+                <div class="login-slide"><span>☁️</span><h3 data-i18n="sliderThreeTitle">Your record, synced</h3><p data-i18n="sliderThreeDesc">Sign in with your mobile number to load your record.</p></div>
+            </div>
+            <div class="login-slider-dots"><span class="active"></span><span></span><span></span></div>
         </div>
 
         <div id="wallStep1">
             <div class="form-group">
-                <label>Mobile Number (10 Digits):</label>
-                <input type="tel" id="wallMobile" class="form-control" placeholder="10 Digit Number daalein" oninput="checkExistingUserAutoFill()">
-                <small style="color:#2563eb; font-size:11px; font-weight:700;">* Har mobile number ka alag dawa record save hota hai</small>
+                <label data-i18n="loginMobileLabel">Mobile Number (10 Digits):</label>
+                <input type="tel" id="wallMobile" class="form-control" placeholder="Enter 10-digit mobile number" data-i18n-placeholder="loginMobilePlaceholder" oninput="checkExistingUserAutoFill()">
+                <small data-i18n="loginMobileHelp" style="color:#2563eb; font-size:11px; font-weight:700;">* A separate medicine record is saved for each mobile number.</small>
             </div>
             <div class="form-group">
-                <label>Patient Name (मरीज का नाम):</label>
-                <input type="text" id="wallName" class="form-control" placeholder="Ex: Ramesh Sharma (Dadaji)">
+                <label data-i18n="loginPatientLabel">Patient Name:</label>
+                <input type="text" id="wallName" class="form-control" placeholder="e.g. Abdullah" data-i18n-placeholder="loginPatientPlaceholder">
             </div>
             <div class="form-group">
-                <label>Family Member / Caregiver WhatsApp Number:</label>
-                <input type="tel" id="wallCaregiverPhone" class="form-control" placeholder="Bete/Beti ka 10 digit WhatsApp number">
+                <label data-i18n="loginCaregiverLabel">Family Member / Caregiver WhatsApp Number:</label>
+                <input type="tel" id="wallCaregiverPhone" class="form-control" placeholder="Caregiver’s 10-digit WhatsApp number" data-i18n-placeholder="loginCaregiverPlaceholder">
             </div>
 
             <button class="btn btn-fk" onclick="wallSendOtp()">
-                OTP Prapt Karein (Send OTP) ➔
+                <span data-i18n="loginSendOtp">Send OTP</span> ➔
             </button>
         </div>
 
         <div id="wallStep2" style="display: none; text-align: center;">
-            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">Enter OTP Code</h3>
+            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;"><span data-i18n="loginEnterOtp">Enter OTP Code</span></h3>
             <p style="font-size: 13px; color: var(--text-muted);">
-                Code sent to <b id="wallSentNumber">+91 XXXXXXXX</b>:
+                <span data-i18n="loginCodeSent">Code sent to</span> <b id="wallSentNumber">+91 XXXXXXXX</b>:
             </p>
 
             <div style="margin: 16px 0;">
@@ -631,12 +860,12 @@
             </div>
 
             <button class="btn btn-fk" id="btnVerifyOtp" onclick="wallValidateOtp()">
-                Verify OTP & Enter App (लॉग इन करें)
+                <span data-i18n="loginVerify">Verify OTP & Enter App</span>
             </button>
 
             <div style="margin-top: 12px; display:flex; justify-content:space-around;">
                 <a href="javascript:void(0)" onclick="wallSendOtp()" style="font-size: 13px; color: var(--primary); font-weight: 700; text-decoration: none;">
-                    🔄 Resend OTP
+                    <span data-i18n="loginResend">🔄 Resend OTP</span>
                 </a>
             </div>
         </div>
@@ -665,7 +894,7 @@
 
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
             <button class="btn btn-take" style="padding:15px; font-size:17px;" onclick="confirmDawaTakenFromAlarm()">
-                ✅ Maine Dawa Kha Li (Stop Alarm)
+                <span data-i18n="alarmStop">✅ I have taken my medicine (Stop Alarm)</span>
             </button>
 
             <button class="btn btn-edit" style="padding:11px;" onclick="snoozePersistentAlarm()">
@@ -675,11 +904,25 @@
     </div>
 </div>
 
+<div class="drawer-scrim" id="drawerScrim" onclick="toggleAppDrawer(false)" aria-hidden="true"></div>
+<aside class="app-drawer" id="appDrawer" aria-label="Main navigation">
+  <div class="drawer-head"><div><div class="drawer-brand">💊 Dawa Sahayak Pro</div><small id="drawerPatientName">Senior Care Hub</small></div><button class="drawer-close" onclick="toggleAppDrawer(false)" aria-label="Close menu">×</button></div>
+  <div class="drawer-section-title" data-i18n="drawerNavigate">Navigate</div>
+  <button class="drawer-item" onclick="drawerGo('win-settings','btnNavSettings')"><span class="drawer-icon">⚙️</span><span data-i18n="navSettings">Settings</span></button>
+  <div class="drawer-section-title" data-i18n="drawerManageTitle">Manage & tools</div>
+  <button class="drawer-item" onclick="toggleAppDrawer(false); toggleProfileEdit(true)"><span class="drawer-icon">✏️</span><span data-i18n="editProfileButton">Edit patient profile</span></button>
+  <button class="drawer-item" onclick="toggleAppDrawer(false); generateMedicalPdf()"><span class="drawer-icon">📄</span><span data-i18n="drawerDownloadPdf">Download medical PDF</span></button>
+  <button class="drawer-item" onclick="openAccountModal();toggleAppDrawer(false)"><span class="drawer-icon">👤</span><span data-i18n="drawerProfile">Patient profile & account</span></button>
+  <button class="drawer-item" onclick="logoutUser()"><span class="drawer-icon">🚪</span><span data-i18n="drawerLogout">Log out / switch number</span></button>
+  <div class="drawer-mini-card"><strong data-i18n="drawerCareTitle">Care made easier</strong><p data-i18n="drawerCareDesc">Manage medicine schedules, caregiver details, voice alarms and cloud sync from one place.</p></div>
+</aside>
+
 <div class="app-shell">
     
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="header-top">
+            <button class="menu-trigger" type="button" onclick="toggleAppDrawer(true)" aria-label="Open main menu">☰</button>
             <a href="#" class="app-brand">
                 💊 Dawa<span>Sahayak</span>
             </a>
@@ -713,8 +956,8 @@
             <!-- Voice Alarm Test Banner -->
             <div class="voice-test-banner">
                 <div>
-                    <span style="font-weight:800; font-size:14px;">🗣️ Bolne Wala Voice Alarm Active</span>
-                    <div style="font-size:12px; opacity:0.9;">Hindi aur English dono me dawa ka naam lekar bolega</div>
+                    <span id="voiceBannerTitle" data-i18n="voiceBannerTitle" style="font-weight:800; font-size:14px;">🗣️ Bolne Wala Voice Alarm Active</span>
+                    <div id="voiceBannerDesc" data-i18n="voiceBannerDesc" style="font-size:12px; opacity:0.9;">Alarm aapki chuni hui language mein dawa ka naam lekar bolega</div>
                 </div>
                 <button class="btn btn-voice" onclick="testVoiceAlarmSample()">
                     ▶️ Aawaz Sunein
@@ -724,7 +967,7 @@
             <div id="lowStockWarning"></div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="font-weight: 800; font-size: 18px;">📋 Aaj Ka Schedule</h2>
+                <h2 id="scheduleTitle" data-i18n="scheduleTitle" style="font-weight: 800; font-size: 18px;">📋 Aaj Ka Schedule</h2>
                 <span id="medCountBadge" style="font-weight: 700; color: var(--text-muted); font-size: 13px;">0 Medicines</span>
             </div>
 
@@ -733,66 +976,66 @@
 
         <!-- ================= TAB 2: ADD MEDICINE ================= -->
         <div id="win-add" class="window">
-            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">➕ Nayi Dawa Jodein</h2>
+            <h2 id="addTitle" data-i18n="addTitle" style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">➕ Nayi Dawa Jodein</h2>
             
             <div class="form-card">
                 <div class="form-group">
-                    <label>Dawa Ka Naam (Medicine Name):</label>
-                    <input type="text" id="addName" class="form-control" placeholder="Ex: Telma 40, Glycomet, Aciloc">
+                    <label data-i18n="medNameLabel">Medicine Name:</label>
+                    <input type="text" id="addName" class="form-control" placeholder="e.g. Telma 40, Glycomet, Aciloc" data-i18n-placeholder="medicineNamePlaceholder">
                 </div>
 
                 <div class="form-group" style="background:#fff1f2; border:1px solid #fecdd3; padding:10px; border-radius:8px;">
                     <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
                         <input type="checkbox" id="addIsCritical" style="width:18px; height:18px;">
-                        <b style="color:#be123c;">⚡ Critical Medicine? (Zaroori Dawa - BP/Sugar/Heart)</b>
+                        <b data-i18n="criticalLabel" style="color:#be123c;">⚡ Critical Medicine? (BP/Sugar/Heart)</b>
                     </label>
                 </div>
 
                 <!-- LOUD ALARM RINGTONE SELECTOR -->
                 <div class="form-group">
-                    <label>🔔 Custom Loud Ringtone (Aawaz Chuniye):</label>
+                    <label data-i18n="ringtoneLabel">🔔 Custom Loud Ringtone:</label>
                     <div style="display: flex; gap: 8px;">
                         <select id="addRingtone" class="form-control" style="flex: 1;">
-                            <option value="siren">🚨 Loud Emergency Siren (Ambulance Alert)</option>
-                            <option value="fastbeep">⚡ Digital Radar Pulse (Fast Loud Alarm)</option>
-                            <option value="chime">🎵 Hospital Acoustic Chime (Melodic Bell)</option>
+                            <option value="siren" data-i18n="ringtoneSiren">🚨 Loud Emergency Siren (Ambulance Alert)</option>
+                            <option value="fastbeep" data-i18n="ringtoneRadar">⚡ Digital Radar Pulse (Fast Loud Alarm)</option>
+                            <option value="chime" data-i18n="ringtoneChime">🎵 Hospital Acoustic Chime (Melodic Bell)</option>
                         </select>
                         <button type="button" class="btn btn-preview-tone" onclick="previewRingtone('add')">
-                            ▶️ Sun Kar Dekhein
+                            <span data-i18n="previewSound">▶️ Preview Sound</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- PILL PHOTO UPLOAD & COLOR IDENTIFIER -->
                 <div class="form-group" style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px;">
-                    <label>📸 Goli Ki Photo (Pill Identifier):</label>
+                    <label data-i18n="pillPhotoLabel">📸 Pill Photo (Pill Identifier):</label>
                     <input type="file" id="addPillFile" accept="image/*" class="form-control" onchange="handlePillPhotoSelected('add', event)">
                     <div id="addPillPreviewWrap" style="margin-top:8px; display:none;">
                         <img id="addPillPreviewImg" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:2px solid var(--primary);">
                     </div>
 
-                    <label style="margin-top:10px;">🎨 Goli Ka Rang / Type Chuniye:</label>
+                    <label data-i18n="pillColorLabel" style="margin-top:10px;">🎨 Choose Pill Color / Type:</label>
                     <select id="addPillColor" class="form-control">
-                        <option value="⚪ Safed (White Round)">⚪ Safed Goli (White Round)</option>
-                        <option value="🔴 Laal (Red / Pink)">🔴 Laal / Pink Goli</option>
-                        <option value="🟡 Peeli (Yellow)">🟡 Peeli Goli (Yellow)</option>
-                        <option value="🔵 Neeli (Blue)">🔵 Neeli Goli (Blue)</option>
-                        <option value="💊 Capsule (Dual Color)">💊 Capsule (Dual Color)</option>
-                        <option value="🟢 Hari (Green)">🟢 Hari Goli (Green)</option>
+                        <option value="⚪ Safed (White Round)" data-i18n="pillWhite">⚪ White Round Pill</option>
+                        <option value="🔴 Laal (Red / Pink)" data-i18n="pillRed">🔴 Red / Pink Pill</option>
+                        <option value="🟡 Peeli (Yellow)" data-i18n="pillYellow">🟡 Yellow Pill</option>
+                        <option value="🔵 Neeli (Blue)" data-i18n="pillBlue">🔵 Blue Pill</option>
+                        <option value="💊 Capsule (Dual Color)" data-i18n="pillCapsule">💊 Capsule (Dual Color)</option>
+                        <option value="🟢 Hari (Green)" data-i18n="pillGreen">🟢 Green Pill</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Din me kitni baar leni hai?:</label>
+                    <label data-i18n="frequencyLabel">How many times per day?</label>
                     <select id="addFreq" class="form-control" onchange="toggleAddTimes()">
-                        <option value="1">1 Baar (1 Time a day)</option>
-                        <option value="2">2 Baar (Subah aur Raat)</option>
-                        <option value="3">3 Baar (Subah, Dopahar, Raat)</option>
+                        <option value="1" data-i18n="freqOne">Once a day</option>
+                        <option value="2" data-i18n="freqTwo">Twice (Morning and Night)</option>
+                        <option value="3" data-i18n="freqThree">Three times (Morning, Afternoon, Night)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Waqt (Timings):</label>
+                    <label data-i18n="timingsLabel">Timings:</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="time" id="addTime1" class="form-control">
                         <input type="time" id="addTime2" class="form-control" style="display: none;">
@@ -801,20 +1044,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Kitni Goliyaan Hain? (Stock Quantity):</label>
-                    <input type="number" id="addStock" class="form-control" placeholder="Ex: 30" min="1">
+                    <label data-i18n="stockLabel">Stock Quantity:</label>
+                    <input type="number" id="addStock" class="form-control" placeholder="e.g. 30" data-i18n-placeholder="stockPlaceholder" min="1">
                 </div>
 
                 <div class="form-group">
-                    <label>Instructions:</label>
+                    <label data-i18n="instructionsLabel">Instructions:</label>
                     <select id="addInstruction" class="form-control">
-                        <option value="Khane ke baad (After Food)">Khane ke baad (After Food)</option>
-                        <option value="Khane se pehle (Before Food)">Khane se pehle (Before Food)</option>
-                        <option value="Raat ko sote samay (At Bedtime)">Raat ko sote samay (At Bedtime)</option>
+                        <option value="Khane ke baad (After Food)" data-i18n="afterFood">After food</option>
+                        <option value="Khane se pehle (Before Food)" data-i18n="beforeFood">Before food</option>
+                        <option value="Raat ko sote samay (At Bedtime)" data-i18n="bedtime">At bedtime</option>
                     </select>
                 </div>
 
-                <button class="btn btn-fk" onclick="saveNewMedicine()">Dawa Save & Sync Karein ✨</button>
+                <button class="btn btn-fk" data-i18n="saveMedicine" onclick="saveNewMedicine()">Save Medicine & Sync ✨</button>
             </div>
         </div>
 
@@ -835,15 +1078,49 @@
 
         <!-- ================= TAB 4: SETTINGS & CLOUD DATABASE ================= -->
         <div id="win-settings" class="window">
-            <h2 style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">⚙️ Cloud & Caregiver</h2>
+            <h2 id="settingsTitle" data-i18n="settingsTitle" style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">⚙️ Settings</h2>
+
+            <!-- APP LANGUAGE AND THEME -->
+            <div class="form-card" style="border-left:5px solid #7c3aed;">
+                <h3 data-i18n="appAppearanceTitle" style="font-size:16px;font-weight:800;color:#7c3aed;">🌐 App Language & Appearance</h3>
+                <div class="form-group" style="margin-top:10px;">
+                    <label for="appLanguageSelect" data-i18n="appLanguageLabel">App language:</label>
+                    <select id="appLanguageSelect" class="form-control" onchange="setAppLanguage(this.value)">
+                        <option value="en">English</option><option value="hi">हिन्दी (Hindi)</option><option value="kn">ಕನ್ನಡ (Kannada)</option><option value="ta">தமிழ் (Tamil)</option><option value="te">తెలుగు (Telugu)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="themeSelect" data-i18n="themeLabel">Theme:</label>
+                    <select id="themeSelect" class="form-control" onchange="setAppTheme(this.value)" aria-label="Theme">
+                        <option value="light" data-i18n="themeLight">Light mode</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SPOKEN ALARM LANGUAGE -->
+            <div class="form-card language-card">
+                <h3 id="alarmLanguageTitle" data-i18n="alarmLanguageTitle" style="font-size:16px; font-weight:800; color:#1d4ed8;">🗣️ Alarm Voice Language</h3>
+                <p id="alarmLanguageDesc" data-i18n="alarmLanguageDesc" style="font-size:12.5px; color:var(--text-muted); margin:6px 0 12px;">Choose the language the medicine alarm will speak.</p>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <label for="alarmLanguageSelect" id="alarmLanguageLabel" data-i18n="alarmLanguageLabel">Alarm language:</label>
+                    <select id="alarmLanguageSelect" class="form-control" onchange="setAlarmLanguage(this.value)">
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="en">English</option>
+                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                    </select>
+                </div>
+                <p id="voiceLanguageStatus" style="font-size:12px; color:#475569;">Selected language will be used for voice alarms.</p>
+            </div>
 
             <!-- SHARED FIREBASE DATABASE: PRECONFIGURED FOR ALL USERS -->
             <div class="form-card" style="border-left: 5px solid #16a34a; background: #f0fdf4;">
-                <h3 style="font-size: 16px; font-weight: 800; color:#166534;">☁️ Automatic Cloud Sync</h3>
+                <h3 id="cloudTitle" data-i18n="cloudTitle" style="font-size: 16px; font-weight: 800; color:#166534;">☁️ Automatic Cloud Sync</h3>
                 <p style="font-size: 12.5px; color: #166534; margin-top:2px;">
-                    Shared Firebase database pehle se set hai. Kisi bhi user ya device ko URL enter ya alag se connect karne ki zaroorat nahi. Login ke baad har mobile number ka data alag aur cloud mein save hota hai.
+                    <span id="cloudDesc" data-i18n="cloudDesc">Shared Firebase database is preconfigured. No user or device needs to enter a URL or connect separately. After login, each mobile number's data is saved separately in the cloud.</span>
                 </p>
-                <p style="font-size: 12px; color:#475569; margin-top:8px;">Database: dawaapp-ef866 · Changes doosre device par aam taur par 10 seconds ke andar refresh honge.</p>
+                <p id="cloudRefreshDesc" data-i18n="cloudRefreshDesc" style="font-size: 12px; color:#475569; margin-top:8px;">Changes usually refresh on another device within 10 seconds.</p>
             </div>
 
             <!-- AUTOMATIC CAREGIVER SETUP CARD -->
@@ -861,8 +1138,8 @@
                 </button>
             </div>
 
-            <!-- Real Hospital Prescription PDF -->
-            <div class="form-card" style="border-left: 5px solid #d93025;">
+            <!-- PDF download is available from the sliding menu to avoid duplicate controls -->
+            <div class="form-card" id="settingsPdfCard" style="display:none;border-left: 5px solid #d93025;">
                 <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color:#d93025;">📄 Doctor Prescription PDF</h3>
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
                     Download printable prescription report with pill photos and schedule:
@@ -880,9 +1157,15 @@
                     Active Mobile: <b id="lblAccountMobile" style="color:#2874f0;">-</b><br>
                     Caregiver: <b id="lblCaregiverDisplay" style="color:#047857;">-</b>
                 </p>
-                <button class="btn btn-delete" style="width:100%;" onclick="logoutUser()">
-                    🚪 Log Out (Switch Mobile Number / Device)
-                </button>
+                <p data-i18n="profileEditHint" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">To edit this profile, open the sliding menu and choose Edit patient profile.</p>
+                <div id="profileEditPanel" class="profile-edit-panel" style="display:none; padding:14px; border:1px solid #dbeafe; border-radius:12px; background:#f8fafc; margin-bottom:12px;">
+                    <div class="form-group"><label for="editProfileName" data-i18n="loginPatientLabel">Patient Name:</label><input id="editProfileName" class="form-control" type="text" placeholder="Patient name" data-i18n-placeholder="loginPatientPlaceholder"></div>
+                    <div class="form-group"><label for="editProfileMobile" data-i18n="loginMobileLabel">Mobile Number (10 Digits):</label><input id="editProfileMobile" class="form-control" type="tel" maxlength="10" inputmode="numeric" disabled></div>
+                    <div class="form-group"><label for="editProfileCaregiver" data-i18n="loginCaregiverLabel">Family Member / Caregiver WhatsApp Number:</label><input id="editProfileCaregiver" class="form-control" type="tel" maxlength="10" inputmode="numeric"></div>
+                    <button class="btn" style="width:100%;" onclick="savePatientProfile()"><span data-i18n="saveProfileButton">💾 Save changes</span></button>
+                    <button class="btn btn-delete" style="width:100%; margin-top:8px;" onclick="toggleProfileEdit(false)"><span data-i18n="cancelButton">Cancel</span></button>
+                </div>
+                <!-- Logout / switch number is available only in the sliding menu. -->
             </div>
         </div>
 
@@ -892,19 +1175,19 @@
     <div class="bottom-nav">
         <button class="nav-btn active" id="btnNavSchedule" onclick="switchWindow('win-schedule', this)">
             <span class="icon">🕒</span>
-            <span>Schedule</span>
+            <span id="navSchedule" data-i18n="navSchedule">Schedule</span>
         </button>
         <button class="nav-btn" id="btnNavAdd" onclick="switchWindow('win-add', this)">
             <span class="icon">➕</span>
-            <span>Add Dawa</span>
+            <span id="navAdd" data-i18n="navAdd">Add Medicine</span>
         </button>
         <button class="nav-btn" id="btnNavStores" onclick="switchWindow('win-pharmacy', this)">
             <span class="icon">🛒</span>
-            <span>Stores</span>
+            <span id="navStores" data-i18n="navStores">Stores</span>
         </button>
-        <button class="nav-btn" id="btnNavSettings" onclick="switchWindow('win-settings', this)">
+        <button class="nav-btn" id="btnNavSettings" style="display:none" onclick="switchWindow('win-settings', this)">
             <span class="icon">⚙️</span>
-            <span>Settings</span>
+            <span id="navSettings" data-i18n="navSettings">Settings</span>
         </button>
     </div>
 
@@ -924,26 +1207,26 @@
         <div class="form-group" style="background:#fff1f2; border:1px solid #fecdd3; padding:10px; border-radius:8px;">
             <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
                 <input type="checkbox" id="editIsCritical" style="width:18px; height:18px;">
-                <b style="color:#be123c;">⚡ Critical Medicine? (Zaroori Dawa)</b>
+                <b data-i18n="criticalLabel" style="color:#be123c;">⚡ Critical Medicine?</b>
             </label>
         </div>
 
         <div class="form-group">
-            <label>🔔 Custom Loud Ringtone:</label>
+            <label data-i18n="ringtoneLabel">🔔 Custom Loud Ringtone:</label>
             <div style="display: flex; gap: 8px;">
                 <select id="editRingtone" class="form-control" style="flex: 1;">
-                    <option value="siren">🚨 Loud Emergency Siren</option>
-                    <option value="fastbeep">⚡ Digital Radar Pulse</option>
-                    <option value="chime">🎵 Hospital Acoustic Chime</option>
+                    <option value="siren" data-i18n="ringtoneSiren">🚨 Loud Emergency Siren</option>
+                    <option value="fastbeep" data-i18n="ringtoneRadar">⚡ Digital Radar Pulse</option>
+                    <option value="chime" data-i18n="ringtoneChime">🎵 Hospital Acoustic Chime</option>
                 </select>
                 <button type="button" class="btn btn-preview-tone" onclick="previewRingtone('edit')">
-                    ▶️ Sun Kar Dekhein
+                    <span data-i18n="previewSound">▶️ Preview Sound</span>
                 </button>
             </div>
         </div>
 
         <div class="form-group" style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px;">
-            <label>📸 Goli Ki Photo (Pill Identifier):</label>
+            <label data-i18n="pillPhotoLabel">📸 Pill Photo (Pill Identifier):</label>
             <input type="file" id="editPillFile" accept="image/*" class="form-control" onchange="handlePillPhotoSelected('edit', event)">
             <div id="editPillPreviewWrap" style="margin-top:8px;">
                 <img id="editPillPreviewImg" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:2px solid var(--primary); display:none;">
@@ -951,26 +1234,26 @@
 
             <label style="margin-top:10px;">🎨 Goli Ka Rang / Type:</label>
             <select id="editPillColor" class="form-control">
-                <option value="⚪ Safed (White Round)">⚪ Safed Goli (White Round)</option>
-                <option value="🔴 Laal (Red / Pink)">🔴 Laal / Pink Goli</option>
-                <option value="🟡 Peeli (Yellow)">🟡 Peeli Goli (Yellow)</option>
-                <option value="🔵 Neeli (Blue)">🔵 Neeli Goli (Blue)</option>
-                <option value="💊 Capsule (Dual Color)">💊 Capsule (Dual Color)</option>
-                <option value="🟢 Hari (Green)">🟢 Hari Goli (Green)</option>
+                <option value="⚪ Safed (White Round)" data-i18n="pillWhite">⚪ White Round Pill</option>
+                <option value="🔴 Laal (Red / Pink)" data-i18n="pillRed">🔴 Red / Pink Pill</option>
+                <option value="🟡 Peeli (Yellow)" data-i18n="pillYellow">🟡 Yellow Pill</option>
+                <option value="🔵 Neeli (Blue)" data-i18n="pillBlue">🔵 Blue Pill</option>
+                <option value="💊 Capsule (Dual Color)" data-i18n="pillCapsule">💊 Capsule (Dual Color)</option>
+                <option value="🟢 Hari (Green)" data-i18n="pillGreen">🟢 Green Pill</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>How many times a day?:</label>
+            <label data-i18n="frequencyLabel">How many times per day?</label>
             <select id="editFreq" class="form-control" onchange="toggleEditTimes()">
-                <option value="1">1 Time a day</option>
-                <option value="2">2 Times (Morning & Night)</option>
-                <option value="3">3 Times (Morning, Afternoon, Night)</option>
+                <option value="1" data-i18n="freqOne">Once a day</option>
+                <option value="2" data-i18n="freqTwo">Twice (Morning and Night)</option>
+                <option value="3" data-i18n="freqThree">Three times (Morning, Afternoon, Night)</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Timings:</label>
+            <label data-i18n="timingsLabel">Timings:</label>
             <div style="display: flex; gap: 8px;">
                 <input type="time" id="editTime1" class="form-control">
                 <input type="time" id="editTime2" class="form-control" style="display: none;">
@@ -979,24 +1262,24 @@
         </div>
 
         <div class="form-group">
-            <label>Stock Quantity:</label>
+            <label data-i18n="stockLabel">Stock Quantity:</label>
             <input type="number" id="editStock" class="form-control" min="0">
         </div>
 
         <div class="form-group">
-            <label>Instructions:</label>
+            <label data-i18n="instructionsLabel">Instructions:</label>
             <select id="editInstruction" class="form-control">
-                <option value="Khane ke baad (After Food)">Khane ke baad (After Food)</option>
-                <option value="Khane se pehle (Before Food)">Khane se pehle (Before Food)</option>
-                <option value="Raat ko sote samay (At Bedtime)">Raat ko sote samay (At Bedtime)</option>
+                <option value="Khane ke baad (After Food)" data-i18n="afterFood">After food</option>
+                <option value="Khane se pehle (Before Food)" data-i18n="beforeFood">Before food</option>
+                <option value="Raat ko sote samay (At Bedtime)" data-i18n="bedtime">At bedtime</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 10px; margin-top: 18px;">
-            <button class="btn btn-fk" style="flex: 2; margin-top:0;" onclick="saveEditedMedicine()">
+            <button class="btn btn-fk" data-i18n="saveChanges" style="flex: 2; margin-top:0;" onclick="saveEditedMedicine()">
                 💾 Save Changes
             </button>
-            <button class="btn btn-delete" style="flex: 1;" onclick="closeEditModal()">
+            <button class="btn btn-delete" data-i18n="cancelButton" style="flex: 1;" onclick="closeEditModal()">
                 Cancel
             </button>
         </div>
@@ -1093,6 +1376,8 @@
         }
     }
     loadCurrentSessionData();
+    // Apply the previously selected app language before the user signs in.
+    // The language selector is available on the login screen itself.
 
     // 1. PUSH TO GOOGLE FIREBASE CLOUD (AUTOMATIC)
     async function pushToFirebaseCloud() {
@@ -1139,6 +1424,14 @@
                     if (data.profile) {
                         userAccount.name = data.profile.name || userAccount.name;
                         userAccount.caregiverPhone = data.profile.caregiverPhone || userAccount.caregiverPhone;
+                        if (data.profile.appLanguage && ['hi','en','kn','ta','te'].includes(data.profile.appLanguage)) { userAccount.appLanguage = data.profile.appLanguage; localStorage.setItem('dawa_app_language_' + phone, data.profile.appLanguage); localStorage.setItem('dawa_app_language', data.profile.appLanguage); }
+                        if (data.profile.language && ['hi','en','kn','ta','te'].includes(data.profile.language)) {
+                            userAccount.language = data.profile.language;
+                            localStorage.setItem('alarm_language_' + phone, data.profile.language);
+                            localStorage.setItem('alarm_language', data.profile.language);
+                            const languageSelect = document.getElementById('alarmLanguageSelect');
+                            if (languageSelect) languageSelect.value = data.profile.language;
+                        }
                     }
                     if (Array.isArray(data.medicines)) {
                         medicines = data.medicines;
@@ -1208,10 +1501,31 @@
     }
     preloadVoices();
 
+    function chooseLoginLanguage(language, button) {
+        setAppLanguage(language);
+        document.querySelectorAll('.login-language-option').forEach(el => el.classList.toggle('active', el.dataset.lang === language));
+    }
+    function continueToLogin() {
+        const gate = document.getElementById('loginLanguageGate');
+        const card = document.getElementById('loginFormCard');
+        if (gate) gate.style.display = 'none';
+        if (card) card.style.display = 'block';
+        applyAppLanguage();
+    }
+    function showLanguageGate() {
+        const gate = document.getElementById('loginLanguageGate');
+        const card = document.getElementById('loginFormCard');
+        if (gate) gate.style.display = 'block';
+        if (card) card.style.display = 'none';
+        const lang = getAppLanguage();
+        document.querySelectorAll('.login-language-option').forEach(el => el.classList.toggle('active', el.dataset.lang === lang));
+    }
+
     function checkLoginGate() {
         const wall = document.getElementById('mandatoryLoginWall');
         if (!userAccount.isLoggedIn) {
             wall.style.display = 'flex';
+            showLanguageGate();
         } else {
             wall.style.display = 'none';
         }
@@ -1220,6 +1534,75 @@
     if ("Notification" in window && Notification.permission !== "granted") {
         Notification.requestPermission();
     }
+
+    function ensureProfileEditorModal() {
+        const panel = document.getElementById('profileEditPanel');
+        if (!panel || document.getElementById('profileEditorOverlay')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'profileEditorOverlay';
+        overlay.className = 'profile-editor-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Edit patient profile');
+        overlay.innerHTML = '<div class="profile-editor-dialog"><div class="profile-editor-heading"><strong>Edit patient profile</strong><button type="button" class="profile-editor-x" aria-label="Close" onclick="toggleProfileEdit(false)">×</button></div><p class="profile-editor-note">Update patient name and caregiver contact details.</p></div>';
+        const dialog = overlay.querySelector('.profile-editor-dialog');
+        dialog.appendChild(panel);
+        panel.style.display = 'block';
+        panel.style.marginBottom = '0';
+        panel.classList.add('profile-editor-panel-modal');
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) toggleProfileEdit(false); });
+    }
+
+    function toggleProfileEdit(forceOpen) {
+        ensureProfileEditorModal();
+        const panel = document.getElementById('profileEditPanel');
+        const overlay = document.getElementById('profileEditorOverlay');
+        if (!panel || !overlay) return;
+        const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !overlay.classList.contains('active');
+        if (shouldOpen) {
+            document.getElementById('editProfileName').value = userAccount.name || '';
+            document.getElementById('editProfileMobile').value = userAccount.mobile || '';
+            document.getElementById('editProfileCaregiver').value = userAccount.caregiverPhone || '';
+            overlay.classList.add('active');
+            panel.style.display = 'block';
+            document.body.classList.add('profile-editor-open');
+        } else {
+            overlay.classList.remove('active');
+            document.body.classList.remove('profile-editor-open');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', ensureProfileEditorModal, { once: true });
+    setTimeout(ensureProfileEditorModal, 0);
+
+    async function savePatientProfile() {
+        const name = document.getElementById('editProfileName').value.trim();
+        const caregiver = document.getElementById('editProfileCaregiver').value.replace(/\D/g, '').slice(0, 10);
+        if (!name) { alert(tr('profileNameRequired') || 'Please enter the patient name.'); return; }
+        if (caregiver && caregiver.length !== 10) { alert(tr('profileCaregiverInvalid') || 'Caregiver mobile number must contain 10 digits.'); return; }
+        userAccount.name = name;
+        userAccount.caregiverPhone = caregiver;
+        localStorage.setItem('user_profile_' + userAccount.mobile, JSON.stringify(userAccount));
+        document.getElementById('lblAccountName').textContent = name;
+        document.getElementById('lblCaregiverDisplay').textContent = caregiver || (getAppLanguage()==='hi'?'सेट नहीं है':'Not Set');
+        document.getElementById('lblDeliverAddress').textContent = name;
+        document.getElementById('btnUserStatus').textContent = name.split(' ')[0] + ' ▾';
+        toggleProfileEdit(false);
+        if (typeof pushToFirebaseCloud === 'function') await pushToFirebaseCloud();
+        alert(tr('profileSaved') || 'Patient profile updated.');
+    }
+
+    let loginSlideIndex = 0;
+    function moveLoginSlide() {
+        const track = document.getElementById('loginSliderTrack');
+        const dots = document.querySelectorAll('.login-slider-dots span');
+        if (!track || !dots.length) return;
+        loginSlideIndex = (loginSlideIndex + 1) % dots.length;
+        track.style.transform = `translateX(-${loginSlideIndex * 33.3333}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === loginSlideIndex));
+    }
+    setInterval(moveLoginSlide, 3800);
 
     function checkExistingUserAutoFill() {
         const phone = document.getElementById('wallMobile').value.trim();
@@ -1386,32 +1769,98 @@
         playCustomTone(tone);
     }
 
+    const APP_TRANSLATIONS = {
+      en: {loginGateTitle:'Choose your language',loginGateDesc:'Select your preferred language to continue to login.',loginContinue:'Continue →',criticalBadge:'⚡ CRITICAL MEDICINE',stockRemaining:'left',takeMedicine:'✅ Taken (-1)',editMedicine:'✏️ Edit',stockPills:'tablets',refillPills:'➕ Add 10 tablets',removeMedicine:'🗑️ Remove',alarmStop:'✅ I have taken my medicine (Stop Alarm)',drawerNavigate:'Navigate',drawerQuickSettings:'Quick settings',drawerProfile:'Patient profile & account',drawerCareTitle:'Care made easier',drawerCareDesc:'Manage medicine schedules, caregiver details, voice alarms and cloud sync from one place.',navStores:'Pharmacy',voiceBannerTitle:'🗣️ Voice Alarm Active',voiceBannerDesc:'The alarm will speak the medicine name in your selected language.',testVoiceLabel:'▶️ Test Voice',scheduleTitle:'📋 Today’s Schedule',addTitle:'➕ Add Medicine',settingsTitle:'⚙️ Settings',appAppearanceTitle:'🌐 App Language & Appearance',appLanguageLabel:'App language:',themeLabel:'Theme:',themeSystem:'System default',themeLight:'Light mode',themeDark:'Dark mode',alarmLanguageTitle:'🗣️ Alarm Voice Language',alarmLanguageDesc:'Choose the language the medicine alarm will speak.',alarmLanguageLabel:'Alarm language:',cloudTitle:'☁️ Automatic Cloud Sync',cloudDesc:'Shared Firebase database is preconfigured. No user or device needs to enter a URL or connect separately. After login, each mobile number’s data is saved separately in the cloud.',cloudRefreshDesc:'Changes usually refresh on another device within 10 seconds.',navSchedule:'Schedule',navAdd:'Add Medicine',navStores:'Stores',navSettings:'Settings',emptyScheduleTitle:'No medicines have been added for this mobile number.',emptyScheduleDesc:'Use the “Add Medicine” tab below to add your medicines.',voiceStatus:'Alarm voice language selected.',loginSubtitle:'Your family’s medicine care, in one place',loginMobileLabel:'Mobile Number (10 Digits):',loginMobilePlaceholder:'Enter 10-digit mobile number',loginMobileHelp:'* A separate medicine record is saved for each mobile number.',loginPatientLabel:'Patient Name:',loginPatientPlaceholder:'e.g. Abdullah',loginCaregiverLabel:'Family Member / Caregiver WhatsApp Number:',loginCaregiverPlaceholder:'Caregiver’s 10-digit WhatsApp number',loginSendOtp:'Send OTP',loginEnterOtp:'Enter OTP Code',loginCodeSent:'Code sent to',loginVerify:'Verify OTP & Enter App',loginResend:'🔄 Resend OTP',sliderOneTitle:'Medicine schedule made simple',sliderOneDesc:'Keep doses and reminders together in one place.',sliderTwoTitle:'Care for the whole family',sliderTwoDesc:'Patient and caregiver details stay easy to find.',sliderThreeTitle:'Your record, synced',sliderThreeDesc:'Sign in with your mobile number to load your record.',editProfileButton:'Edit patient profile',saveProfileButton:'💾 Save changes',cancelButton:'Cancel',profileNameRequired:'Please enter the patient name.',profileCaregiverInvalid:'Caregiver mobile number must contain 10 digits.',profileSaved:'Patient profile updated.',drawerManageTitle:'Manage & tools',drawerDownloadPdf:'Download medical PDF',drawerLogout:'Log out / switch number',profileEditHint:'To edit this profile, open the sliding menu and choose Edit patient profile.'},
+      hi: {loginGateTitle:'अपनी भाषा चुनें',loginGateDesc:'लॉगिन करने के लिए अपनी पसंदीदा भाषा चुनें।',loginContinue:'आगे बढ़ें →',criticalBadge:'⚡ ज़रूरी दवा',stockRemaining:'बाकी',takeMedicine:'✅ दवा ले ली (-1)',editMedicine:'✏️ संपादित करें',stockPills:'गोलियाँ',refillPills:'➕ 10 गोलियाँ जोड़ें',removeMedicine:'🗑️ हटाएँ',alarmStop:'✅ मैंने दवा ले ली (अलार्म बंद करें)',drawerNavigate:'मुख्य मेनू',drawerQuickSettings:'त्वरित सेटिंग्स',drawerProfile:'मरीज प्रोफ़ाइल और खाता',drawerCareTitle:'देखभाल अब आसान',drawerCareDesc:'दवा का समय, केयरगिवर, वॉइस अलार्म और क्लाउड सिंक एक ही जगह संभालें।',navStores:'मेडिकल स्टोर',voiceBannerTitle:'🗣️ बोलने वाला अलार्म चालू है',voiceBannerDesc:'अलार्म चुनी हुई भाषा में दवा का नाम लेकर बोलेगा।',testVoiceLabel:'▶️ आवाज़ सुनें',scheduleTitle:'📋 आज का शेड्यूल',addTitle:'➕ नई दवा जोड़ें',settingsTitle:'⚙️ सेटिंग्स',appAppearanceTitle:'🌐 ऐप की भाषा और रूप',appLanguageLabel:'ऐप की भाषा:',themeLabel:'थीम:',themeSystem:'सिस्टम डिफ़ॉल्ट',themeLight:'लाइट मोड',themeDark:'डार्क मोड',alarmLanguageTitle:'🗣️ अलार्म की आवाज़ की भाषा',alarmLanguageDesc:'वह भाषा चुनें जिसमें दवा का अलार्म बोलेगा।',alarmLanguageLabel:'अलार्म की भाषा:',cloudTitle:'☁️ ऑटोमैटिक क्लाउड सिंक',cloudDesc:'साझा Firebase डेटाबेस पहले से सेट है। किसी यूज़र या डिवाइस को URL डालने या अलग से कनेक्ट करने की ज़रूरत नहीं है। लॉगिन के बाद हर मोबाइल नंबर का डेटा अलग-अलग क्लाउड में सेव होता है।',cloudRefreshDesc:'दूसरे डिवाइस पर बदलाव आमतौर पर 10 सेकंड के अंदर दिखेंगे।',navSchedule:'शेड्यूल',navAdd:'दवा जोड़ें',navStores:'स्टोर',navSettings:'सेटिंग्स',emptyScheduleTitle:'इस मोबाइल नंबर पर अभी कोई दवा नहीं जोड़ी गई है।',emptyScheduleDesc:'अपनी दवाएँ जोड़ने के लिए नीचे “दवा जोड़ें” टैब चुनें।',voiceStatus:'अलार्म की चुनी हुई भाषा सेव हो गई है।',loginSubtitle:'परिवार की दवाओं की देखभाल, एक ही जगह',loginMobileLabel:'मोबाइल नंबर (10 अंक):',loginMobilePlaceholder:'10 अंकों का मोबाइल नंबर डालें',loginMobileHelp:'* हर मोबाइल नंबर का दवा रिकॉर्ड अलग सेव होता है।',loginPatientLabel:'मरीज का नाम:',loginPatientPlaceholder:'जैसे: अब्दुल्लाह',loginCaregiverLabel:'परिवार के सदस्य / केयरगिवर का WhatsApp नंबर:',loginCaregiverPlaceholder:'केयरगिवर का 10 अंकों का नंबर',loginSendOtp:'OTP भेजें',loginEnterOtp:'OTP कोड दर्ज करें',loginCodeSent:'कोड इस नंबर पर भेजा गया:',loginVerify:'OTP सत्यापित करें और ऐप खोलें',loginResend:'🔄 OTP दोबारा भेजें',sliderOneTitle:'दवा का शेड्यूल आसान बनाएं',sliderOneDesc:'दवा की खुराक और रिमाइंडर एक जगह रखें।',sliderTwoTitle:'पूरे परिवार की देखभाल',sliderTwoDesc:'मरीज और केयरगिवर की जानकारी आसानी से पाएं।',sliderThreeTitle:'आपका रिकॉर्ड, सिंक के साथ',sliderThreeDesc:'अपना रिकॉर्ड खोलने के लिए मोबाइल नंबर से लॉग इन करें।',editProfileButton:'मरीज की प्रोफाइल बदलें',saveProfileButton:'💾 बदलाव सेव करें',cancelButton:'रद्द करें',profileNameRequired:'कृपया मरीज का नाम लिखें।',profileCaregiverInvalid:'केयरगिवर का मोबाइल नंबर 10 अंकों का होना चाहिए।',profileSaved:'मरीज की प्रोफाइल अपडेट हो गई।',drawerManageTitle:'प्रबंधन और सुविधाएँ',drawerDownloadPdf:'दवा की PDF डाउनलोड करें',drawerLogout:'लॉग आउट / नंबर बदलें',profileEditHint:'प्रोफ़ाइल बदलने के लिए स्लाइडिंग मेनू खोलें और मरीज की प्रोफ़ाइल संपादित करें चुनें।'},
+      kn: {loginGateTitle:'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',loginGateDesc:'ಲಾಗಿನ್ ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.',loginContinue:'ಮುಂದುವರಿಸಿ →',criticalBadge:'⚡ ಮುಖ್ಯ ಔಷಧಿ',stockRemaining:'ಉಳಿದಿವೆ',takeMedicine:'✅ ಔಷಧಿ ತೆಗೆದುಕೊಂಡೆ (-1)',editMedicine:'✏️ ತಿದ್ದುಪಡಿ',stockPills:'ಮಾತ್ರೆಗಳು',refillPills:'➕ 10 ಮಾತ್ರೆ ಸೇರಿಸಿ',removeMedicine:'🗑️ ತೆಗೆದುಹಾಕಿ',alarmStop:'✅ ಔಷಧಿ ತೆಗೆದುಕೊಂಡಿದ್ದೇನೆ (ಅಲಾರಂ ನಿಲ್ಲಿಸಿ)',drawerNavigate:'ಮುಖ್ಯ ಮೆನು',drawerQuickSettings:'ತ್ವರಿತ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',drawerProfile:'ರೋಗಿಯ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಖಾತೆ',drawerCareTitle:'ಆರೈಕೆ ಇನ್ನಷ್ಟು ಸುಲಭ',drawerCareDesc:'ಔಷಧಿ ವೇಳಾಪಟ್ಟಿ, ಆರೈಕೆದಾರರ ವಿವರಗಳು, ಧ್ವನಿ ಅಲಾರಂ ಮತ್ತು ಕ್ಲೌಡ್ ಸಿಂಕ್ ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ.',navStores:'ಔಷಧಿ ಅಂಗಡಿಗಳು',voiceBannerTitle:'🗣️ ಧ್ವನಿ ಅಲಾರಂ ಸಕ್ರಿಯವಾಗಿದೆ',voiceBannerDesc:'ಅಲಾರಂ ಆಯ್ಕೆ ಮಾಡಿದ ಭಾಷೆಯಲ್ಲಿ ಔಷಧಿಯ ಹೆಸರನ್ನು ಹೇಳುತ್ತದೆ.',testVoiceLabel:'▶️ ಧ್ವನಿ ಪರೀಕ್ಷಿಸಿ',scheduleTitle:'📋 ಇಂದಿನ ವೇಳಾಪಟ್ಟಿ',addTitle:'➕ ಔಷಧಿ ಸೇರಿಸಿ',settingsTitle:'⚙️ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',appAppearanceTitle:'🌐 ಆ್ಯಪ್ ಭಾಷೆ ಮತ್ತು ವಿನ್ಯಾಸ',appLanguageLabel:'ಆ್ಯಪ್ ಭಾಷೆ:',themeLabel:'ಥೀಮ್:',themeSystem:'ಸಿಸ್ಟಮ್ ಡೀಫಾಲ್ಟ್',themeLight:'ಲೈಟ್ ಮೋಡ್',themeDark:'ಡಾರ್ಕ್ ಮೋಡ್',alarmLanguageTitle:'🗣️ ಅಲಾರಂ ಧ್ವನಿ ಭಾಷೆ',alarmLanguageDesc:'ಔಷಧಿ ಅಲಾರಂ ಮಾತನಾಡುವ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.',alarmLanguageLabel:'ಅಲಾರಂ ಭಾಷೆ:',cloudTitle:'☁️ ಸ್ವಯಂಚಾಲಿತ ಕ್ಲೌಡ್ ಸಿಂಕ್',cloudDesc:'ಹಂಚಿದ Firebase ಡೇಟಾಬೇಸ್ ಈಗಾಗಲೇ ಹೊಂದಿಸಲಾಗಿದೆ. URL ನಮೂದಿಸುವ ಅಥವಾ ಪ್ರತ್ಯೇಕವಾಗಿ ಸಂಪರ್ಕಿಸುವ ಅಗತ್ಯವಿಲ್ಲ. ಲಾಗಿನ್ ನಂತರ ಪ್ರತಿ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯ ಡೇಟಾ ಪ್ರತ್ಯೇಕವಾಗಿ ಕ್ಲೌಡ್‌ನಲ್ಲಿ ಉಳಿಯುತ್ತದೆ.',cloudRefreshDesc:'ಬದಲಾವಣೆಗಳು ಸಾಮಾನ್ಯವಾಗಿ 10 ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಮತ್ತೊಂದು ಸಾಧನದಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',navSchedule:'ವೇಳಾಪಟ್ಟಿ',navAdd:'ಔಷಧಿ ಸೇರಿಸಿ',navStores:'ಅಂಗಡಿಗಳು',navSettings:'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',emptyScheduleTitle:'ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಇನ್ನೂ ಔಷಧಿ ಸೇರಿಸಿಲ್ಲ.',emptyScheduleDesc:'ಔಷಧಿಗಳನ್ನು ಸೇರಿಸಲು ಕೆಳಗಿನ “ಔಷಧಿ ಸೇರಿಸಿ” ಟ್ಯಾಬ್ ಆಯ್ಕೆಮಾಡಿ.',voiceStatus:'ಅಲಾರಂ ಧ್ವನಿ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ.',loginSubtitle:'ಕುಟುಂಬದ ಔಷಧಿ ಆರೈಕೆ ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ',loginMobileLabel:'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (10 ಅಂಕಿಗಳು):',loginMobilePlaceholder:'10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ',loginMobileHelp:'* ಪ್ರತಿ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಪ್ರತ್ಯೇಕ ಔಷಧಿ ದಾಖಲೆ ಉಳಿಸಲಾಗುತ್ತದೆ.',loginPatientLabel:'ರೋಗಿಯ ಹೆಸರು:',loginPatientPlaceholder:'ಉದಾ: ಅಬ್ದುಲ್ಲಾ',loginCaregiverLabel:'ಕುಟುಂಬದ ಸದಸ್ಯ / ಆರೈಕೆದಾರರ WhatsApp ಸಂಖ್ಯೆ:',loginCaregiverPlaceholder:'ಆರೈಕೆದಾರರ 10 ಅಂಕಿಯ ಸಂಖ್ಯೆ',loginSendOtp:'OTP ಕಳುಹಿಸಿ',loginEnterOtp:'OTP ಕೋಡ್ ನಮೂದಿಸಿ',loginCodeSent:'ಈ ಸಂಖ್ಯೆಗೆ ಕೋಡ್ ಕಳುಹಿಸಲಾಗಿದೆ:',loginVerify:'OTP ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಆ್ಯಪ್ ತೆರೆಯಿರಿ',loginResend:'🔄 OTP ಮತ್ತೆ ಕಳುಹಿಸಿ',sliderOneTitle:'ಔಷಧಿ ವೇಳಾಪಟ್ಟಿ ಸುಲಭವಾಗಿ',sliderOneDesc:'ಔಷಧಿ ಸಮಯ ಮತ್ತು ಜ್ಞಾಪನೆಗಳನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ಇರಿಸಿ.',sliderTwoTitle:'ಕುಟುಂಬದ ಎಲ್ಲರ ಆರೈಕೆ',sliderTwoDesc:'ರೋಗಿ ಮತ್ತು ಆರೈಕೆದಾರರ ವಿವರಗಳನ್ನು ಸುಲಭವಾಗಿ ನೋಡಿ.',sliderThreeTitle:'ನಿಮ್ಮ ದಾಖಲೆ ಸಿಂಕ್ ಆಗುತ್ತದೆ',sliderThreeDesc:'ನಿಮ್ಮ ದಾಖಲೆಯನ್ನು ತೆರೆಯಲು ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯಿಂದ ಲಾಗಿನ್ ಮಾಡಿ.',editProfileButton:'ರೋಗಿಯ ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',saveProfileButton:'💾 ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ',cancelButton:'ರದ್ದುಮಾಡಿ',profileNameRequired:'ದಯವಿಟ್ಟು ರೋಗಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.',profileCaregiverInvalid:'ಆರೈಕೆದಾರರ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ 10 ಅಂಕಿಗಳಿರಬೇಕು.',profileSaved:'ರೋಗಿಯ ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಲಾಗಿದೆ.',drawerManageTitle:'ನಿರ್ವಹಣೆ ಮತ್ತು ಸಾಧನಗಳು',drawerDownloadPdf:'ಔಷಧಿ PDF ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ',drawerLogout:'ಲಾಗ್ ಔಟ್ / ಸಂಖ್ಯೆ ಬದಲಿಸಿ',profileEditHint:'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಲು ಸ್ಲೈಡಿಂಗ್ ಮೆನು ತೆರೆಯಿರಿ ಮತ್ತು ರೋಗಿಯ ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ ಆಯ್ಕೆಮಾಡಿ.'},
+      ta: {loginGateTitle:'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',loginGateDesc:'உள்நுழைய உங்கள் விருப்ப மொழியைத் தேர்ந்தெடுக்கவும்.',loginContinue:'தொடரவும் →',criticalBadge:'⚡ முக்கியமான மருந்து',stockRemaining:'மீதம்',takeMedicine:'✅ மருந்து எடுத்தேன் (-1)',editMedicine:'✏️ திருத்து',stockPills:'மாத்திரைகள்',refillPills:'➕ 10 மாத்திரைகள் சேர்க்கவும்',removeMedicine:'🗑️ அகற்று',alarmStop:'✅ மருந்தை எடுத்துவிட்டேன் (அலாரத்தை நிறுத்து)',drawerNavigate:'முக்கிய மெனு',drawerQuickSettings:'விரைவு அமைப்புகள்',drawerProfile:'நோயாளர் சுயவிவரம் மற்றும் கணக்கு',drawerCareTitle:'பராமரிப்பு எளிதாக',drawerCareDesc:'மருந்து அட்டவணை, பராமரிப்பாளர் விவரங்கள், குரல் அலாரம், கிளவுட் ஒத்திசைவு அனைத்தையும் ஒரே இடத்தில் நிர்வகிக்கவும்.',navStores:'மருந்தகங்கள்',voiceBannerTitle:'🗣️ குரல் அலாரம் செயல்பாட்டில் உள்ளது',voiceBannerDesc:'அலாரம் நீங்கள் தேர்ந்தெடுத்த மொழியில் மருந்தின் பெயரைச் சொல்லும்.',testVoiceLabel:'▶️ குரலைச் சோதிக்கவும்',scheduleTitle:'📋 இன்றைய அட்டவணை',addTitle:'➕ மருந்தைச் சேர்க்கவும்',settingsTitle:'⚙️ அமைப்புகள்',appAppearanceTitle:'🌐 செயலி மொழி மற்றும் தோற்றம்',appLanguageLabel:'செயலி மொழி:',themeLabel:'தீம்:',themeSystem:'கணினி இயல்புநிலை',themeLight:'ஒளி முறை',themeDark:'இருள் முறை',alarmLanguageTitle:'🗣️ அலாரம் குரல் மொழி',alarmLanguageDesc:'மருந்து அலாரம் பேச வேண்டிய மொழியைத் தேர்ந்தெடுக்கவும்.',alarmLanguageLabel:'அலாரம் மொழி:',cloudTitle:'☁️ தானியங்கி கிளவுட் ஒத்திசைவு',cloudDesc:'பகிரப்பட்ட Firebase தரவுத்தளம் முன்பே அமைக்கப்பட்டுள்ளது. URL உள்ளிடவோ தனியாக இணைக்கவோ தேவையில்லை. உள்நுழைந்த பிறகு ஒவ்வொரு மொபைல் எண்ணின் தரவும் தனித்தனியாக கிளவுட்டில் சேமிக்கப்படும்.',cloudRefreshDesc:'மாற்றங்கள் பொதுவாக 10 வினாடிகளுக்குள் மற்றொரு சாதனத்தில் தோன்றும்.',navSchedule:'அட்டவணை',navAdd:'மருந்து சேர்க்க',navStores:'கடைகள்',navSettings:'அமைப்புகள்',emptyScheduleTitle:'இந்த மொபைல் எண்ணுக்கு மருந்துகள் சேர்க்கப்படவில்லை.',emptyScheduleDesc:'மருந்துகளைச் சேர்க்க கீழே உள்ள “மருந்து சேர்க்க” தாவலைத் தேர்ந்தெடுக்கவும்.',voiceStatus:'அலாரம் குரல் மொழி தேர்ந்தெடுக்கப்பட்டது.',loginSubtitle:'குடும்ப மருந்துப் பராமரிப்பு ஒரே இடத்தில்',loginMobileLabel:'மொபைல் எண் (10 இலக்கங்கள்):',loginMobilePlaceholder:'10 இலக்க மொபைல் எண்ணை உள்ளிடவும்',loginMobileHelp:'* ஒவ்வொரு மொபைல் எண்ணுக்கும் தனி மருந்துப் பதிவு சேமிக்கப்படும்.',loginPatientLabel:'நோயாளியின் பெயர்:',loginPatientPlaceholder:'எ.கா.: அப்துல்லா',loginCaregiverLabel:'குடும்ப உறுப்பினர் / பராமரிப்பாளர் WhatsApp எண்:',loginCaregiverPlaceholder:'பராமரிப்பாளரின் 10 இலக்க எண்',loginSendOtp:'OTP அனுப்பு',loginEnterOtp:'OTP குறியீட்டை உள்ளிடவும்',loginCodeSent:'இந்த எண்ணுக்கு குறியீடு அனுப்பப்பட்டது:',loginVerify:'OTP சரிபார்த்து செயலியைத் திறக்கவும்',loginResend:'🔄 OTP மீண்டும் அனுப்பு',sliderOneTitle:'மருந்து அட்டவணை எளிதாக',sliderOneDesc:'மருந்து நேரங்களையும் நினைவூட்டல்களையும் ஒரே இடத்தில் வைக்கவும்.',sliderTwoTitle:'முழுக் குடும்பத்திற்கான பராமரிப்பு',sliderTwoDesc:'நோயாளி மற்றும் பராமரிப்பாளர் விவரங்களை எளிதாகப் பார்க்கவும்.',sliderThreeTitle:'உங்கள் பதிவு ஒத்திசைக்கப்படும்',sliderThreeDesc:'உங்கள் பதிவைப் பெற மொபைல் எண்ணில் உள்நுழையவும்.',editProfileButton:'நோயாளி சுயவிவரத்தைத் திருத்து',saveProfileButton:'💾 மாற்றங்களைச் சேமி',cancelButton:'ரத்து செய்',profileNameRequired:'நோயாளியின் பெயரை உள்ளிடவும்.',profileCaregiverInvalid:'பராமரிப்பாளர் மொபைல் எண் 10 இலக்கங்களாக இருக்க வேண்டும்.',profileSaved:'நோயாளி சுயவிவரம் புதுப்பிக்கப்பட்டது.',drawerManageTitle:'நிர்வாகம் மற்றும் கருவிகள்',drawerDownloadPdf:'மருந்து PDF பதிவிறக்கவும்',drawerLogout:'வெளியேறு / எண்ணை மாற்று',profileEditHint:'சுயவிவரத்தைத் திருத்த, ஸ்லைடிங் மெனுவைத் திறந்து நோயாளர் சுயவிவரத்தைத் திருத்து என்பதைத் தேர்ந்தெடுக்கவும்.'},
+      te: {loginGateTitle:'మీ భాషను ఎంచుకోండి',loginGateDesc:'లాగిన్ కొనసాగించడానికి మీకు నచ్చిన భాషను ఎంచుకోండి.',loginContinue:'కొనసాగించండి →',criticalBadge:'⚡ ముఖ్యమైన మందు',stockRemaining:'మిగిలాయి',takeMedicine:'✅ మందు తీసుకున్నాను (-1)',editMedicine:'✏️ సవరించు',stockPills:'మాత్రలు',refillPills:'➕ 10 మాత్రలు జోడించు',removeMedicine:'🗑️ తొలగించు',alarmStop:'✅ మందు తీసుకున్నాను (అలారం ఆపు)',drawerNavigate:'ప్రధాన మెనూ',drawerQuickSettings:'త్వరిత సెట్టింగ్‌లు',drawerProfile:'రోగి ప్రొఫైల్ మరియు ఖాతా',drawerCareTitle:'సంరక్షణ మరింత సులభం',drawerCareDesc:'మందుల షెడ్యూల్, సంరక్షకుడి వివరాలు, వాయిస్ అలారాలు, క్లౌడ్ సింక్ అన్నీ ఒకేచోట నిర్వహించండి.',navStores:'ఫార్మసీ',voiceBannerTitle:'🗣️ వాయిస్ అలారం పనిచేస్తోంది',voiceBannerDesc:'అలారం మీరు ఎంచుకున్న భాషలో మందు పేరు చెబుతుంది.',testVoiceLabel:'▶️ వాయిస్ పరీక్షించండి',scheduleTitle:'📋 నేటి షెడ్యూల్',addTitle:'➕ మందు జోడించండి',settingsTitle:'⚙️ సెట్టింగ్‌లు',appAppearanceTitle:'🌐 యాప్ భాష మరియు రూపం',appLanguageLabel:'యాప్ భాష:',themeLabel:'థీమ్:',themeSystem:'సిస్టమ్ డిఫాల్ట్',themeLight:'లైట్ మోడ్',themeDark:'డార్క్ మోడ్',alarmLanguageTitle:'🗣️ అలారం వాయిస్ భాష',alarmLanguageDesc:'మందు అలారం మాట్లాడే భాషను ఎంచుకోండి.',alarmLanguageLabel:'అలారం భాష:',cloudTitle:'☁️ ఆటోమేటిక్ క్లౌడ్ సింక్',cloudDesc:'షేర్ చేసిన Firebase డేటాబేస్ ముందుగానే సెటప్ చేయబడింది. URL నమోదు చేయాల్సిన లేదా విడిగా కనెక్ట్ చేయాల్సిన అవసరం లేదు. లాగిన్ తర్వాత ప్రతి మొబైల్ నంబర్ డేటా క్లౌడ్‌లో విడిగా సేవ్ అవుతుంది.',cloudRefreshDesc:'మార్పులు సాధారణంగా 10 సెకన్లలో మరో పరికరంలో కనిపిస్తాయి.',navSchedule:'షెడ్యూల్',navAdd:'మందు జోడించు',navStores:'స్టోర్లు',navSettings:'సెట్టింగ్‌లు',emptyScheduleTitle:'ఈ మొబైల్ నంబర్‌కు ఇంకా మందులు జోడించలేదు.',emptyScheduleDesc:'మందులు జోడించడానికి కింద ఉన్న “మందు జోడించు” ట్యాబ్‌ను ఎంచుకోండి.',voiceStatus:'అలారం వాయిస్ భాష ఎంచుకోబడింది.',loginSubtitle:'కుటుంబ మందుల సంరక్షణ ఒకే చోట',loginMobileLabel:'మొబైల్ నంబర్ (10 అంకెలు):',loginMobilePlaceholder:'10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి',loginMobileHelp:'* ప్రతి మొబైల్ నంబర్‌కు ప్రత్యేక మందుల రికార్డు సేవ్ అవుతుంది.',loginPatientLabel:'రోగి పేరు:',loginPatientPlaceholder:'ఉదా: అబ్దుల్లా',loginCaregiverLabel:'కుటుంబ సభ్యుడు / సంరక్షకుడి WhatsApp నంబర్:',loginCaregiverPlaceholder:'సంరక్షకుడి 10 అంకెల నంబర్',loginSendOtp:'OTP పంపండి',loginEnterOtp:'OTP కోడ్ నమోదు చేయండి',loginCodeSent:'ఈ నంబర్‌కు కోడ్ పంపబడింది:',loginVerify:'OTP ధృవీకరించి యాప్ తెరవండి',loginResend:'🔄 OTP మళ్లీ పంపండి',sliderOneTitle:'మందుల షెడ్యూల్ సులభం',sliderOneDesc:'మందుల సమయాలు, రిమైండర్‌లను ఒకేచోట ఉంచండి.',sliderTwoTitle:'కుటుంబం మొత్తానికి సంరక్షణ',sliderTwoDesc:'రోగి మరియు సంరక్షకుడి వివరాలను సులభంగా చూడండి.',sliderThreeTitle:'మీ రికార్డు సింక్ అవుతుంది',sliderThreeDesc:'మీ రికార్డును తెరవడానికి మొబైల్ నంబర్‌తో లాగిన్ అవ్వండి.',editProfileButton:'రోగి ప్రొఫైల్‌ను సవరించండి',saveProfileButton:'💾 మార్పులను సేవ్ చేయండి',cancelButton:'రద్దు చేయండి',profileNameRequired:'దయచేసి రోగి పేరును నమోదు చేయండి.',profileCaregiverInvalid:'సంరక్షకుడి మొబైల్ నంబర్ 10 అంకెలు ఉండాలి.',profileSaved:'రోగి ప్రొఫైల్ నవీకరించబడింది.',drawerManageTitle:'నిర్వహణ మరియు సాధనాలు',drawerDownloadPdf:'మందుల PDF డౌన్‌లోడ్',drawerLogout:'లాగ్ అవుట్ / నంబర్ మార్చు',profileEditHint:'ప్రొఫైల్ సవరించడానికి స్లైడింగ్ మెనును తెరిచి రోగి ప్రొఫైల్ సవరించు ఎంచుకోండి.'}
+    };
+    const MED_FORM_TRANSLATIONS = {
+      en: {medNameLabel:'Medicine Name:',medicineNamePlaceholder:'e.g. Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ Critical Medicine? (BP/Sugar/Heart)',ringtoneLabel:'🔔 Custom Loud Ringtone:',ringtoneSiren:'🚨 Loud Emergency Siren (Ambulance Alert)',ringtoneRadar:'⚡ Digital Radar Pulse (Fast Loud Alarm)',ringtoneChime:'🎵 Hospital Acoustic Chime (Melodic Bell)',previewSound:'▶️ Preview Sound',pillPhotoLabel:'📸 Pill Photo (Pill Identifier):',pillColorLabel:'🎨 Choose Pill Color / Type:',pillWhite:'⚪ White Round Pill',pillRed:'🔴 Red / Pink Pill',pillYellow:'🟡 Yellow Pill',pillBlue:'🔵 Blue Pill',pillCapsule:'💊 Capsule (Dual Color)',pillGreen:'🟢 Green Pill',frequencyLabel:'How many times per day?',freqOne:'Once a day',freqTwo:'Twice (Morning and Night)',freqThree:'Three times (Morning, Afternoon, Night)',timingsLabel:'Timings:',stockLabel:'Stock Quantity:',stockPlaceholder:'e.g. 30',instructionsLabel:'Instructions:',afterFood:'After food',beforeFood:'Before food',bedtime:'At bedtime',saveMedicine:'Save Medicine & Sync ✨',saveChanges:'💾 Save Changes'},
+      hi: {medNameLabel:'दवा का नाम:',medicineNamePlaceholder:'जैसे: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ज़रूरी दवा? (BP/शुगर/दिल)',ringtoneLabel:'🔔 तेज़ अलार्म की आवाज़ चुनें:',ringtoneSiren:'🚨 तेज़ इमरजेंसी सायरन (एम्बुलेंस अलर्ट)',ringtoneRadar:'⚡ डिजिटल रडार पल्स (तेज़ अलार्म)',ringtoneChime:'🎵 अस्पताल की मधुर घंटी',previewSound:'▶️ आवाज़ सुनकर देखें',pillPhotoLabel:'📸 गोली की फोटो (पहचान के लिए):',pillColorLabel:'🎨 गोली का रंग / प्रकार चुनें:',pillWhite:'⚪ सफेद गोल गोली',pillRed:'🔴 लाल / गुलाबी गोली',pillYellow:'🟡 पीली गोली',pillBlue:'🔵 नीली गोली',pillCapsule:'💊 कैप्सूल (दो रंग)',pillGreen:'🟢 हरी गोली',frequencyLabel:'दिन में कितनी बार लेनी है?',freqOne:'1 बार (दिन में एक बार)',freqTwo:'2 बार (सुबह और रात)',freqThree:'3 बार (सुबह, दोपहर, रात)',timingsLabel:'समय:',stockLabel:'कितनी गोलियाँ बची हैं?',stockPlaceholder:'जैसे: 30',instructionsLabel:'निर्देश:',afterFood:'खाने के बाद',beforeFood:'खाने से पहले',bedtime:'रात को सोते समय',saveMedicine:'दवा सेव करें और सिंक करें ✨',saveChanges:'💾 बदलाव सेव करें'},
+      kn: {medNameLabel:'ಔಷಧಿಯ ಹೆಸರು:',medicineNamePlaceholder:'ಉದಾ: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ತುರ್ತು ಔಷಧಿಯೇ? (BP/ಸಕ್ಕರೆ/ಹೃದಯ)',ringtoneLabel:'🔔 ಜೋರಾದ ಅಲಾರಂ ಆಯ್ಕೆಮಾಡಿ:',ringtoneSiren:'🚨 ತುರ್ತು ಸೈರನ್ (ಆಂಬುಲೆನ್ಸ್ ಎಚ್ಚರಿಕೆ)',ringtoneRadar:'⚡ ಡಿಜಿಟಲ್ ರಡಾರ್ ಪಲ್ಸ್ (ವೇಗದ ಅಲಾರಂ)',ringtoneChime:'🎵 ಆಸ್ಪತ್ರೆಯ ಮಧುರ ಗಂಟೆ',previewSound:'▶️ ಧ್ವನಿ ಕೇಳಿ',pillPhotoLabel:'📸 ಮಾತ್ರೆಯ ಫೋಟೋ:',pillColorLabel:'🎨 ಮಾತ್ರೆಯ ಬಣ್ಣ / ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ:',pillWhite:'⚪ ಬಿಳಿ ಗೋಳಾಕಾರದ ಮಾತ್ರೆ',pillRed:'🔴 ಕೆಂಪು / ಗುಲಾಬಿ ಮಾತ್ರೆ',pillYellow:'🟡 ಹಳದಿ ಮಾತ್ರೆ',pillBlue:'🔵 ನೀಲಿ ಮಾತ್ರೆ',pillCapsule:'💊 ಕ್ಯಾಪ್ಸುಲ್ (ಎರಡು ಬಣ್ಣ)',pillGreen:'🟢 ಹಸಿರು ಮಾತ್ರೆ',frequencyLabel:'ದಿನಕ್ಕೆ ಎಷ್ಟು ಬಾರಿ ತೆಗೆದುಕೊಳ್ಳಬೇಕು?',freqOne:'ದಿನಕ್ಕೆ 1 ಬಾರಿ',freqTwo:'2 ಬಾರಿ (ಬೆಳಗ್ಗೆ ಮತ್ತು ರಾತ್ರಿ)',freqThree:'3 ಬಾರಿ (ಬೆಳಗ್ಗೆ, ಮಧ್ಯಾಹ್ನ, ರಾತ್ರಿ)',timingsLabel:'ಸಮಯ:',stockLabel:'ಉಳಿದ ಮಾತ್ರೆಗಳ ಸಂಖ್ಯೆ:',stockPlaceholder:'ಉದಾ: 30',instructionsLabel:'ಸೂಚನೆಗಳು:',afterFood:'ಊಟದ ನಂತರ',beforeFood:'ಊಟದ ಮೊದಲು',bedtime:'ಮಲಗುವಾಗ',saveMedicine:'ಔಷಧಿ ಉಳಿಸಿ ಮತ್ತು ಸಿಂಕ್ ಮಾಡಿ ✨',saveChanges:'💾 ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ'},
+      ta: {medNameLabel:'மருந்தின் பெயர்:',medicineNamePlaceholder:'எ.கா.: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ முக்கியமான மருந்தா? (BP/சர்க்கரை/இதயம்)',ringtoneLabel:'🔔 உரத்த அலாரம் ஒலியைத் தேர்ந்தெடுக்கவும்:',ringtoneSiren:'🚨 அவசர சைரன் (ஆம்புலன்ஸ் எச்சரிக்கை)',ringtoneRadar:'⚡ டிஜிட்டல் ரேடார் துடிப்பு (வேகமான அலாரம்)',ringtoneChime:'🎵 மருத்துவமனை இனிய மணி',previewSound:'▶️ ஒலியைக் கேளுங்கள்',pillPhotoLabel:'📸 மாத்திரையின் படம்:',pillColorLabel:'🎨 மாத்திரையின் நிறம் / வகையைத் தேர்ந்தெடுக்கவும்:',pillWhite:'⚪ வெள்ளை வட்ட மாத்திரை',pillRed:'🔴 சிவப்பு / இளஞ்சிவப்பு மாத்திரை',pillYellow:'🟡 மஞ்சள் மாத்திரை',pillBlue:'🔵 நீல மாத்திரை',pillCapsule:'💊 காப்ஸ்யூல் (இரண்டு நிறம்)',pillGreen:'🟢 பச்சை மாத்திரை',frequencyLabel:'ஒரு நாளில் எத்தனை முறை?',freqOne:'ஒரு நாளில் 1 முறை',freqTwo:'2 முறை (காலை மற்றும் இரவு)',freqThree:'3 முறை (காலை, மதியம், இரவு)',timingsLabel:'நேரங்கள்:',stockLabel:'மீதமுள்ள மாத்திரைகள்:',stockPlaceholder:'எ.கா.: 30',instructionsLabel:'வழிமுறைகள்:',afterFood:'உணவுக்குப் பிறகு',beforeFood:'உணவுக்கு முன்',bedtime:'படுக்கைக்குச் செல்லும் போது',saveMedicine:'மருந்தைச் சேமித்து ஒத்திசைக்கவும் ✨',saveChanges:'💾 மாற்றங்களைச் சேமிக்கவும்'},
+      te: {medNameLabel:'మందు పేరు:',medicineNamePlaceholder:'ఉదా: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ముఖ్యమైన మందా? (BP/షుగర్/గుండె)',ringtoneLabel:'🔔 గట్టిగా వినిపించే అలారం ఎంచుకోండి:',ringtoneSiren:'🚨 అత్యవసర సైరన్ (అంబులెన్స్ హెచ్చరిక)',ringtoneRadar:'⚡ డిజిటల్ రాడార్ పల్స్ (వేగవంతమైన అలారం)',ringtoneChime:'🎵 ఆసుపత్రి మధుర గంట',previewSound:'▶️ శబ్దం వినండి',pillPhotoLabel:'📸 మాత్ర ఫోటో:',pillColorLabel:'🎨 మాత్ర రంగు / రకాన్ని ఎంచుకోండి:',pillWhite:'⚪ తెల్లని గుండ్రని మాత్ర',pillRed:'🔴 ఎరుపు / గులాబీ మాత్ర',pillYellow:'🟡 పసుపు మాత్ర',pillBlue:'🔵 నీలం మాత్ర',pillCapsule:'💊 క్యాప్సూల్ (రెండు రంగులు)',pillGreen:'🟢 ఆకుపచ్చ మాత్ర',frequencyLabel:'రోజుకు ఎన్నిసార్లు తీసుకోవాలి?',freqOne:'రోజుకు 1సారి',freqTwo:'2సార్లు (ఉదయం మరియు రాత్రి)',freqThree:'3సార్లు (ఉదయం, మధ్యాహ్నం, రాత్రి)',timingsLabel:'సమయాలు:',stockLabel:'మిగిలిన మాత్రల సంఖ్య:',stockPlaceholder:'ఉదా: 30',instructionsLabel:'సూచనలు:',afterFood:'భోజనం తర్వాత',beforeFood:'భోజనానికి ముందు',bedtime:'నిద్రపోయే సమయంలో',saveMedicine:'మందును సేవ్ చేసి సింక్ చేయండి ✨',saveChanges:'💾 మార్పులను సేవ్ చేయండి'}
+    };
+    function getAppLanguage(){ const s=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); const v=(s&&s.value)||(loginSel&&loginSel.value)||localStorage.getItem('dawa_app_language')||'en'; return APP_TRANSLATIONS[v]?v:'en'; }
+    function tr(key){ return (APP_TRANSLATIONS[getAppLanguage()]||APP_TRANSLATIONS.en)[key]||APP_TRANSLATIONS.en[key]||key; }
+    function setAppLanguage(language){ if(!APP_TRANSLATIONS[language]) language='en'; localStorage.setItem('dawa_app_language',language); const appSel=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); const drawerSel=document.getElementById('drawerLanguageSelect'); if(appSel) appSel.value=language; if(loginSel) loginSel.value=language; if(drawerSel) drawerSel.value=language; if(userAccount&&userAccount.mobile){localStorage.setItem('dawa_app_language_'+userAccount.mobile,language); userAccount.appLanguage=language; localStorage.setItem('user_profile_'+userAccount.mobile,JSON.stringify(userAccount)); if(typeof pushToFirebaseCloud==='function') pushToFirebaseCloud();} applyAppLanguage(); }
+    function applyAppLanguage(){ const lang=(userAccount&&userAccount.mobile&&localStorage.getItem('dawa_app_language_'+userAccount.mobile))||localStorage.getItem('dawa_app_language')||(userAccount&&userAccount.appLanguage)||'en'; const sel=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); if(sel) sel.value=APP_TRANSLATIONS[lang]?lang:'en'; if(loginSel) loginSel.value=APP_TRANSLATIONS[lang]?lang:'en'; const drawerSel=document.getElementById('drawerLanguageSelect'); if(drawerSel) drawerSel.value=APP_TRANSLATIONS[lang]?lang:'en'; const drawerAlarm=document.getElementById('drawerAlarmLanguageSelect'); if(drawerAlarm) drawerAlarm.value=getAlarmLanguage(); document.documentElement.lang=({en:'en',hi:'hi',kn:'kn',ta:'ta',te:'te'})[lang]||'en'; document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); const value=tr(k); if(value) el.textContent=value;}); document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder'); const value=(MED_FORM_TRANSLATIONS[lang]||MED_FORM_TRANSLATIONS.en)[k]; if(value) el.placeholder=value; else {const fallback=tr(k); if(fallback) el.placeholder=fallback;}}); document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); const value=(MED_FORM_TRANSLATIONS[lang]||MED_FORM_TRANSLATIONS.en)[k]; if(value) el.textContent=value;}); if(typeof userAccount!=='undefined' && userAccount && typeof medicines!=='undefined' && Array.isArray(medicines) && document.getElementById('schedList')) { try { renderAll(); } catch(e) {} } const status=document.getElementById('voiceLanguageStatus'); if(status){ const labels={hi:'अलार्म हिन्दी में बोलेगा।',en:'Alarm will speak in English.',kn:'ಅಲಾರಂ ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡುತ್ತದೆ.',ta:'அலாரம் தமிழில் பேசும்.',te:'అలారం తెలుగులో మాట్లాడుతుంది.'}; status.textContent=labels[getAlarmLanguage()]||tr('voiceStatus'); } }
+    function setAppTheme(theme){ localStorage.setItem('dawa_app_theme','light'); document.body.classList.remove('dark-mode'); const sel=document.getElementById('themeSelect'); if(sel)sel.value='light'; const drawerSel=document.getElementById('drawerThemeSelect'); if(drawerSel)drawerSel.value='light'; }
+    function applyAppTheme(){ localStorage.setItem('dawa_app_theme','light'); document.body.classList.remove('dark-mode'); const sel=document.getElementById('themeSelect'); const drawerSel=document.getElementById('drawerThemeSelect'); if(sel)sel.value='light'; if(drawerSel)drawerSel.value='light'; }
+
+    const ALARM_LANGUAGE_CONFIG = {
+        hi: { lang: 'hi-IN', voicePrefix: 'hi', text: name => `ध्यान दें, आपकी दवा ${name} लेने का समय हो गया है। कृपया अब अपनी दवा ले लें।` },
+        en: { lang: 'en-IN', voicePrefix: 'en', text: name => `Attention, it is time to take your medicine ${name}. Please take your medicine now.` },
+        kn: { lang: 'kn-IN', voicePrefix: 'kn', text: name => `ಗಮನಿಸಿ, ನಿಮ್ಮ ${name} ಔಷಧಿಯನ್ನು ತೆಗೆದುಕೊಳ್ಳುವ ಸಮಯವಾಗಿದೆ. ದಯವಿಟ್ಟು ಈಗ ಔಷಧಿಯನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ.` },
+        ta: { lang: 'ta-IN', voicePrefix: 'ta', text: name => `கவனிக்கவும், உங்கள் ${name} மருந்தை எடுத்துக்கொள்ளும் நேரம் வந்துவிட்டது. தயவுசெய்து இப்போது மருந்தை எடுத்துக்கொள்ளுங்கள்.` },
+        te: { lang: 'te-IN', voicePrefix: 'te', text: name => `గమనించండి, మీ ${name} మందు వేసుకునే సమయం అయింది. దయచేసి ఇప్పుడు మందు వేసుకోండి.` }
+    };
+
+    function getAlarmLanguage() {
+        const select = document.getElementById('alarmLanguageSelect');
+        const drawerSelect = document.getElementById('drawerAlarmLanguageSelect');
+        const saved = (userAccount && userAccount.language) || localStorage.getItem('alarm_language') || 'hi';
+        const value = select && select.value ? select.value : saved;
+        const finalValue = (drawerSelect && drawerSelect.value) || value;
+        return ALARM_LANGUAGE_CONFIG[finalValue] ? finalValue : 'hi';
+    }
+
+    function setAlarmLanguage(language) {
+        if (!ALARM_LANGUAGE_CONFIG[language]) language = 'hi';
+        const mainAlarmSelect = document.getElementById('alarmLanguageSelect');
+        const drawerAlarmSelect = document.getElementById('drawerAlarmLanguageSelect');
+        if (mainAlarmSelect) mainAlarmSelect.value = language;
+        if (drawerAlarmSelect) drawerAlarmSelect.value = language;
+        localStorage.setItem('alarm_language', language);
+        if (userAccount && userAccount.mobile) {
+            localStorage.setItem('alarm_language_' + userAccount.mobile, language);
+            userAccount.language = language;
+            localStorage.setItem('user_profile_' + userAccount.mobile, JSON.stringify(userAccount));
+            // Sync preference to the user's cloud profile, alongside their medicines.
+            pushToFirebaseCloud();
+        }
+        const status = document.getElementById('voiceLanguageStatus');
+        if (status) {
+            const labels = { hi: 'Alarm हिन्दी में बोलेगा।', en: 'Alarm will speak in English.', kn: 'ಅಲಾರಂ ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡುತ್ತದೆ.', ta: 'அலாரம் தமிழில் பேசும்.', te: 'అలారం తెలుగులో మాట్లాడుతుంది.' };
+            status.textContent = labels[language];
+        }
+    }
+
+    function applySavedAlarmLanguage() {
+        const select = document.getElementById('alarmLanguageSelect');
+        if (!select) return;
+        const saved = (userAccount && userAccount.language) ||
+            (userAccount && userAccount.mobile ? localStorage.getItem('alarm_language_' + userAccount.mobile) : null) ||
+            localStorage.getItem('alarm_language') || 'hi';
+        select.value = ALARM_LANGUAGE_CONFIG[saved] ? saved : 'hi';
+        const drawerSelect = document.getElementById('drawerAlarmLanguageSelect');
+        if (drawerSelect) drawerSelect.value = select.value;
+        if (userAccount && userAccount.mobile) userAccount.language = select.value;
+        setAlarmLanguage(select.value);
+    }
+
     function playBilingualSpeech(medName) {
-        if (!('speechSynthesis' in window)) return;
+        if (!('speechSynthesis' in window)) {
+            alert('Is browser mein voice alarm supported nahi hai. Chrome ya Edge mein try karein.');
+            return;
+        }
         window.speechSynthesis.cancel();
         preloadVoices();
-
-        const hiText = `ध्यान दें, आपकी दवा ${medName} लेने का समय हो गया है। कृपया फोटो देखकर दवा खा लें।`;
-        const hiSpeech = new SpeechSynthesisUtterance(hiText);
-        const hiVoice = availableVoices.find(v => v.lang.includes('hi') || v.lang.includes('Hindi'));
-        if (hiVoice) hiSpeech.voice = hiVoice;
-        hiSpeech.lang = 'hi-IN';
-        hiSpeech.rate = 0.86;
-        hiSpeech.pitch = 1.0;
-
-        const enText = `Attention please, it is time to take your medicine ${medName}. Please check the photo and take your medicine.`;
-        const enSpeech = new SpeechSynthesisUtterance(enText);
-        const enVoice = availableVoices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-GB') || v.lang.includes('en-US'));
-        if (enVoice) enSpeech.voice = enVoice;
-        enSpeech.lang = 'en-IN';
-        enSpeech.rate = 0.90;
-        enSpeech.pitch = 1.0;
-
-        window.speechSynthesis.speak(hiSpeech);
-        window.speechSynthesis.speak(enSpeech);
+        const selectedLanguage = getAlarmLanguage();
+        const config = ALARM_LANGUAGE_CONFIG[selectedLanguage];
+        const utterance = new SpeechSynthesisUtterance(config.text(medName));
+        const matchingVoice = availableVoices.find(v => (v.lang || '').toLowerCase().startsWith(config.voicePrefix));
+        if (matchingVoice) utterance.voice = matchingVoice;
+        utterance.lang = config.lang;
+        utterance.rate = selectedLanguage === 'en' ? 0.9 : 0.82;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
     }
 
     function testVoiceAlarmSample() {
+        applySavedAlarmLanguage();
         const testMed = medicines.length > 0 ? medicines[0].name : "Paracetamol";
         playCustomTone('chime');
         setTimeout(() => {
@@ -1419,12 +1868,56 @@
         }, 600);
     }
 
+    function localizedMedicineText(value, kind) {
+        const lang = getAppLanguage();
+        const raw = String(value || '').trim();
+        const low = raw.toLowerCase();
+        const labels = {
+          instruction: {
+            after: {en:'After food',hi:'खाने के बाद',kn:'ಊಟದ ನಂತರ',ta:'உணவுக்குப் பிறகு',te:'భోజనం తర్వాత'},
+            before:{en:'Before food',hi:'खाने से पहले',kn:'ಊಟದ ಮೊದಲು',ta:'உணவுக்கு முன்',te:'భోజనానికి ముందు'},
+            bed:   {en:'At bedtime',hi:'रात को सोते समय',kn:'ಮಲಗುವಾಗ',ta:'படுக்கைக்குச் செல்லும் போது',te:'నిద్రపోయే సమయంలో'}
+          },
+          pill: {
+            white:{en:'⚪ White Round',hi:'⚪ सफेद गोल गोली',kn:'⚪ ಬಿಳಿ ಗೋಳಾಕಾರದ ಮಾತ್ರೆ',ta:'⚪ வெள்ளை வட்ட மாத்திரை',te:'⚪ తెల్లని గుండ్రని మాత్ర'},
+            red:{en:'🔴 Red / Pink',hi:'🔴 लाल / गुलाबी गोली',kn:'🔴 ಕೆಂಪು / ಗುಲಾಬಿ ಮಾತ್ರೆ',ta:'🔴 சிவப்பு / இளஞ்சிவப்பு மாத்திரை',te:'🔴 ఎరుపు / గులాబీ మాత్ర'},
+            yellow:{en:'🟡 Yellow',hi:'🟡 पीली गोली',kn:'🟡 ಹಳದಿ ಮಾತ್ರೆ',ta:'🟡 மஞ்சள் மாத்திரை',te:'🟡 పసుపు మాత్ర'},
+            blue:{en:'🔵 Blue',hi:'🔵 नीली गोली',kn:'🔵 ನೀಲಿ ಮಾತ್ರೆ',ta:'🔵 நீல மாத்திரை',te:'🔵 నీలం మాత్ర'},
+            capsule:{en:'💊 Capsule (Dual Color)',hi:'💊 कैप्सूल (दो रंग)',kn:'💊 ಎರಡು ಬಣ್ಣದ ಕ್ಯಾಪ್ಸುಲ್',ta:'💊 இரு நிற காப்ஸ்யூல்',te:'💊 రెండు రంగుల క్యాప్సూల్'},
+            green:{en:'🟢 Green',hi:'🟢 हरी गोली',kn:'🟢 ಹಸಿರು ಮಾತ್ರೆ',ta:'🟢 பச்சை மாத்திரை',te:'🟢 ఆకుపచ్చ మాత్ర'}
+          }
+        };
+        if (kind === 'instruction') {
+          let k = '';
+          if (/before food|beforefood|खाने से पहले|ಊಟದ ಮೊದಲು|உணவுக்கு முன்|భోజనానికి ముందు/.test(low)) k='before';
+          else if (/bedtime|at bed|sote samay|सोते समय|ಮಲಗುವಾಗ|படுக்கைக்குச்|నిద్రపోయే/.test(low)) k='bed';
+          else if (/after food|afterfood|khane ke baad|खाने के बाद|ಊಟದ ನಂತರ|உணவுக்குப் பிறகு|భోజనం తర్వాత/.test(low)) k='after';
+          return k ? labels.instruction[k][lang] : raw;
+        }
+        if (kind === 'pill') {
+          let k='';
+          if (/capsule|ಕ್ಯಾಪ್ಸುಲ್|காப்ஸ்யூல்|క్యాప్సూల్|dual color|दो रंग/.test(low)) k='capsule';
+          else if (/white|safed|सफेद|ಬಿಳಿ|வெள்ளை|తెల్ల/.test(low)) k='white';
+          else if (/red|pink|laal|लाल|गुलाबी|ಕೆಂಪು|சிவப்பு|இளஞ்சிவப்பு|ఎరుపు|గులాబీ/.test(low)) k='red';
+          else if (/yellow|peeli|पीली|ಹಳದಿ|மஞ்சள்|పసుపు/.test(low)) k='yellow';
+          else if (/blue|neeli|नीली|ನೀಲಿ|நீல|నీలం/.test(low)) k='blue';
+          else if (/green|hari|हरी|ಹಸಿರು|பச்சை|ఆకుపచ్చ/.test(low)) k='green';
+          return k ? labels.pill[k][lang] : raw;
+        }
+        return raw;
+    }
+    function localizedRingtone(value) {
+        const lang=getAppLanguage(); const v=String(value||'siren').toLowerCase();
+        const labels={en:{siren:'Siren',fastbeep:'Digital radar pulse',chime:'Hospital chime'},hi:{siren:'इमरजेंसी सायरन',fastbeep:'डिजिटल रडार पल्स',chime:'अस्पताल की घंटी'},kn:{siren:'ತುರ್ತು ಸೈರನ್',fastbeep:'ಡಿಜಿಟಲ್ ರಡಾರ್ ಪಲ್ಸ್',chime:'ಆಸ್ಪತ್ರೆಯ ಗಂಟೆ'},ta:{siren:'அவசர சைரன்',fastbeep:'டிஜிட்டல் ரேடார் ஒலி',chime:'மருத்துவமனை மணி'},te:{siren:'అత్యవసర సైరన్',fastbeep:'డిజిటల్ రాడార్ శబ్దం',chime:'ఆసుపత్రి గంట'}};
+        return (labels[lang]||labels.en)[v] || v;
+    }
+
     function triggerPersistentAlarm(med) {
         currentAlarmMedicine = med;
         alarmSecondsRemaining = 60;
 
         document.getElementById('alarmMedName').innerText = med.name + (med.isCritical ? ' ⚡ (CRITICAL)' : '');
-        document.getElementById('alarmMedInstruction').innerText = `📌 Nirdesh: ${med.instruction} | Rang: ${med.pillColor || 'N/A'}`;
+        document.getElementById('alarmMedInstruction').innerText = `${({en:'📌 Instructions',hi:'📌 निर्देश',kn:'📌 ಸೂಚನೆಗಳು',ta:'📌 வழிமுறைகள்',te:'📌 సూచనలు'}[getAppLanguage()]||'📌 Instructions')}: ${localizedMedicineText(med.instruction,'instruction')} | ${({en:'Pill',hi:'गोली',kn:'ಮಾತ್ರೆ',ta:'மாத்திரை',te:'మాత్ర'}[getAppLanguage()]||'Pill')}: ${localizedMedicineText(med.pillColor || 'N/A','pill')}`;
 
         const imgWrap = document.getElementById('alarmPillImageWrap');
         if (med.pillPhoto) {
@@ -1552,6 +2045,10 @@
     setInterval(startClock, 1000);
     startClock();
 
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') toggleAppDrawer(false); });
+    function toggleAppDrawer(open) { document.body.classList.toggle('drawer-open', !!open); const drawer=document.getElementById('appDrawer'); if(drawer) drawer.setAttribute('aria-hidden', open ? 'false' : 'true'); }
+    function drawerGo(windowId, navId) { const nav=document.getElementById(navId); if(nav) switchWindow(windowId, nav); toggleAppDrawer(false); }
+
     function switchWindow(windowId, btnElement) {
         document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1582,6 +2079,7 @@
         const stockList = document.getElementById('stockList');
 
         document.getElementById('btnUserStatus').innerText = `${(userAccount.name || 'User').split(' ')[0]} ▾`;
+        const drawerPatient=document.getElementById('drawerPatientName'); if(drawerPatient) drawerPatient.textContent=userAccount.name || 'Senior Care Hub';
         document.getElementById('lblDeliverAddress').innerText = userAccount.name || '-';
         document.getElementById('lblAccountName').innerText = userAccount.name || '-';
         document.getElementById('lblAccountMobile').innerText = userAccount.mobile || '-';
@@ -1590,6 +2088,8 @@
         // Shared Firebase URL is configured in code; no per-user input needed.
 
         updateCloudStatusUI(true, 'Active');
+        applyAppLanguage();
+        applyAppTheme();
 
         schedList.innerHTML = "";
         stockList.innerHTML = "";
@@ -1599,10 +2099,10 @@
         let lowStockItems = [];
 
         if (medicines.length === 0) {
-            schedList.innerHTML = `<div style="text-align: center; color: var(--text-muted); background: white; padding: 40px 20px; border-radius: 12px; border:1px solid #e0e0e0;">
+            schedList.innerHTML = `<div id="emptyScheduleCard" style="text-align: center; color: var(--text-muted); background: white; padding: 40px 20px; border-radius: 12px; border:1px solid #e0e0e0;">
                 <span style="font-size: 38px;">🩺</span>
-                <p style="margin-top: 10px; font-weight: 700;">Is mobile number par koi dawa nahi jodi gayi hai.</p>
-                <p style="font-size:12px; margin-top:4px;">Neeche <b>"Add Dawa"</b> tab se apni dawaayein jodein.</p>
+                <p id="emptyScheduleTitle" style="margin-top: 10px; font-weight: 700;">${tr('emptyScheduleTitle')}</p>
+                <p id="emptyScheduleDesc" style="font-size:12px; margin-top:4px;">${tr('emptyScheduleDesc')}</p>
             </div>`;
             storesDiv.innerHTML = renderAllSixStores("Medicine");
             return;
@@ -1625,27 +2125,27 @@
 
             schedList.innerHTML += `
                 <div class="med-card ${isCrit ? 'critical-card' : ''}">
-                    ${isCrit ? '<div style="margin-bottom:8px;"><span class="critical-badge">⚡ CRITICAL MEDICINE (जरूरी दवा)</span></div>' : ''}
+                    ${isCrit ? `<div style="margin-bottom:8px;"><span class="critical-badge">${tr('criticalBadge')}</span></div>` : ''}
                     
                     <div class="med-card-top">
                         ${thumbHtml}
                         <div style="flex:1;">
                             <div class="med-name">${med.name}</div>
-                            <div style="font-size:12px; color:#475569; margin-top:2px;">🎨 ${med.pillColor || 'White Round'}</div>
+                            <div style="font-size:12px; color:#475569; margin-top:2px;">🎨 ${localizedMedicineText(med.pillColor || 'White Round','pill')}</div>
                             <div class="time-pill-group">${timesPills}</div>
                         </div>
                         <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
-                            ${med.stock} Bachi
+                            ${med.stock} ${tr('stockRemaining')}
                         </span>
                     </div>
 
                     <div style="margin: 10px 0 6px; font-size: 13.5px; color: var(--text-muted);">
-                        📌 <b>Nirdesh:</b> ${med.instruction} | 🔔 <b>Ringtone:</b> ${med.ringtone || 'siren'}
+                        📌 <b>${({en:'Instructions',hi:'निर्देश',kn:'ಸೂಚನೆಗಳು',ta:'வழிமுறைகள்',te:'సూచనలు'}[getAppLanguage()]||'Instructions')}:</b> ${localizedMedicineText(med.instruction,'instruction')} | 🔔 <b>${({en:'Ringtone',hi:'रिंगटोन',kn:'ರಿಂಗ್‌ಟೋನ್',ta:'ரிங்டோன்',te:'రింగ్‌టోన్'}[getAppLanguage()]||'Ringtone')}:</b> ${localizedRingtone(med.ringtone || 'siren')}
                     </div>
 
                     <div style="display: flex; gap: 8px; margin-top: 8px;">
                         <button class="btn btn-take" onclick="takeMedicine(${i})">
-                            ✅ Dawa Kha Li (-1)
+                            ${tr('takeMedicine')}
                         </button>
                         <button class="btn btn-edit" onclick="openEditModal(${i})">
                             ✏️ Edit
@@ -1660,13 +2160,13 @@
                     <div style="display: flex; justify-content: space-between;">
                         <div class="med-name">${med.name}</div>
                         <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
-                            ${med.stock} Goliyaan
+                            ${med.stock} ${tr('stockPills')}
                         </span>
                     </div>
                     <div style="display:flex; gap:8px; margin-top:10px;">
-                        <button class="btn btn-refill" style="flex:2;" onclick="refillStock(${i}, 10)">➕ 10 Goli Refill</button>
-                        <button class="btn btn-edit" style="flex:1;" onclick="openEditModal(${i})">✏️ Edit</button>
-                        <button class="btn btn-delete" style="flex:1;" onclick="deleteMed(${i})">🗑️ Hatao</button>
+                        <button class="btn btn-refill" style="flex:2;" onclick="refillStock(${i}, 10)">${tr('refillPills')}</button>
+                        <button class="btn btn-edit" style="flex:1;" onclick="openEditModal(${i})">${tr('editMedicine')}</button>
+                        <button class="btn btn-delete" style="flex:1;" onclick="deleteMed(${i})">${tr('removeMedicine')}</button>
                     </div>
                 </div>
             `;
@@ -1931,7 +2431,8 @@
             isLoggedIn: true,
             name: name,
             mobile: mob,
-            caregiverPhone: caregiver
+            caregiverPhone: caregiver,
+            language: localStorage.getItem('alarm_language_' + mob) || localStorage.getItem('alarm_language') || 'hi'
         };
 
         // 1. Set active session
@@ -1957,7 +2458,10 @@
         }
 
         document.getElementById('mandatoryLoginWall').style.display = 'none';
-        document.getElementById('btnVerifyOtp').innerText = "Verify OTP & Enter App (लॉग इन करें)";
+        const appShell=document.querySelector('.app-shell'); if(appShell) appShell.style.display='block';
+        const bottomNav=document.querySelector('.bottom-nav'); if(bottomNav) bottomNav.style.display='flex';
+        document.getElementById('btnVerifyOtp').innerText = "Verify OTP & Enter App";
+        applyAppLanguage(); applyAppTheme();
         renderAll();
     }
 
@@ -1978,25 +2482,28 @@
     }
 
     function logoutUser() {
-        if (confirm("Kya aap sach me Log Out karke doosra mobile number daalna chahte hain?")) {
-            localStorage.removeItem('dawa_active_session_phone');
-            activeUserPhone = '';
-
-            userAccount = { isLoggedIn: false, name: '', mobile: '', caregiverPhone: '' };
-            medicines = [];
-
-            const step1 = document.getElementById('wallStep1');
-            const step2 = document.getElementById('wallStep2');
-            if (step1) step1.style.display = 'block';
-            if (step2) step2.style.display = 'none';
-
-            document.getElementById('wallMobile').value = '';
-            document.getElementById('wallName').value = '';
-            document.getElementById('wallCaregiverPhone').value = '';
-            document.getElementById('wallEnteredOtp').value = '';
-
-            checkLoginGate();
-        }
+        const lang = getAppLanguage();
+        const confirmText = ({en:'Log out and switch to another mobile number?',hi:'क्या आप लॉग आउट करके दूसरा मोबाइल नंबर इस्तेमाल करना चाहते हैं?',kn:'ಲಾಗ್ ಔಟ್ ಮಾಡಿ ಬೇರೆ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಬದಲಾಯಿಸಬೇಕೇ?',ta:'வெளியேறி வேறு மொபைல் எண்ணைப் பயன்படுத்தவா?',te:'లాగ్ అవుట్ చేసి మరో మొబైల్ నంబర్‌కు మారాలా?'}[lang] || 'Log out and switch mobile number?');
+        if (!window.confirm(confirmText)) return;
+        // Clear only the active session; keep each number's saved profile/medicine history intact.
+        localStorage.removeItem('dawa_active_session_phone');
+        activeUserPhone = '';
+        userAccount = { isLoggedIn:false, name:'', mobile:'', caregiverPhone:'' };
+        medicines = [];
+        try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
+        if (persistentAlarmInterval) { clearInterval(persistentAlarmInterval); persistentAlarmInterval = null; }
+        if (autoEscalationCountdownInterval) { clearInterval(autoEscalationCountdownInterval); autoEscalationCountdownInterval = null; }
+        closeAccountModal();
+        toggleAppDrawer(false);
+        const step1=document.getElementById('wallStep1'), step2=document.getElementById('wallStep2');
+        if(step1) step1.style.display='block';
+        if(step2) step2.style.display='none';
+        ['wallMobile','wallName','wallCaregiverPhone','wallEnteredOtp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+        const otpMsg=document.getElementById('otpMessage'); if(otpMsg) otpMsg.textContent='';
+        const wall=document.getElementById('mandatoryLoginWall'); if(wall) wall.style.display='flex'; showLanguageGate();
+        const shell=document.querySelector('.app-shell'); if(shell) shell.style.display='none';
+        const nav=document.querySelector('.bottom-nav'); if(nav) nav.style.display='none';
+        applyAppLanguage(); applyAppTheme();
     }
 
     function generateMedicalPdf() {
@@ -2056,6 +2563,10 @@
     }
 
     // App Initialization
+    applyAppTheme();
+    applyAppLanguage();
+    applySavedAlarmLanguage();
+    applyAppLanguage();
     checkLoginGate();
     if (userAccount.isLoggedIn) {
         renderAll();
