@@ -1363,15 +1363,41 @@
 
     let medicines = [];
 
+    // Compatibility helpers: old versions stored Indian numbers as 10 digits,
+    // while newer versions may store them with country code 91.
+    function phoneKeyCandidates(phone) {
+        const raw = String(phone || '').trim();
+        const digits = raw.replace(/\D/g, '');
+        const keys = [];
+        const add = v => { if (v && !keys.includes(v)) keys.push(v); };
+        add(raw); add(digits);
+        if (digits.startsWith('91') && digits.length === 12) add(digits.slice(2));
+        if (digits.length === 10) { add('91' + digits); add('+91' + digits); }
+        if (raw.startsWith('+')) add(raw.slice(1));
+        return keys;
+    }
+    function readLocalForPhone(prefix, phone) {
+        for (const key of phoneKeyCandidates(phone)) {
+            const value = localStorage.getItem(prefix + key);
+            if (value) return { key, value };
+        }
+        return null;
+    }
+    function localMedicinesForPhone(phone) {
+        const found = readLocalForPhone('medicines_', phone);
+        if (!found) return null;
+        try { const parsed = JSON.parse(found.value); return Array.isArray(parsed) ? parsed : null; }
+        catch (_) { return null; }
+    }
+
     function loadCurrentSessionData() {
         if (activeUserPhone && activeUserPhone.length >= 10) {
-            const savedProfile = localStorage.getItem('user_profile_' + activeUserPhone);
-            if (savedProfile) {
-                userAccount = JSON.parse(savedProfile);
-                userAccount.isLoggedIn = true;
+            const profileFound = readLocalForPhone('user_profile_', activeUserPhone);
+            if (profileFound) {
+                try { userAccount = JSON.parse(profileFound.value); userAccount.isLoggedIn = true; } catch (_) {}
             }
-            const savedMeds = localStorage.getItem('medicines_' + activeUserPhone);
-            medicines = savedMeds ? JSON.parse(savedMeds) : [];
+            const localMeds = localMedicinesForPhone(activeUserPhone);
+            medicines = localMeds || [];
         } else {
             userAccount = { isLoggedIn: false, name: '', mobile: '', caregiverPhone: '' };
             medicines = [];
@@ -1413,43 +1439,50 @@
 
     // 2. FETCH FROM GOOGLE FIREBASE CLOUD ON ANY DEVICE LOGIN
     async function fetchFromFirebaseCloud(phone) {
-        if (!firebaseDbUrl || !phone || phone.length < 10) return false;
-        
+        if (!firebaseDbUrl || !phone || String(phone).replace(/\D/g, '').length < 10) return false;
         try {
             updateCloudStatusUI(true, 'Checking Cloud...');
-            let cleanUrl = firebaseDbUrl.trim().replace(/\/$/, "");
-            const res = await fetch(`${cleanUrl}/patients/${phone}.json`);
-
-            if (res.ok) {
+            const cleanUrl = firebaseDbUrl.trim().replace(/\/$/, '');
+            const candidates = phoneKeyCandidates(phone);
+            // Try every known legacy key before treating the account as new.
+            for (const candidate of candidates) {
+                let res;
+                try { res = await fetch(`${cleanUrl}/patients/${encodeURIComponent(candidate)}.json`); }
+                catch (_) { continue; }
+                if (!res.ok) continue;
                 const data = await res.json();
-                if (data && typeof data === 'object') {
-                    if (data.profile) {
-                        userAccount.name = data.profile.name || userAccount.name;
-                        userAccount.caregiverPhone = data.profile.caregiverPhone || userAccount.caregiverPhone;
-                        if (data.profile.appLanguage && ['hi','en','kn','ta','te'].includes(data.profile.appLanguage)) { userAccount.appLanguage = data.profile.appLanguage; localStorage.setItem('dawa_app_language_' + phone, data.profile.appLanguage); localStorage.setItem('dawa_app_language', data.profile.appLanguage); }
-                        if (data.profile.language && ['hi','en','kn','ta','te'].includes(data.profile.language)) {
-                            userAccount.language = data.profile.language;
-                            localStorage.setItem('alarm_language_' + phone, data.profile.language);
-                            localStorage.setItem('alarm_language', data.profile.language);
-                            const languageSelect = document.getElementById('alarmLanguageSelect');
-                            if (languageSelect) languageSelect.value = data.profile.language;
-                        }
+                if (!data || typeof data !== 'object' || Array.isArray(data)) continue;
+                const hasProfile = !!data.profile;
+                const hasMeds = Array.isArray(data.medicines);
+                if (!hasProfile && !hasMeds) continue;
+                if (hasProfile) {
+                    userAccount.name = data.profile.name || userAccount.name;
+                    userAccount.caregiverPhone = data.profile.caregiverPhone || userAccount.caregiverPhone;
+                    if (data.profile.appLanguage && ['hi','en','kn','ta','te'].includes(data.profile.appLanguage)) {
+                        userAccount.appLanguage = data.profile.appLanguage;
+                        localStorage.setItem('dawa_app_language_' + phone, data.profile.appLanguage);
+                        localStorage.setItem('dawa_app_language', data.profile.appLanguage);
                     }
-                    if (Array.isArray(data.medicines)) {
-                        medicines = data.medicines;
+                    if (data.profile.language && ['hi','en','kn','ta','te'].includes(data.profile.language)) {
+                        userAccount.language = data.profile.language;
+                        localStorage.setItem('alarm_language_' + phone, data.profile.language);
+                        localStorage.setItem('alarm_language', data.profile.language);
+                        const languageSelect = document.getElementById('alarmLanguageSelect');
+                        if (languageSelect) languageSelect.value = data.profile.language;
                     }
-
-                    // Save to local cache on this new device
-                    localStorage.setItem('user_profile_' + phone, JSON.stringify(userAccount));
-                    localStorage.setItem('medicines_' + phone, JSON.stringify(medicines));
-                    updateCloudStatusUI(true, 'Cloud Synced ✅');
-                    return true;
                 }
+                if (hasMeds) medicines = data.medicines;
+                // Cache under current and discovered legacy key for future sign-ins.
+                localStorage.setItem('user_profile_' + phone, JSON.stringify(userAccount));
+                localStorage.setItem('medicines_' + phone, JSON.stringify(medicines));
+                if (Array.isArray(data.medicines)) localStorage.setItem('medicines_' + candidate, JSON.stringify(data.medicines));
+                updateCloudStatusUI(true, 'Cloud Synced ✅');
+                return true;
             }
         } catch (e) {
             console.log('Firebase fetch error:', e);
         }
-        updateCloudStatusUI(false, 'Offline');
+        updateCloudStatusUI(false, 'Offline / No matching record');
         return false;
     }
 
@@ -1564,8 +1597,8 @@
         const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !overlay.classList.contains('active');
         if (shouldOpen) {
             document.getElementById('editProfileName').value = userAccount.name || '';
-            document.getElementById('editProfileMobile').value = userAccount.mobile || '';
-            document.getElementById('editProfileCaregiver').value = userAccount.caregiverPhone || '';
+            document.getElementById('editProfileMobile').value = phoneForEditableInput(userAccount.mobile || '');
+            document.getElementById('editProfileCaregiver').value = phoneForEditableInput(userAccount.caregiverPhone || '');
             overlay.classList.add('active');
             panel.style.display = 'block';
             document.body.classList.add('profile-editor-open');
@@ -2090,6 +2123,29 @@
         document.getElementById('editTime3').style.display = f >= 3 ? 'block' : 'none';
     }
 
+    // Display international phone numbers clearly while preserving stored keys.
+    function formatPhoneForDisplay(value) {
+        const raw = String(value || '').trim();
+        const digits = raw.replace(/\D/g, '');
+        if (!digits) return '-';
+        // India: 91 + 10-digit mobile number
+        if (digits.length === 12 && digits.startsWith('91')) {
+            return '+91 ' + digits.slice(2, 7) + ' ' + digits.slice(7);
+        }
+        if (digits.length === 10) return digits.slice(0, 5) + ' ' + digits.slice(5);
+        return raw.startsWith('+') ? raw : '+' + digits;
+    }
+    function phoneForEditableInput(value) {
+        const digits = String(value || '').replace(/\D/g, '');
+        return digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
+    }
+    function normalizeCaregiverPhone(value) {
+        const digits = String(value || '').replace(/\D/g, '');
+        if (digits.length === 10 && String(userAccount.mobile || '').replace(/\D/g, '').startsWith('91')) return '91' + digits;
+        if (digits.length === 12 && digits.startsWith('91')) return digits;
+        return digits;
+    }
+
     function renderAll() {
         const schedList = document.getElementById('scheduleList');
         const lowBanner = document.getElementById('lowStockWarning');
@@ -2101,9 +2157,9 @@
         const drawerPatient=document.getElementById('drawerPatientName'); if(drawerPatient) drawerPatient.textContent=userAccount.name || 'Senior Care Hub';
         document.getElementById('lblDeliverAddress').innerText = userAccount.name || '-';
         document.getElementById('lblAccountName').innerText = userAccount.name || '-';
-        document.getElementById('lblAccountMobile').innerText = userAccount.mobile || '-';
-        document.getElementById('lblCaregiverDisplay').innerText = userAccount.caregiverPhone || 'Not Set';
-        document.getElementById('inputCaregiverPhone').value = userAccount.caregiverPhone || '';
+        document.getElementById('lblAccountMobile').innerText = formatPhoneForDisplay(userAccount.mobile);
+        document.getElementById('lblCaregiverDisplay').innerText = userAccount.caregiverPhone ? formatPhoneForDisplay(userAccount.caregiverPhone) : 'Not Set';
+        document.getElementById('inputCaregiverPhone').value = phoneForEditableInput(userAccount.caregiverPhone || '');
         // Shared Firebase URL is configured in code; no per-user input needed.
 
         updateCloudStatusUI(true, 'Active');
@@ -2386,8 +2442,13 @@
     }
 
     function saveCaregiverDetails() {
-        const phone = document.getElementById('inputCaregiverPhone').value.trim();
-        userAccount.caregiverPhone = phone;
+        const entered = document.getElementById('inputCaregiverPhone').value.trim();
+        const digits = entered.replace(/\D/g, '');
+        if (digits.length !== 10 && !(digits.length === 12 && digits.startsWith('91'))) {
+            alert('Please enter a valid 10-digit mobile number (or +91 followed by 10 digits).');
+            return;
+        }
+        userAccount.caregiverPhone = normalizeCaregiverPhone(entered);
         if (userAccount.mobile) {
             localStorage.setItem('user_profile_' + userAccount.mobile, JSON.stringify(userAccount));
             pushToFirebaseCloud();
@@ -2470,13 +2531,13 @@
                 alert(`☁️ Cloud Sync Success!\n\nWelcome back, ${userAccount.name}! Google Firebase se aapki saari dawaayein load ho gayi hain.`);
             } else {
                 // If this number has no cloud record or the cloud is unavailable, use this device's cache.
-                const existingMeds = localStorage.getItem('medicines_' + mob);
-                medicines = existingMeds ? JSON.parse(existingMeds) : [];
+                const localMeds = localMedicinesForPhone(mob);
+                medicines = localMeds || [];
             }
         } else {
             // Local storage works only in this browser/device; it does not transfer to another phone.
-            const existingMeds = localStorage.getItem('medicines_' + mob);
-            medicines = existingMeds ? JSON.parse(existingMeds) : [];
+            const localMeds = localMedicinesForPhone(mob);
+            medicines = localMeds || [];
         }
 
         document.getElementById('mandatoryLoginWall').style.display = 'none';
@@ -2489,8 +2550,8 @@
 
     function openAccountModal() {
         document.getElementById('modalAccName').innerText = userAccount.name;
-        document.getElementById('modalAccMobile').innerText = userAccount.mobile || '-';
-        document.getElementById('modalCaregiverMobile').innerText = userAccount.caregiverPhone || '-';
+        document.getElementById('modalAccMobile').innerText = formatPhoneForDisplay(userAccount.mobile);
+        document.getElementById('modalCaregiverMobile').innerText = userAccount.caregiverPhone ? formatPhoneForDisplay(userAccount.caregiverPhone) : '-';
         document.getElementById('accountProfileModal').classList.add('active');
     }
 
