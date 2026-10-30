@@ -780,6 +780,73 @@
         body.dark-mode { background: linear-gradient(145deg, #dbeafe 0%, #eef2ff 45%, #f8fafc 100%) !important; color: #111827 !important; }
         body.dark-mode .app-shell, body.dark-mode .form-card, body.dark-mode .med-card, body.dark-mode .modal-content, body.dark-mode .app-drawer { background: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
         body.dark-mode label, body.dark-mode p, body.dark-mode span, body.dark-mode strong, body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: inherit; }
+    
+    /* ===== NEW DARK THEME (class: theme-dark) ===== */
+    @media screen {
+    body.theme-dark { color-scheme: dark; --bg:#0f172a; --card-bg:#1e293b; --text-dark:#f1f5f9; --text-muted:#cbd5e1; background:#020617 !important; color:#f1f5f9; }
+    body.theme-dark .app-shell { background:#0f172a; }
+    body.theme-dark .top-bar { background:linear-gradient(120deg,#1e3a8a,#1d4ed8); }
+    body.theme-dark .sub-header { background:#172554; }
+    body.theme-dark .form-card, body.theme-dark .med-card, body.theme-dark .modal-content,
+    body.theme-dark .store-tile, body.theme-dark .login-card-fk, body.theme-dark .login-language-gate,
+    body.theme-dark .alarm-box-content, body.theme-dark .profile-editor-dialog,
+    body.theme-dark #emptyScheduleCard, body.theme-dark .language-card
+    { background:#1e293b !important; color:#f1f5f9 !important; border-color:#334155 !important; }
+    body.theme-dark .med-card.critical-card { background:#2b1a22 !important; border-left-color:#ef4444 !important; }
+    body.theme-dark .profile-editor-panel-modal { background:#1e293b !important; color:#f1f5f9 !important; border-color:#475569 !important; }
+    body.theme-dark .med-name, body.theme-dark .s-name { color:#f8fafc !important; }
+    body.theme-dark label, body.theme-dark .form-card h3, body.theme-dark .modal-content h2,
+    body.theme-dark .profile-editor-dialog label, body.theme-dark .profile-editor-heading,
+    body.theme-dark .login-language-gate h2, body.theme-dark .login-language-gate p,
+    body.theme-dark .profile-editor-note, body.theme-dark .country-code-help,
+    body.theme-dark [style*="#212121"], body.theme-dark [style*="#475569"], body.theme-dark [style*="#111827"],
+    body.theme-dark [style*="#4b5563"] { color:#e2e8f0 !important; }
+    body.theme-dark [style*="#166534"] { color:#86efac !important; }
+    body.theme-dark [style*="#047857"] { color:#6ee7b7 !important; }
+    body.theme-dark [style*="#be123c"] { color:#fda4af !important; }
+    body.theme-dark [style*="#1d4ed8"], body.theme-dark [style*="#2874f0"], body.theme-dark [style*="#2563eb"] { color:#93c5fd !important; }
+    body.theme-dark [style*="#7c3aed"] { color:#c4b5fd !important; }
+    body.theme-dark #alarmMedName { color:#f9fafb !important; }
+    body.theme-dark [style*="#f8fafc"], body.theme-dark [style*="#fff1f2"] { background:#0f172a !important; border-color:#475569 !important; }
+    body.theme-dark [style*="#f0fdf4"] { background:#052e16 !important; }
+    body.theme-dark .form-control, body.theme-dark input, body.theme-dark select, body.theme-dark textarea,
+    body.theme-dark .profile-editor-dialog input, body.theme-dark .profile-editor-dialog select
+    { background:#0f172a !important; color:#f8fafc !important; border-color:#475569 !important; caret-color:#fff; }
+    body.theme-dark input::placeholder { color:#94a3b8 !important; opacity:1; }
+    body.theme-dark select option { background:#0f172a; color:#f8fafc; }
+    body.theme-dark .time-pill { background:#1e3a8a; color:#dbeafe; border-color:#3b82f6; }
+    body.theme-dark .stock-ok { background:#14532d; color:#dcfce7; }
+    body.theme-dark .stock-alert { background:#7f1d1d; color:#fee2e2; }
+    body.theme-dark .critical-badge { background:#7f1d1d; color:#fee2e2; }
+    body.theme-dark .cloud-online { background:#14532d; color:#dcfce7; }
+    body.theme-dark .cloud-offline { background:#7f1d1d; color:#fee2e2; }
+    body.theme-dark .pill-thumbnail, body.theme-dark .alarm-pill-display { background:#0f172a; border-color:#475569; }
+    body.theme-dark .voice-test-banner { background:#052e16; border-color:#22c55e; color:#bbf7d0; }
+    body.theme-dark .btn-edit { background:#334155; color:#dbeafe; border-color:#60a5fa; }
+    body.theme-dark .btn-refill { background:#1e3a8a; color:#dbeafe; }
+    body.theme-dark .btn-delete { background:#7f1d1d; color:#fee2e2; }
+    body.theme-dark .btn-preview-tone { background:#0c4a6e; color:#bae6fd; border-color:#0369a1; }
+    body.theme-dark .profile-editor-x, body.theme-dark .drawer-close { background:#334155; color:#fff; }
+    body.theme-dark .bottom-nav { background:#0f172a; border-top-color:#334155; }
+    body.theme-dark .nav-btn { color:#94a3b8; }
+    body.theme-dark .nav-btn.active { color:#93c5fd; }
+    body.theme-dark .app-drawer { background:#0f172a; color:#f1f5f9; border-right:1px solid #334155; }
+    body.theme-dark .drawer-head { border-color:#334155; }
+    body.theme-dark .drawer-brand { color:#93c5fd; }
+    body.theme-dark .drawer-item { color:#e2e8f0; }
+    body.theme-dark .drawer-item:hover, body.theme-dark .drawer-item:focus { background:#1e3a8a; color:#fff; }
+    body.theme-dark .drawer-section-title { color:#94a3b8; }
+    body.theme-dark .drawer-mini-card { background:#172554; color:#dbeafe; }
+    body.theme-dark #mandatoryLoginWall { background:#020617; }
+    body.theme-dark .login-slider { background:linear-gradient(135deg,#172554,#1e3a8a); }
+    body.theme-dark .login-slide h3 { color:#bfdbfe; }
+    body.theme-dark .login-slide p { color:#dbeafe; }
+    body.theme-dark .login-slider-dots span { background:#475569; }
+    body.theme-dark .login-slider-dots span.active { background:#60a5fa; }
+    body.theme-dark .login-language-option { background:#1e293b; border-color:#475569; color:#f8fafc; }
+    body.theme-dark .login-language-option.active { background:#1e3a8a; border-color:#60a5fa; color:#fff; }
+    body.theme-dark .alarm-box-content { border-color:#ef4444 !important; }
+    }
     </style>
 </head>
 <body>
@@ -1095,6 +1162,8 @@
                     <label for="themeSelect" data-i18n="themeLabel">Theme:</label>
                     <select id="themeSelect" class="form-control" onchange="setAppTheme(this.value)" aria-label="Theme">
                         <option value="light" data-i18n="themeLight">Light mode</option>
+                        <option value="dark" data-i18n="themeDark">Dark mode</option>
+                        <option value="system" data-i18n="themeSystem">System default</option>
                     </select>
                 </div>
             </div>
@@ -1839,8 +1908,16 @@
     function tr(key){ return (APP_TRANSLATIONS[getAppLanguage()]||APP_TRANSLATIONS.en)[key]||APP_TRANSLATIONS.en[key]||key; }
     function setAppLanguage(language){ if(!APP_TRANSLATIONS[language]) language='en'; localStorage.setItem('dawa_app_language',language); const appSel=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); const drawerSel=document.getElementById('drawerLanguageSelect'); if(appSel) appSel.value=language; if(loginSel) loginSel.value=language; if(drawerSel) drawerSel.value=language; if(userAccount&&userAccount.mobile){localStorage.setItem('dawa_app_language_'+userAccount.mobile,language); userAccount.appLanguage=language; localStorage.setItem('user_profile_'+userAccount.mobile,JSON.stringify(userAccount)); if(typeof pushToFirebaseCloud==='function') pushToFirebaseCloud();} applyAppLanguage(); }
     function applyAppLanguage(){ const lang=(userAccount&&userAccount.mobile&&localStorage.getItem('dawa_app_language_'+userAccount.mobile))||localStorage.getItem('dawa_app_language')||(userAccount&&userAccount.appLanguage)||'en'; const sel=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); if(sel) sel.value=APP_TRANSLATIONS[lang]?lang:'en'; if(loginSel) loginSel.value=APP_TRANSLATIONS[lang]?lang:'en'; const drawerSel=document.getElementById('drawerLanguageSelect'); if(drawerSel) drawerSel.value=APP_TRANSLATIONS[lang]?lang:'en'; const drawerAlarm=document.getElementById('drawerAlarmLanguageSelect'); if(drawerAlarm) drawerAlarm.value=getAlarmLanguage(); document.documentElement.lang=({en:'en',hi:'hi',kn:'kn',ta:'ta',te:'te'})[lang]||'en'; document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); const value=tr(k); if(value) el.textContent=value;}); document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder'); const value=(MED_FORM_TRANSLATIONS[lang]||MED_FORM_TRANSLATIONS.en)[k]; if(value) el.placeholder=value; else {const fallback=tr(k); if(fallback) el.placeholder=fallback;}}); document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); const value=(MED_FORM_TRANSLATIONS[lang]||MED_FORM_TRANSLATIONS.en)[k]; if(value) el.textContent=value;}); if(typeof userAccount!=='undefined' && userAccount && typeof medicines!=='undefined' && Array.isArray(medicines) && document.getElementById('schedList')) { try { renderAll(); } catch(e) {} } const status=document.getElementById('voiceLanguageStatus'); if(status){ const labels={hi:'अलार्म हिन्दी में बोलेगा।',en:'Alarm will speak in English.',kn:'ಅಲಾರಂ ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡುತ್ತದೆ.',ta:'அலாரம் தமிழில் பேசும்.',te:'అలారం తెలుగులో మాట్లాడుతుంది.'}; status.textContent=labels[getAlarmLanguage()]||tr('voiceStatus'); } }
-    function setAppTheme(theme){ localStorage.setItem('dawa_app_theme','light'); document.body.classList.remove('dark-mode'); const sel=document.getElementById('themeSelect'); if(sel)sel.value='light'; const drawerSel=document.getElementById('drawerThemeSelect'); if(drawerSel)drawerSel.value='light'; }
-    function applyAppTheme(){ localStorage.setItem('dawa_app_theme','light'); document.body.classList.remove('dark-mode'); const sel=document.getElementById('themeSelect'); const drawerSel=document.getElementById('drawerThemeSelect'); if(sel)sel.value='light'; if(drawerSel)drawerSel.value='light'; }
+    function getThemePref(){ const t = localStorage.getItem('dawa_app_theme'); return ['light','dark','system'].includes(t) ? t : 'light'; }
+    function setAppTheme(theme){ if(!['light','dark','system'].includes(theme)) theme='light'; localStorage.setItem('dawa_app_theme',theme); applyAppTheme(); }
+    function applyAppTheme(){
+        const pref = getThemePref();
+        const dark = pref === 'dark' || (pref === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.body.classList.remove('dark-mode');
+        document.body.classList.toggle('theme-dark', dark);
+        ['themeSelect','drawerThemeSelect'].forEach(id => { const el = document.getElementById(id); if (el) el.value = pref; });
+    }
+    if (window.matchMedia) { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (getThemePref() === 'system') applyAppTheme(); }); }
 
     const ALARM_LANGUAGE_CONFIG = {
         hi: { lang: 'hi-IN', voicePrefix: 'hi', text: name => `ध्यान दें, आपकी दवा ${name} लेने का समय हो गया है। कृपया अब अपनी दवा ले लें।` },
@@ -2263,27 +2340,27 @@
     function renderAllSixStores(medName) {
         const q = encodeURIComponent(medName);
         return `
-            <a class="store-tile" target="_blank" href="https://www.amazon.in/s?k=${q}&i=hpc">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.amazon.in/s?k=${q}&i=hpc">
                 <span class="s-name">🛒 Amazon</span>
                 <span class="s-tag tag-amz">Amazon Pharmacy</span>
             </a>
-            <a class="store-tile" target="_blank" href="https://www.flipkart.com/search?q=${q}+medicine">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.flipkart.com/search?q=${q}+medicine">
                 <span class="s-name">🛍️ Flipkart</span>
                 <span class="s-tag tag-fk">Flipkart Health+</span>
             </a>
-            <a class="store-tile" target="_blank" href="https://www.1mg.com/search/all?name=${q}">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.1mg.com/search/all?name=${q}">
                 <span class="s-name">🔴 Tata 1mg</span>
                 <span class="s-tag tag-1mg">Discount Verified</span>
             </a>
-            <a class="store-tile" target="_blank" href="https://www.apollopharmacy.in/search-medicines/${q}">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.apollopharmacy.in/search-medicines/${q}">
                 <span class="s-name">🔵 Apollo</span>
                 <span class="s-tag tag-apollo">Apollo Pharmacy</span>
             </a>
-            <a class="store-tile" target="_blank" href="https://pharmeasy.in/search/all?name=${q}">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://pharmeasy.in/search/all?name=${q}">
                 <span class="s-name">🟢 PharmEasy</span>
                 <span class="s-tag tag-pharmeasy">Fast Delivery</span>
             </a>
-            <a class="store-tile" target="_blank" href="https://www.netmeds.com/catalogsearch/result/${q}/all">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.netmeds.com/catalogsearch/result?q=${q}">
                 <span class="s-name">💊 Netmeds</span>
                 <span class="s-tag tag-netmeds">India Ki Pharmacy</span>
             </a>
