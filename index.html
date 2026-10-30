@@ -806,6 +806,7 @@
     body.theme-dark [style*="#be123c"] { color:#fda4af !important; }
     body.theme-dark [style*="#1d4ed8"], body.theme-dark [style*="#2874f0"], body.theme-dark [style*="#2563eb"] { color:#93c5fd !important; }
     body.theme-dark [style*="#7c3aed"] { color:#c4b5fd !important; }
+    body.theme-dark [style*="#0369a1"] { color:#7dd3fc !important; }
     body.theme-dark #alarmMedName { color:#f9fafb !important; }
     body.theme-dark [style*="#f8fafc"], body.theme-dark [style*="#fff1f2"] { background:#0f172a !important; border-color:#475569 !important; }
     body.theme-dark [style*="#f0fdf4"] { background:#052e16 !important; }
@@ -847,6 +848,26 @@
     body.theme-dark .login-language-option.active { background:#1e3a8a; border-color:#60a5fa; color:#fff; }
     body.theme-dark .alarm-box-content { border-color:#ef4444 !important; }
     }
+    
+    /* Required field marker + error highlight */
+    label.req::after { content:" *"; color:#dc2626; font-weight:900; }
+    .field-error { border-color:#dc2626 !important; box-shadow:0 0 0 3px rgba(220,38,38,.18) !important; }
+    body.theme-dark label.req::after { color:#f87171; }
+    body.theme-dark .field-error { border-color:#f87171 !important; }
+    
+    /* Required note, toast and medicine-name suggestions */
+    .req-note { font-size:12.5px; font-weight:800; color:#dc2626; margin-bottom:12px; }
+    #appToast { position:fixed; top:14px; left:50%; transform:translateX(-50%); width:min(92%,440px); z-index:100001; background:#b91c1c; color:#fff; padding:13px 16px; border-radius:14px; box-shadow:0 12px 30px rgba(0,0,0,.35); font-weight:800; font-size:14px; line-height:1.45; display:none; }
+    .med-suggest { position:absolute; left:0; right:0; top:100%; margin-top:4px; background:#fff; border:1.5px solid #cbd5e1; border-radius:12px; box-shadow:0 12px 28px rgba(15,23,42,.18); max-height:240px; overflow-y:auto; z-index:60; display:none; }
+    .med-suggest-item { padding:12px 14px; font-weight:700; color:#172033; cursor:pointer; border-bottom:1px solid #eef2f7; display:flex; justify-content:space-between; gap:8px; }
+    .med-suggest-item:last-child { border-bottom:0; }
+    .med-suggest-item:hover, .med-suggest-item:active { background:#eff6ff; }
+    .med-suggest-item small { color:#64748b; font-weight:700; font-size:11px; white-space:nowrap; }
+    body.theme-dark .req-note { color:#f87171; }
+    body.theme-dark .med-suggest { background:#1e293b; border-color:#475569; }
+    body.theme-dark .med-suggest-item { color:#f1f5f9; border-bottom-color:#334155; }
+    body.theme-dark .med-suggest-item:hover, body.theme-dark .med-suggest-item:active { background:#1e3a8a; }
+    body.theme-dark .med-suggest-item small { color:#94a3b8; }
     </style>
 </head>
 <body>
@@ -1048,9 +1069,23 @@
             <h2 id="addTitle" data-i18n="addTitle" style="font-weight: 800; margin-bottom: 14px; font-size: 18px;">➕ Nayi Dawa Jodein</h2>
             
             <div class="form-card">
+                <div class="req-note" data-i18n="requiredNote">* marked fields are mandatory</div>
                 <div class="form-group">
-                    <label data-i18n="medNameLabel">Medicine Name:</label>
+                    <label class="req" data-i18n="medNameLabel">Medicine Name:</label>
                     <input type="text" id="addName" class="form-control" placeholder="e.g. Telma 40, Glycomet, Aciloc" data-i18n-placeholder="medicineNamePlaceholder">
+                </div>
+
+                <div class="form-group">
+                    <label>🧴 Medicine Type:</label>
+                    <select id="addType" class="form-control" onchange="toggleAddType()">
+                        <option value="tablet">💊 Tablet / Capsule</option>
+                        <option value="syrup">🧴 Syrup / Liquid / Drops (ml)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="addSyrupBox" style="display:none;">
+                    <label class="req">💧 Dose per intake (ml):</label>
+                    <input type="number" id="addDoseMl" class="form-control" placeholder="e.g. 5 or 10" min="0.5" step="0.5" inputmode="decimal" value="5">
+                    <small style="color:var(--text-muted);">Har baar jitna ml piyoge, utna stock se ghatega. Schedule mein ise kabhi bhi badal sakte ho.</small>
                 </div>
 
                 <div class="form-group" style="background:#fff1f2; border:1px solid #fecdd3; padding:10px; border-radius:8px;">
@@ -1095,8 +1130,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label data-i18n="frequencyLabel">How many times per day?</label>
+                    <label class="req" data-i18n="frequencyLabel">How many times per day?</label>
                     <select id="addFreq" class="form-control" onchange="toggleAddTimes()">
+                        <option value="" data-i18n="selectPlaceholder" selected>-- Select --</option>
                         <option value="1" data-i18n="freqOne">Once a day</option>
                         <option value="2" data-i18n="freqTwo">Twice (Morning and Night)</option>
                         <option value="3" data-i18n="freqThree">Three times (Morning, Afternoon, Night)</option>
@@ -1104,7 +1140,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label data-i18n="timingsLabel">Timings:</label>
+                    <label class="req" data-i18n="timingsLabel">Timings:</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="time" id="addTime1" class="form-control">
                         <input type="time" id="addTime2" class="form-control" style="display: none;">
@@ -1113,13 +1149,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label data-i18n="stockLabel">Stock Quantity:</label>
-                    <input type="number" id="addStock" class="form-control" placeholder="e.g. 30" data-i18n-placeholder="stockPlaceholder" min="1">
+                    <label class="req" data-i18n="stockLabel">Stock Quantity:</label>
+                    <input type="number" id="addStock" class="form-control" placeholder="e.g. 30" data-i18n-placeholder="stockPlaceholder" min="1" step="any">
+                    <small id="addStockHint" style="color:var(--text-muted); display:none;">🧴 Bottle mein total kitne ml hai (jaise 100 ya 60)</small>
                 </div>
 
                 <div class="form-group">
-                    <label data-i18n="instructionsLabel">Instructions:</label>
+                    <label class="req" data-i18n="instructionsLabel">Instructions:</label>
                     <select id="addInstruction" class="form-control">
+                        <option value="" data-i18n="selectPlaceholder" selected>-- Select --</option>
                         <option value="Khane ke baad (After Food)" data-i18n="afterFood">After food</option>
                         <option value="Khane se pehle (Before Food)" data-i18n="beforeFood">Before food</option>
                         <option value="Raat ko sote samay (At Bedtime)" data-i18n="bedtime">At bedtime</option>
@@ -1232,7 +1270,7 @@
                 <div id="profileEditPanel" class="profile-edit-panel" style="display:none; padding:14px; border:1px solid #dbeafe; border-radius:12px; background:#f8fafc; margin-bottom:12px;">
                     <div class="form-group"><label for="editProfileName" data-i18n="loginPatientLabel">Patient Name:</label><input id="editProfileName" class="form-control" type="text" placeholder="Patient name" data-i18n-placeholder="loginPatientPlaceholder"></div>
                     <div class="form-group"><label for="editProfileMobile" data-i18n="loginMobileLabel">Mobile Number (10 Digits):</label><input id="editProfileMobile" class="form-control" type="tel" maxlength="10" inputmode="numeric" disabled></div>
-                    <div class="form-group"><label for="editProfileCaregiver" data-i18n="loginCaregiverLabel">Family Member / Caregiver WhatsApp Number:</label><input id="editProfileCaregiver" class="form-control" type="tel" maxlength="10" inputmode="numeric"></div>
+                    <div class="form-group"><label for="editProfileCaregiver" data-i18n="loginCaregiverLabel">Family Member / Caregiver WhatsApp Number:</label><input id="editProfileCaregiver" class="form-control" type="tel" maxlength="15" inputmode="numeric"></div>
                     <button class="btn" style="width:100%;" onclick="savePatientProfile()"><span data-i18n="saveProfileButton">💾 Save changes</span></button>
                     <button class="btn btn-delete" style="width:100%; margin-top:8px;" onclick="toggleProfileEdit(false)"><span data-i18n="cancelButton">Cancel</span></button>
                 </div>
@@ -1333,8 +1371,21 @@
         </div>
 
         <div class="form-group">
+            <label>🧴 Medicine Type:</label>
+            <select id="editType" class="form-control" onchange="toggleEditType()">
+                <option value="tablet">💊 Tablet / Capsule</option>
+                <option value="syrup">🧴 Syrup / Liquid / Drops (ml)</option>
+            </select>
+        </div>
+        <div class="form-group" id="editSyrupBox" style="display:none;">
+            <label>💧 Dose per intake (ml):</label>
+            <input type="number" id="editDoseMl" class="form-control" min="0.5" step="0.5" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
             <label data-i18n="stockLabel">Stock Quantity:</label>
-            <input type="number" id="editStock" class="form-control" min="0">
+            <input type="number" id="editStock" class="form-control" min="0" step="any">
+            <small id="editStockHint" style="color:var(--text-muted); display:none;">🧴 Bottle mein bache hue total ml</small>
         </div>
 
         <div class="form-group">
@@ -1350,7 +1401,8 @@
             <button class="btn btn-fk" data-i18n="saveChanges" style="flex: 2; margin-top:0;" onclick="saveEditedMedicine()">
                 💾 Save Changes
             </button>
-            <button class="btn btn-delete" data-i18n="cancelButton" style="flex: 1;" onclick="closeEditModal()">
+            <button class="btn btn-delete" style="flex: 1;" onclick="deleteFromEditModal()">🗑️ Delete</button>
+            <button class="btn btn-edit" data-i18n="cancelButton" style="flex: 1;" onclick="closeEditModal()">
                 Cancel
             </button>
         </div>
@@ -1682,9 +1734,10 @@
 
     async function savePatientProfile() {
         const name = document.getElementById('editProfileName').value.trim();
-        const caregiver = document.getElementById('editProfileCaregiver').value.replace(/\D/g, '').slice(0, 10);
+        const caregiverRaw = document.getElementById('editProfileCaregiver').value.replace(/\D/g, '').slice(0, 15);
+        const caregiver = withCaregiverCode(caregiverRaw);
         if (!name) { alert(tr('profileNameRequired') || 'Please enter the patient name.'); return; }
-        if (caregiver && caregiver.length !== 10) { alert(tr('profileCaregiverInvalid') || 'Caregiver mobile number must contain 10 digits.'); return; }
+        if (caregiverRaw && (caregiverRaw.length < 10 || caregiverRaw.length > 15)) { alert(tr('profileCaregiverInvalid') || 'Caregiver mobile number must contain 10 digits.'); return; }
         userAccount.name = name;
         userAccount.caregiverPhone = caregiver;
         localStorage.setItem('user_profile_' + userAccount.mobile, JSON.stringify(userAccount));
@@ -1719,7 +1772,8 @@
     }
     function getInternationalPhone(codeId, inputId) {
       const code=(document.getElementById(codeId)?.value || '+91').replace(/\D/g,'');
-      const local=(document.getElementById(inputId)?.value || '').replace(/\D/g,'');
+      let local=(document.getElementById(inputId)?.value || '').replace(/\D/g,'').replace(/^0+/,'');
+      if (local.length > 10 && local.startsWith(code)) local = local.slice(code.length);
       return code + local;
     }
     populateCountryCodes();
@@ -1898,11 +1952,11 @@
       te: {loginGateTitle:'మీ భాషను ఎంచుకోండి',loginGateDesc:'లాగిన్ కొనసాగించడానికి మీకు నచ్చిన భాషను ఎంచుకోండి.',loginContinue:'కొనసాగించండి →',criticalBadge:'⚡ ముఖ్యమైన మందు',stockRemaining:'మిగిలాయి',takeMedicine:'✅ మందు తీసుకున్నాను (-1)',editMedicine:'✏️ సవరించు',stockPills:'మాత్రలు',refillPills:'➕ 10 మాత్రలు జోడించు',removeMedicine:'🗑️ తొలగించు',alarmStop:'✅ మందు తీసుకున్నాను (అలారం ఆపు)',drawerNavigate:'ప్రధాన మెనూ',drawerQuickSettings:'త్వరిత సెట్టింగ్‌లు',drawerProfile:'రోగి ప్రొఫైల్ మరియు ఖాతా',drawerCareTitle:'సంరక్షణ మరింత సులభం',drawerCareDesc:'మందుల షెడ్యూల్, సంరక్షకుడి వివరాలు, వాయిస్ అలారాలు, క్లౌడ్ సింక్ అన్నీ ఒకేచోట నిర్వహించండి.',navStores:'ఫార్మసీ',voiceBannerTitle:'🗣️ వాయిస్ అలారం పనిచేస్తోంది',voiceBannerDesc:'అలారం మీరు ఎంచుకున్న భాషలో మందు పేరు చెబుతుంది.',testVoiceLabel:'▶️ వాయిస్ పరీక్షించండి',scheduleTitle:'📋 నేటి షెడ్యూల్',addTitle:'➕ మందు జోడించండి',settingsTitle:'⚙️ సెట్టింగ్‌లు',appAppearanceTitle:'🌐 యాప్ భాష మరియు రూపం',appLanguageLabel:'యాప్ భాష:',themeLabel:'థీమ్:',themeSystem:'సిస్టమ్ డిఫాల్ట్',themeLight:'లైట్ మోడ్',themeDark:'డార్క్ మోడ్',alarmLanguageTitle:'🗣️ అలారం వాయిస్ భాష',alarmLanguageDesc:'మందు అలారం మాట్లాడే భాషను ఎంచుకోండి.',alarmLanguageLabel:'అలారం భాష:',cloudTitle:'☁️ ఆటోమేటిక్ క్లౌడ్ సింక్',cloudDesc:'షేర్ చేసిన Firebase డేటాబేస్ ముందుగానే సెటప్ చేయబడింది. URL నమోదు చేయాల్సిన లేదా విడిగా కనెక్ట్ చేయాల్సిన అవసరం లేదు. లాగిన్ తర్వాత ప్రతి మొబైల్ నంబర్ డేటా క్లౌడ్‌లో విడిగా సేవ్ అవుతుంది.',cloudRefreshDesc:'మార్పులు సాధారణంగా 10 సెకన్లలో మరో పరికరంలో కనిపిస్తాయి.',navSchedule:'షెడ్యూల్',navAdd:'మందు జోడించు',navStores:'స్టోర్లు',navSettings:'సెట్టింగ్‌లు',emptyScheduleTitle:'ఈ మొబైల్ నంబర్‌కు ఇంకా మందులు జోడించలేదు.',emptyScheduleDesc:'మందులు జోడించడానికి కింద ఉన్న “మందు జోడించు” ట్యాబ్‌ను ఎంచుకోండి.',voiceStatus:'అలారం వాయిస్ భాష ఎంచుకోబడింది.',loginSubtitle:'కుటుంబ మందుల సంరక్షణ ఒకే చోట',loginMobileLabel:'మొబైల్ నంబర్ (10 అంకెలు):',loginMobilePlaceholder:'10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి',loginMobileHelp:'* ప్రతి మొబైల్ నంబర్‌కు ప్రత్యేక మందుల రికార్డు సేవ్ అవుతుంది.',loginPatientLabel:'రోగి పేరు:',loginPatientPlaceholder:'ఉదా: అబ్దుల్లా',loginCaregiverLabel:'కుటుంబ సభ్యుడు / సంరక్షకుడి WhatsApp నంబర్:',loginCaregiverPlaceholder:'సంరక్షకుడి 10 అంకెల నంబర్',loginSendOtp:'OTP పంపండి',loginEnterOtp:'OTP కోడ్ నమోదు చేయండి',loginCodeSent:'ఈ నంబర్‌కు కోడ్ పంపబడింది:',loginVerify:'OTP ధృవీకరించి యాప్ తెరవండి',loginResend:'🔄 OTP మళ్లీ పంపండి',sliderOneTitle:'మందుల షెడ్యూల్ సులభం',sliderOneDesc:'మందుల సమయాలు, రిమైండర్‌లను ఒకేచోట ఉంచండి.',sliderTwoTitle:'కుటుంబం మొత్తానికి సంరక్షణ',sliderTwoDesc:'రోగి మరియు సంరక్షకుడి వివరాలను సులభంగా చూడండి.',sliderThreeTitle:'మీ రికార్డు సింక్ అవుతుంది',sliderThreeDesc:'మీ రికార్డును తెరవడానికి మొబైల్ నంబర్‌తో లాగిన్ అవ్వండి.',editProfileButton:'రోగి ప్రొఫైల్‌ను సవరించండి',saveProfileButton:'💾 మార్పులను సేవ్ చేయండి',cancelButton:'రద్దు చేయండి',profileNameRequired:'దయచేసి రోగి పేరును నమోదు చేయండి.',profileCaregiverInvalid:'సంరక్షకుడి మొబైల్ నంబర్ 10 అంకెలు ఉండాలి.',profileSaved:'రోగి ప్రొఫైల్ నవీకరించబడింది.',drawerManageTitle:'నిర్వహణ మరియు సాధనాలు',drawerDownloadPdf:'మందుల PDF డౌన్‌లోడ్',drawerLogout:'లాగ్ అవుట్ / నంబర్ మార్చు',profileEditHint:'ప్రొఫైల్ సవరించడానికి స్లైడింగ్ మెనును తెరిచి రోగి ప్రొఫైల్ సవరించు ఎంచుకోండి.'}
     };
     const MED_FORM_TRANSLATIONS = {
-      en: {medNameLabel:'Medicine Name:',medicineNamePlaceholder:'e.g. Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ Critical Medicine? (BP/Sugar/Heart)',ringtoneLabel:'🔔 Custom Loud Ringtone:',ringtoneSiren:'🚨 Loud Emergency Siren (Ambulance Alert)',ringtoneRadar:'⚡ Digital Radar Pulse (Fast Loud Alarm)',ringtoneChime:'🎵 Hospital Acoustic Chime (Melodic Bell)',previewSound:'▶️ Preview Sound',pillPhotoLabel:'📸 Pill Photo (Pill Identifier):',pillColorLabel:'🎨 Choose Pill Color / Type:',pillWhite:'⚪ White Round Pill',pillRed:'🔴 Red / Pink Pill',pillYellow:'🟡 Yellow Pill',pillBlue:'🔵 Blue Pill',pillCapsule:'💊 Capsule (Dual Color)',pillGreen:'🟢 Green Pill',frequencyLabel:'How many times per day?',freqOne:'Once a day',freqTwo:'Twice (Morning and Night)',freqThree:'Three times (Morning, Afternoon, Night)',timingsLabel:'Timings:',stockLabel:'Stock Quantity:',stockPlaceholder:'e.g. 30',instructionsLabel:'Instructions:',afterFood:'After food',beforeFood:'Before food',bedtime:'At bedtime',saveMedicine:'Save Medicine & Sync ✨',saveChanges:'💾 Save Changes'},
-      hi: {medNameLabel:'दवा का नाम:',medicineNamePlaceholder:'जैसे: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ज़रूरी दवा? (BP/शुगर/दिल)',ringtoneLabel:'🔔 तेज़ अलार्म की आवाज़ चुनें:',ringtoneSiren:'🚨 तेज़ इमरजेंसी सायरन (एम्बुलेंस अलर्ट)',ringtoneRadar:'⚡ डिजिटल रडार पल्स (तेज़ अलार्म)',ringtoneChime:'🎵 अस्पताल की मधुर घंटी',previewSound:'▶️ आवाज़ सुनकर देखें',pillPhotoLabel:'📸 गोली की फोटो (पहचान के लिए):',pillColorLabel:'🎨 गोली का रंग / प्रकार चुनें:',pillWhite:'⚪ सफेद गोल गोली',pillRed:'🔴 लाल / गुलाबी गोली',pillYellow:'🟡 पीली गोली',pillBlue:'🔵 नीली गोली',pillCapsule:'💊 कैप्सूल (दो रंग)',pillGreen:'🟢 हरी गोली',frequencyLabel:'दिन में कितनी बार लेनी है?',freqOne:'1 बार (दिन में एक बार)',freqTwo:'2 बार (सुबह और रात)',freqThree:'3 बार (सुबह, दोपहर, रात)',timingsLabel:'समय:',stockLabel:'कितनी गोलियाँ बची हैं?',stockPlaceholder:'जैसे: 30',instructionsLabel:'निर्देश:',afterFood:'खाने के बाद',beforeFood:'खाने से पहले',bedtime:'रात को सोते समय',saveMedicine:'दवा सेव करें और सिंक करें ✨',saveChanges:'💾 बदलाव सेव करें'},
-      kn: {medNameLabel:'ಔಷಧಿಯ ಹೆಸರು:',medicineNamePlaceholder:'ಉದಾ: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ತುರ್ತು ಔಷಧಿಯೇ? (BP/ಸಕ್ಕರೆ/ಹೃದಯ)',ringtoneLabel:'🔔 ಜೋರಾದ ಅಲಾರಂ ಆಯ್ಕೆಮಾಡಿ:',ringtoneSiren:'🚨 ತುರ್ತು ಸೈರನ್ (ಆಂಬುಲೆನ್ಸ್ ಎಚ್ಚರಿಕೆ)',ringtoneRadar:'⚡ ಡಿಜಿಟಲ್ ರಡಾರ್ ಪಲ್ಸ್ (ವೇಗದ ಅಲಾರಂ)',ringtoneChime:'🎵 ಆಸ್ಪತ್ರೆಯ ಮಧುರ ಗಂಟೆ',previewSound:'▶️ ಧ್ವನಿ ಕೇಳಿ',pillPhotoLabel:'📸 ಮಾತ್ರೆಯ ಫೋಟೋ:',pillColorLabel:'🎨 ಮಾತ್ರೆಯ ಬಣ್ಣ / ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ:',pillWhite:'⚪ ಬಿಳಿ ಗೋಳಾಕಾರದ ಮಾತ್ರೆ',pillRed:'🔴 ಕೆಂಪು / ಗುಲಾಬಿ ಮಾತ್ರೆ',pillYellow:'🟡 ಹಳದಿ ಮಾತ್ರೆ',pillBlue:'🔵 ನೀಲಿ ಮಾತ್ರೆ',pillCapsule:'💊 ಕ್ಯಾಪ್ಸುಲ್ (ಎರಡು ಬಣ್ಣ)',pillGreen:'🟢 ಹಸಿರು ಮಾತ್ರೆ',frequencyLabel:'ದಿನಕ್ಕೆ ಎಷ್ಟು ಬಾರಿ ತೆಗೆದುಕೊಳ್ಳಬೇಕು?',freqOne:'ದಿನಕ್ಕೆ 1 ಬಾರಿ',freqTwo:'2 ಬಾರಿ (ಬೆಳಗ್ಗೆ ಮತ್ತು ರಾತ್ರಿ)',freqThree:'3 ಬಾರಿ (ಬೆಳಗ್ಗೆ, ಮಧ್ಯಾಹ್ನ, ರಾತ್ರಿ)',timingsLabel:'ಸಮಯ:',stockLabel:'ಉಳಿದ ಮಾತ್ರೆಗಳ ಸಂಖ್ಯೆ:',stockPlaceholder:'ಉದಾ: 30',instructionsLabel:'ಸೂಚನೆಗಳು:',afterFood:'ಊಟದ ನಂತರ',beforeFood:'ಊಟದ ಮೊದಲು',bedtime:'ಮಲಗುವಾಗ',saveMedicine:'ಔಷಧಿ ಉಳಿಸಿ ಮತ್ತು ಸಿಂಕ್ ಮಾಡಿ ✨',saveChanges:'💾 ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ'},
-      ta: {medNameLabel:'மருந்தின் பெயர்:',medicineNamePlaceholder:'எ.கா.: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ முக்கியமான மருந்தா? (BP/சர்க்கரை/இதயம்)',ringtoneLabel:'🔔 உரத்த அலாரம் ஒலியைத் தேர்ந்தெடுக்கவும்:',ringtoneSiren:'🚨 அவசர சைரன் (ஆம்புலன்ஸ் எச்சரிக்கை)',ringtoneRadar:'⚡ டிஜிட்டல் ரேடார் துடிப்பு (வேகமான அலாரம்)',ringtoneChime:'🎵 மருத்துவமனை இனிய மணி',previewSound:'▶️ ஒலியைக் கேளுங்கள்',pillPhotoLabel:'📸 மாத்திரையின் படம்:',pillColorLabel:'🎨 மாத்திரையின் நிறம் / வகையைத் தேர்ந்தெடுக்கவும்:',pillWhite:'⚪ வெள்ளை வட்ட மாத்திரை',pillRed:'🔴 சிவப்பு / இளஞ்சிவப்பு மாத்திரை',pillYellow:'🟡 மஞ்சள் மாத்திரை',pillBlue:'🔵 நீல மாத்திரை',pillCapsule:'💊 காப்ஸ்யூல் (இரண்டு நிறம்)',pillGreen:'🟢 பச்சை மாத்திரை',frequencyLabel:'ஒரு நாளில் எத்தனை முறை?',freqOne:'ஒரு நாளில் 1 முறை',freqTwo:'2 முறை (காலை மற்றும் இரவு)',freqThree:'3 முறை (காலை, மதியம், இரவு)',timingsLabel:'நேரங்கள்:',stockLabel:'மீதமுள்ள மாத்திரைகள்:',stockPlaceholder:'எ.கா.: 30',instructionsLabel:'வழிமுறைகள்:',afterFood:'உணவுக்குப் பிறகு',beforeFood:'உணவுக்கு முன்',bedtime:'படுக்கைக்குச் செல்லும் போது',saveMedicine:'மருந்தைச் சேமித்து ஒத்திசைக்கவும் ✨',saveChanges:'💾 மாற்றங்களைச் சேமிக்கவும்'},
-      te: {medNameLabel:'మందు పేరు:',medicineNamePlaceholder:'ఉదా: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ముఖ్యమైన మందా? (BP/షుగర్/గుండె)',ringtoneLabel:'🔔 గట్టిగా వినిపించే అలారం ఎంచుకోండి:',ringtoneSiren:'🚨 అత్యవసర సైరన్ (అంబులెన్స్ హెచ్చరిక)',ringtoneRadar:'⚡ డిజిటల్ రాడార్ పల్స్ (వేగవంతమైన అలారం)',ringtoneChime:'🎵 ఆసుపత్రి మధుర గంట',previewSound:'▶️ శబ్దం వినండి',pillPhotoLabel:'📸 మాత్ర ఫోటో:',pillColorLabel:'🎨 మాత్ర రంగు / రకాన్ని ఎంచుకోండి:',pillWhite:'⚪ తెల్లని గుండ్రని మాత్ర',pillRed:'🔴 ఎరుపు / గులాబీ మాత్ర',pillYellow:'🟡 పసుపు మాత్ర',pillBlue:'🔵 నీలం మాత్ర',pillCapsule:'💊 క్యాప్సూల్ (రెండు రంగులు)',pillGreen:'🟢 ఆకుపచ్చ మాత్ర',frequencyLabel:'రోజుకు ఎన్నిసార్లు తీసుకోవాలి?',freqOne:'రోజుకు 1సారి',freqTwo:'2సార్లు (ఉదయం మరియు రాత్రి)',freqThree:'3సార్లు (ఉదయం, మధ్యాహ్నం, రాత్రి)',timingsLabel:'సమయాలు:',stockLabel:'మిగిలిన మాత్రల సంఖ్య:',stockPlaceholder:'ఉదా: 30',instructionsLabel:'సూచనలు:',afterFood:'భోజనం తర్వాత',beforeFood:'భోజనానికి ముందు',bedtime:'నిద్రపోయే సమయంలో',saveMedicine:'మందును సేవ్ చేసి సింక్ చేయండి ✨',saveChanges:'💾 మార్పులను సేవ్ చేయండి'}
+      en: {selectPlaceholder:'-- Select --',requiredNote:'* marked fields are mandatory',requiredToast:'Please fill all * mandatory fields',medNameLabel:'Medicine Name:',medicineNamePlaceholder:'e.g. Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ Critical Medicine? (BP/Sugar/Heart)',ringtoneLabel:'🔔 Custom Loud Ringtone:',ringtoneSiren:'🚨 Loud Emergency Siren (Ambulance Alert)',ringtoneRadar:'⚡ Digital Radar Pulse (Fast Loud Alarm)',ringtoneChime:'🎵 Hospital Acoustic Chime (Melodic Bell)',previewSound:'▶️ Preview Sound',pillPhotoLabel:'📸 Pill Photo (Pill Identifier):',pillColorLabel:'🎨 Choose Pill Color / Type:',pillWhite:'⚪ White Round Pill',pillRed:'🔴 Red / Pink Pill',pillYellow:'🟡 Yellow Pill',pillBlue:'🔵 Blue Pill',pillCapsule:'💊 Capsule (Dual Color)',pillGreen:'🟢 Green Pill',frequencyLabel:'How many times per day?',freqOne:'Once a day',freqTwo:'Twice (Morning and Night)',freqThree:'Three times (Morning, Afternoon, Night)',timingsLabel:'Timings:',stockLabel:'Stock Quantity:',stockPlaceholder:'e.g. 30',instructionsLabel:'Instructions:',afterFood:'After food',beforeFood:'Before food',bedtime:'At bedtime',saveMedicine:'Save Medicine & Sync ✨',saveChanges:'💾 Save Changes'},
+      hi: {selectPlaceholder:'-- चुनें --',requiredNote:'* वाले फ़ील्ड भरना ज़रूरी है',requiredToast:'कृपया * वाले सभी ज़रूरी फ़ील्ड भरें',medNameLabel:'दवा का नाम:',medicineNamePlaceholder:'जैसे: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ज़रूरी दवा? (BP/शुगर/दिल)',ringtoneLabel:'🔔 तेज़ अलार्म की आवाज़ चुनें:',ringtoneSiren:'🚨 तेज़ इमरजेंसी सायरन (एम्बुलेंस अलर्ट)',ringtoneRadar:'⚡ डिजिटल रडार पल्स (तेज़ अलार्म)',ringtoneChime:'🎵 अस्पताल की मधुर घंटी',previewSound:'▶️ आवाज़ सुनकर देखें',pillPhotoLabel:'📸 गोली की फोटो (पहचान के लिए):',pillColorLabel:'🎨 गोली का रंग / प्रकार चुनें:',pillWhite:'⚪ सफेद गोल गोली',pillRed:'🔴 लाल / गुलाबी गोली',pillYellow:'🟡 पीली गोली',pillBlue:'🔵 नीली गोली',pillCapsule:'💊 कैप्सूल (दो रंग)',pillGreen:'🟢 हरी गोली',frequencyLabel:'दिन में कितनी बार लेनी है?',freqOne:'1 बार (दिन में एक बार)',freqTwo:'2 बार (सुबह और रात)',freqThree:'3 बार (सुबह, दोपहर, रात)',timingsLabel:'समय:',stockLabel:'कितनी गोलियाँ बची हैं?',stockPlaceholder:'जैसे: 30',instructionsLabel:'निर्देश:',afterFood:'खाने के बाद',beforeFood:'खाने से पहले',bedtime:'रात को सोते समय',saveMedicine:'दवा सेव करें और सिंक करें ✨',saveChanges:'💾 बदलाव सेव करें'},
+      kn: {selectPlaceholder:'-- ಆಯ್ಕೆಮಾಡಿ --',requiredNote:'* ಗುರುತಿನ ಕ್ಷೇತ್ರಗಳು ಕಡ್ಡಾಯ',requiredToast:'ದಯವಿಟ್ಟು * ಗುರುತಿನ ಎಲ್ಲಾ ಕಡ್ಡಾಯ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ',medNameLabel:'ಔಷಧಿಯ ಹೆಸರು:',medicineNamePlaceholder:'ಉದಾ: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ತುರ್ತು ಔಷಧಿಯೇ? (BP/ಸಕ್ಕರೆ/ಹೃದಯ)',ringtoneLabel:'🔔 ಜೋರಾದ ಅಲಾರಂ ಆಯ್ಕೆಮಾಡಿ:',ringtoneSiren:'🚨 ತುರ್ತು ಸೈರನ್ (ಆಂಬುಲೆನ್ಸ್ ಎಚ್ಚರಿಕೆ)',ringtoneRadar:'⚡ ಡಿಜಿಟಲ್ ರಡಾರ್ ಪಲ್ಸ್ (ವೇಗದ ಅಲಾರಂ)',ringtoneChime:'🎵 ಆಸ್ಪತ್ರೆಯ ಮಧುರ ಗಂಟೆ',previewSound:'▶️ ಧ್ವನಿ ಕೇಳಿ',pillPhotoLabel:'📸 ಮಾತ್ರೆಯ ಫೋಟೋ:',pillColorLabel:'🎨 ಮಾತ್ರೆಯ ಬಣ್ಣ / ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ:',pillWhite:'⚪ ಬಿಳಿ ಗೋಳಾಕಾರದ ಮಾತ್ರೆ',pillRed:'🔴 ಕೆಂಪು / ಗುಲಾಬಿ ಮಾತ್ರೆ',pillYellow:'🟡 ಹಳದಿ ಮಾತ್ರೆ',pillBlue:'🔵 ನೀಲಿ ಮಾತ್ರೆ',pillCapsule:'💊 ಕ್ಯಾಪ್ಸುಲ್ (ಎರಡು ಬಣ್ಣ)',pillGreen:'🟢 ಹಸಿರು ಮಾತ್ರೆ',frequencyLabel:'ದಿನಕ್ಕೆ ಎಷ್ಟು ಬಾರಿ ತೆಗೆದುಕೊಳ್ಳಬೇಕು?',freqOne:'ದಿನಕ್ಕೆ 1 ಬಾರಿ',freqTwo:'2 ಬಾರಿ (ಬೆಳಗ್ಗೆ ಮತ್ತು ರಾತ್ರಿ)',freqThree:'3 ಬಾರಿ (ಬೆಳಗ್ಗೆ, ಮಧ್ಯಾಹ್ನ, ರಾತ್ರಿ)',timingsLabel:'ಸಮಯ:',stockLabel:'ಉಳಿದ ಮಾತ್ರೆಗಳ ಸಂಖ್ಯೆ:',stockPlaceholder:'ಉದಾ: 30',instructionsLabel:'ಸೂಚನೆಗಳು:',afterFood:'ಊಟದ ನಂತರ',beforeFood:'ಊಟದ ಮೊದಲು',bedtime:'ಮಲಗುವಾಗ',saveMedicine:'ಔಷಧಿ ಉಳಿಸಿ ಮತ್ತು ಸಿಂಕ್ ಮಾಡಿ ✨',saveChanges:'💾 ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ'},
+      ta: {selectPlaceholder:'-- தேர்ந்தெடுக்கவும் --',requiredNote:'* குறியிட்ட புலங்கள் கட்டாயம்',requiredToast:'* குறியிட்ட அனைத்து கட்டாய புலங்களையும் நிரப்பவும்',medNameLabel:'மருந்தின் பெயர்:',medicineNamePlaceholder:'எ.கா.: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ முக்கியமான மருந்தா? (BP/சர்க்கரை/இதயம்)',ringtoneLabel:'🔔 உரத்த அலாரம் ஒலியைத் தேர்ந்தெடுக்கவும்:',ringtoneSiren:'🚨 அவசர சைரன் (ஆம்புலன்ஸ் எச்சரிக்கை)',ringtoneRadar:'⚡ டிஜிட்டல் ரேடார் துடிப்பு (வேகமான அலாரம்)',ringtoneChime:'🎵 மருத்துவமனை இனிய மணி',previewSound:'▶️ ஒலியைக் கேளுங்கள்',pillPhotoLabel:'📸 மாத்திரையின் படம்:',pillColorLabel:'🎨 மாத்திரையின் நிறம் / வகையைத் தேர்ந்தெடுக்கவும்:',pillWhite:'⚪ வெள்ளை வட்ட மாத்திரை',pillRed:'🔴 சிவப்பு / இளஞ்சிவப்பு மாத்திரை',pillYellow:'🟡 மஞ்சள் மாத்திரை',pillBlue:'🔵 நீல மாத்திரை',pillCapsule:'💊 காப்ஸ்யூல் (இரண்டு நிறம்)',pillGreen:'🟢 பச்சை மாத்திரை',frequencyLabel:'ஒரு நாளில் எத்தனை முறை?',freqOne:'ஒரு நாளில் 1 முறை',freqTwo:'2 முறை (காலை மற்றும் இரவு)',freqThree:'3 முறை (காலை, மதியம், இரவு)',timingsLabel:'நேரங்கள்:',stockLabel:'மீதமுள்ள மாத்திரைகள்:',stockPlaceholder:'எ.கா.: 30',instructionsLabel:'வழிமுறைகள்:',afterFood:'உணவுக்குப் பிறகு',beforeFood:'உணவுக்கு முன்',bedtime:'படுக்கைக்குச் செல்லும் போது',saveMedicine:'மருந்தைச் சேமித்து ஒத்திசைக்கவும் ✨',saveChanges:'💾 மாற்றங்களைச் சேமிக்கவும்'},
+      te: {selectPlaceholder:'-- ఎంచుకోండి --',requiredNote:'* గుర్తున్న ఫీల్డ్‌లు తప్పనిసరి',requiredToast:'* గుర్తున్న అన్ని తప్పనిసరి ఫీల్డ్‌లను నింపండి',medNameLabel:'మందు పేరు:',medicineNamePlaceholder:'ఉదా: Telma 40, Glycomet, Aciloc',criticalLabel:'⚡ ముఖ్యమైన మందా? (BP/షుగర్/గుండె)',ringtoneLabel:'🔔 గట్టిగా వినిపించే అలారం ఎంచుకోండి:',ringtoneSiren:'🚨 అత్యవసర సైరన్ (అంబులెన్స్ హెచ్చరిక)',ringtoneRadar:'⚡ డిజిటల్ రాడార్ పల్స్ (వేగవంతమైన అలారం)',ringtoneChime:'🎵 ఆసుపత్రి మధుర గంట',previewSound:'▶️ శబ్దం వినండి',pillPhotoLabel:'📸 మాత్ర ఫోటో:',pillColorLabel:'🎨 మాత్ర రంగు / రకాన్ని ఎంచుకోండి:',pillWhite:'⚪ తెల్లని గుండ్రని మాత్ర',pillRed:'🔴 ఎరుపు / గులాబీ మాత్ర',pillYellow:'🟡 పసుపు మాత్ర',pillBlue:'🔵 నీలం మాత్ర',pillCapsule:'💊 క్యాప్సూల్ (రెండు రంగులు)',pillGreen:'🟢 ఆకుపచ్చ మాత్ర',frequencyLabel:'రోజుకు ఎన్నిసార్లు తీసుకోవాలి?',freqOne:'రోజుకు 1సారి',freqTwo:'2సార్లు (ఉదయం మరియు రాత్రి)',freqThree:'3సార్లు (ఉదయం, మధ్యాహ్నం, రాత్రి)',timingsLabel:'సమయాలు:',stockLabel:'మిగిలిన మాత్రల సంఖ్య:',stockPlaceholder:'ఉదా: 30',instructionsLabel:'సూచనలు:',afterFood:'భోజనం తర్వాత',beforeFood:'భోజనానికి ముందు',bedtime:'నిద్రపోయే సమయంలో',saveMedicine:'మందును సేవ్ చేసి సింక్ చేయండి ✨',saveChanges:'💾 మార్పులను సేవ్ చేయండి'}
     };
     function getAppLanguage(){ const s=document.getElementById('appLanguageSelect'); const loginSel=document.getElementById('loginLanguageSelect'); const v=(s&&s.value)||(loginSel&&loginSel.value)||localStorage.getItem('dawa_app_language')||'en'; return APP_TRANSLATIONS[v]?v:'en'; }
     function tr(key){ return (APP_TRANSLATIONS[getAppLanguage()]||APP_TRANSLATIONS.en)[key]||APP_TRANSLATIONS.en[key]||key; }
@@ -2142,7 +2196,7 @@
         alertMsg += `⚠️ मरीज ने 60 सेकंड तक अलार्म बजने के बाद भी दवा नहीं ली है! कृपया तुरंत कॉल करके जांच करें।\n`;
         alertMsg += `_Dawa Sahayak Care App dwara automatically bheja gaya._`;
 
-        const waUrl = `https://api.whatsapp.com/send?phone=91${caregiverPhone}&text=${encodeURIComponent(alertMsg)}`;
+        const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent('+' + whatsappNumber(caregiverPhone))}&text=${encodeURIComponent(alertMsg)}`;
         window.open(waUrl, '_blank');
         stopPersistentAlarm();
     }
@@ -2216,11 +2270,30 @@
         const digits = String(value || '').replace(/\D/g, '');
         return digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
     }
+    function caregiverCountryPrefix() {
+        const cg = String(userAccount.caregiverPhone || '').replace(/\D/g, '');
+        if (cg.length > 10) return cg.slice(0, cg.length - 10);
+        const mob = String(userAccount.mobile || '').replace(/\D/g, '');
+        return mob.length > 10 ? mob.slice(0, mob.length - 10) : '91';
+    }
+    // 10-digit entry keeps the existing country code; a full number is kept exactly as typed.
+    function withCaregiverCode(value) {
+        const d = String(value || '').replace(/\D/g, '');
+        if (!d) return '';
+        return d.length <= 10 ? caregiverCountryPrefix() + d : d;
+    }
+    // Number to use in WhatsApp links: never adds 91 twice.
+    function whatsappNumber(value) {
+        let d = String(value || '').replace(/\D/g, '').replace(/^0+/, '');
+        const mob = String(userAccount.mobile || '').replace(/\D/g, '');
+        const cc = mob.length > 10 ? mob.slice(0, mob.length - 10) : '91';
+        if (d.length <= 10) return cc + d;
+        // Repeated country code (e.g. 9191XXXXXXXXXX) is invalid on WhatsApp: keep it once.
+        while (d.length > 10 + cc.length && d.startsWith(cc + cc)) d = d.slice(cc.length);
+        return d;
+    }
     function normalizeCaregiverPhone(value) {
-        const digits = String(value || '').replace(/\D/g, '');
-        if (digits.length === 10 && String(userAccount.mobile || '').replace(/\D/g, '').startsWith('91')) return '91' + digits;
-        if (digits.length === 12 && digits.startsWith('91')) return digits;
-        return digits;
+        return withCaregiverCode(value);
     }
 
     function renderAll() {
@@ -2262,17 +2335,24 @@
 
         medicines.forEach((med, i) => {
             const times = med.times || (med.time ? [med.time] : []);
-            const isLow = med.stock <= 5;
+            const isLow = isLowStock(med);
+            const syrup = isSyrup(med);
             if (isLow) lowStockItems.push(med);
 
             const timesPills = times.map(t => `<span class="time-pill">⏰ ${t}</span>`).join('');
             const isCrit = med.isCritical;
+            const doseRowHtml = syrup ? `<div style="display:flex; align-items:center; gap:8px; margin:6px 0 2px; padding:8px 10px; border:1px dashed #94a3b8; border-radius:10px; flex-wrap:wrap;">
+                <span style="font-weight:800;">🧴 Dose:</span>
+                <input type="number" id="dose_${i}" value="${med.doseMl || 5}" min="0.5" step="0.5" inputmode="decimal" oninput="document.getElementById('doseLbl_${i}').textContent = this.value || 0" style="width:84px; padding:8px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:16px; font-weight:800; text-align:center;">
+                <span style="font-weight:800;">ml</span>
+                <span style="font-size:12px; color:var(--text-muted);">piya hua ml yahan badlo, phir Taken dabao</span>
+            </div>` : '';
 
             let thumbHtml = '';
             if (med.pillPhoto) {
                 thumbHtml = `<img src="${med.pillPhoto}" class="pill-thumbnail">`;
             } else {
-                thumbHtml = `<div class="pill-thumbnail">💊</div>`;
+                thumbHtml = `<div class="pill-thumbnail">${syrup ? '🧴' : '💊'}</div>`;
             }
 
             schedList.innerHTML += `
@@ -2287,7 +2367,7 @@
                             <div class="time-pill-group">${timesPills}</div>
                         </div>
                         <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
-                            ${med.stock} ${tr('stockRemaining')}
+                            ${med.stock}${syrup ? ' ml' : ''} ${tr('stockRemaining')}
                         </span>
                     </div>
 
@@ -2295,12 +2375,16 @@
                         📌 <b>${({en:'Instructions',hi:'निर्देश',kn:'ಸೂಚನೆಗಳು',ta:'வழிமுறைகள்',te:'సూచనలు'}[getAppLanguage()]||'Instructions')}:</b> ${localizedMedicineText(med.instruction,'instruction')} | 🔔 <b>${({en:'Ringtone',hi:'रिंगटोन',kn:'ರಿಂಗ್‌ಟೋನ್',ta:'ரிங்டோன்',te:'రింగ్‌టోన్'}[getAppLanguage()]||'Ringtone')}:</b> ${localizedRingtone(med.ringtone || 'siren')}
                     </div>
 
+                    ${doseRowHtml}
                     <div style="display: flex; gap: 8px; margin-top: 8px;">
-                        <button class="btn btn-take" onclick="takeMedicine(${i})">
-                            ${tr('takeMedicine')}
+                        <button class="btn btn-take" onclick="takeMedicine(${i}${syrup ? `, document.getElementById('dose_${i}').value` : ''})">
+                            ${syrup ? `✅ Taken (-<span id="doseLbl_${i}">${med.doseMl || 5}</span> ml)` : tr('takeMedicine')}
                         </button>
                         <button class="btn btn-edit" onclick="openEditModal(${i})">
                             ✏️ Edit
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteMed(${i})">
+                            🗑️ Delete
                         </button>
                     </div>
                 </div>
@@ -2312,11 +2396,11 @@
                     <div style="display: flex; justify-content: space-between;">
                         <div class="med-name">${med.name}</div>
                         <span class="stock-indicator ${isLow ? 'stock-alert' : 'stock-ok'}">
-                            ${med.stock} ${tr('stockPills')}
+                            ${med.stock} ${syrup ? 'ml' : tr('stockPills')}
                         </span>
                     </div>
                     <div style="display:flex; gap:8px; margin-top:10px;">
-                        <button class="btn btn-refill" style="flex:2;" onclick="refillStock(${i}, 10)">${tr('refillPills')}</button>
+                        <button class="btn btn-refill" style="flex:2;" onclick="refillStock(${i}, ${syrup ? 100 : 10})">${syrup ? '➕ Add 100 ml' : tr('refillPills')}</button>
                         <button class="btn btn-edit" style="flex:1;" onclick="openEditModal(${i})">${tr('editMedicine')}</button>
                         <button class="btn btn-delete" style="flex:1;" onclick="deleteMed(${i})">${tr('removeMedicine')}</button>
                     </div>
@@ -2360,33 +2444,69 @@
                 <span class="s-name">🟢 PharmEasy</span>
                 <span class="s-tag tag-pharmeasy">Fast Delivery</span>
             </a>
-            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.netmeds.com/catalogsearch/result?q=${q}">
+            <a class="store-tile" target="_blank" rel="noopener noreferrer" href="https://www.netmeds.com/products?q=${q}">
                 <span class="s-name">💊 Netmeds</span>
                 <span class="s-tag tag-netmeds">India Ki Pharmacy</span>
             </a>
         `;
     }
 
-    function takeMedicine(i) {
-        if (medicines[i].stock > 0) {
-            medicines[i].stock -= 1;
-            saveAndRefresh();
-            if (medicines[i].stock <= 5) {
-                alert(`⚠️ Warning: "${medicines[i].name}" only ${medicines[i].stock} tablets left!`);
-            }
-        } else {
-            alert("Out of stock! Please refill or reorder.");
+    const SYRUP_RE = /syrup|\bsyp\b|suspension|\bsusp\b|liquid|drops|linctus|expectorant|kadha|kwath|juice|solution|respules|tonic|\bgel\b/i;
+    function isSyrup(m) { return !!m && m.type === 'syrup'; }
+    function r1(n) { return Math.round(n * 10) / 10; }
+    function stockUnit(m) { return isSyrup(m) ? 'ml' : 'tablets'; }
+    function isLowStock(m) { return isSyrup(m) ? m.stock <= Math.max(10, (parseFloat(m.doseMl) || 5) * 2) : m.stock <= 5; }
+
+    function toggleAddType() {
+        const sy = document.getElementById('addType').value === 'syrup';
+        document.getElementById('addSyrupBox').style.display = sy ? 'block' : 'none';
+        document.getElementById('addStockHint').style.display = sy ? 'block' : 'none';
+        document.getElementById('addStock').placeholder = sy ? 'e.g. 100 (ml)' : 'e.g. 30';
+    }
+    function toggleEditType() {
+        const sy = document.getElementById('editType').value === 'syrup';
+        document.getElementById('editSyrupBox').style.display = sy ? 'block' : 'none';
+        document.getElementById('editStockHint').style.display = sy ? 'block' : 'none';
+        if (sy && !document.getElementById('editDoseMl').value) document.getElementById('editDoseMl').value = 5;
+    }
+
+    function takeMedicine(i, doseOverride) {
+        const med = medicines[i];
+        if (!med) return;
+        let dec = 1;
+        if (isSyrup(med)) {
+            let d = parseFloat(doseOverride);
+            if (!(d > 0)) d = parseFloat(med.doseMl) || 5;
+            med.doseMl = d;          // remember the last dose used
+            dec = d;
+        }
+        if (med.stock <= 0) { alert("Out of stock! Please refill or reorder."); return; }
+        med.stock = Math.max(0, r1(med.stock - dec));
+        saveAndRefresh();
+        if (isLowStock(med)) {
+            alert(`⚠️ Warning: "${med.name}" only ${med.stock} ${stockUnit(med)} left!`);
         }
     }
 
     function refillStock(i, qty) {
-        medicines[i].stock += qty;
+        medicines[i].stock = r1(medicines[i].stock + qty);
         saveAndRefresh();
     }
 
     function deleteMed(i) {
+        if (!medicines[i]) return;
         if (confirm(`Delete "${medicines[i].name}"?`)) {
             medicines.splice(i, 1);
+            saveAndRefresh();
+        }
+    }
+
+    function deleteFromEditModal() {
+        const i = parseInt(document.getElementById('editIndex').value);
+        if (isNaN(i) || !medicines[i]) return;
+        if (confirm(`Delete "${medicines[i].name}"?`)) {
+            medicines.splice(i, 1);
+            closeEditModal();
             saveAndRefresh();
         }
     }
@@ -2397,25 +2517,40 @@
         const ringtone = document.getElementById('addRingtone').value;
         const pillColor = document.getElementById('addPillColor').value;
         const freq = parseInt(document.getElementById('addFreq').value);
-        const stock = parseInt(document.getElementById('addStock').value);
+        const isSy = document.getElementById('addType').value === 'syrup';
+        const doseMl = isSy ? parseFloat(document.getElementById('addDoseMl').value) : null;
+        const stock = isSy ? parseFloat(document.getElementById('addStock').value) : parseInt(document.getElementById('addStock').value);
         const instruction = document.getElementById('addInstruction').value;
 
-        let times = [];
-        const t1 = document.getElementById('addTime1').value;
-        const t2 = document.getElementById('addTime2').value;
-        const t3 = document.getElementById('addTime3').value;
+        const timeIds = ['addTime1', 'addTime2', 'addTime3'];
+        ['addName', 'addFreq', 'addStock', 'addInstruction', ...timeIds].forEach(id => document.getElementById(id).classList.remove('field-error'));
 
-        if (t1) times.push(t1);
-        if (freq >= 2 && t2) times.push(t2);
-        if (freq >= 3 && t3) times.push(t3);
+        // Required fields (marked with red *): name, times per day, timings, stock, instructions.
+        const missing = [];
+        const flag = (id, label) => { document.getElementById(id).classList.add('field-error'); if (!missing.includes(label)) missing.push(label); };
+        if (!name) flag('addName', 'Medicine Name');
+        if (isNaN(freq)) flag('addFreq', 'How many times per day');
+        const needTimes = isNaN(freq) ? 1 : freq;
+        const times = [];
+        for (let i = 0; i < needTimes; i++) {
+            const v = document.getElementById(timeIds[i]).value;
+            if (v) times.push(v); else flag(timeIds[i], 'Timings');
+        }
+        if (isNaN(stock) || stock < 1) flag('addStock', 'Stock Quantity');
+        if (!instruction) flag('addInstruction', 'Instructions');
+        if (isSy && !(doseMl > 0)) flag('addDoseMl', 'Dose (ml)');
 
-        if (!name || times.length < freq || isNaN(stock)) {
-            alert("Please fill all details!");
+        if (missing.length) {
+            showRequiredToast(missing);
+            const first = document.querySelector('#win-add .field-error');
+            if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); first.focus(); }
             return;
         }
 
         medicines.push({
             name,
+            type: isSy ? 'syrup' : 'tablet',
+            doseMl,
             isCritical,
             ringtone,
             pillColor,
@@ -2426,9 +2561,13 @@
             frequency: freq
         });
 
+        rememberMedName(name);
         saveAndRefresh();
 
         document.getElementById('addName').value = '';
+        document.getElementById('addType').value = 'tablet'; delete document.getElementById('addType').dataset.manual;
+        document.getElementById('addDoseMl').value = 5;
+        toggleAddType();
         document.getElementById('addIsCritical').checked = false;
         document.getElementById('addPillFile').value = '';
         document.getElementById('addPillPreviewWrap').style.display = 'none';
@@ -2437,9 +2576,17 @@
         document.getElementById('addTime2').value = '';
         document.getElementById('addTime3').value = '';
         document.getElementById('addStock').value = '';
+        document.getElementById('addFreq').value = '';
+        document.getElementById('addInstruction').value = '';
+        toggleAddTimes();
 
         switchWindow('win-schedule', document.getElementById('btnNavSchedule'));
     }
+    // Remove the red highlight as soon as the user fixes a field.
+    ['addName', 'addFreq', 'addStock', 'addInstruction', 'addTime1', 'addTime2', 'addTime3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) ['input', 'change'].forEach(ev => el.addEventListener(ev, () => el.classList.remove('field-error')));
+    });
 
     function openEditModal(i) {
         const med = medicines[i];
@@ -2463,6 +2610,9 @@
 
         document.getElementById('editFreq').value = freq;
         document.getElementById('editStock').value = med.stock;
+        document.getElementById('editType').value = isSyrup(med) ? 'syrup' : 'tablet';
+        document.getElementById('editDoseMl').value = med.doseMl || 5;
+        toggleEditType();
         document.getElementById('editInstruction').value = med.instruction;
 
         document.getElementById('editTime1').value = times[0] || '';
@@ -2484,7 +2634,9 @@
         const ringtone = document.getElementById('editRingtone').value;
         const pillColor = document.getElementById('editPillColor').value;
         const freq = parseInt(document.getElementById('editFreq').value);
-        const stock = parseInt(document.getElementById('editStock').value);
+        const isSy = document.getElementById('editType').value === 'syrup';
+        const doseMl = isSy ? parseFloat(document.getElementById('editDoseMl').value) : null;
+        const stock = isSy ? parseFloat(document.getElementById('editStock').value) : parseInt(document.getElementById('editStock').value);
         const instruction = document.getElementById('editInstruction').value;
 
         let times = [];
@@ -2496,7 +2648,7 @@
         if (freq >= 2 && t2) times.push(t2);
         if (freq >= 3 && t3) times.push(t3);
 
-        if (!name || times.length < freq || isNaN(stock)) {
+        if (!name || times.length < freq || isNaN(stock) || (isSy && !(doseMl > 0))) {
             alert("Please fill all fields!");
             return;
         }
@@ -2504,6 +2656,8 @@
         medicines[i] = {
             ...medicines[i],
             name,
+            type: isSy ? 'syrup' : 'tablet',
+            doseMl,
             isCritical,
             ringtone,
             pillColor,
@@ -2513,7 +2667,7 @@
             instruction,
             frequency: freq
         };
-
+        rememberMedName(name);
         saveAndRefresh();
         closeEditModal();
     }
@@ -2690,7 +2844,7 @@
                     <td>${m.pillColor || 'White Round'}</td>
                     <td>⏰ ${times.join(', ')}</td>
                     <td>${m.instruction}</td>
-                    <td>${m.stock}</td>
+                    <td>${m.stock}${isSyrup(m) ? ' ml' : ''}</td>
                 </tr>
             `;
         });
@@ -2699,28 +2853,139 @@
     }
 
     function sendWhatsAppOrder() {
-        const lowItems = medicines.filter(m => m.stock <= 5);
+        const lowItems = medicines.filter(m => isLowStock(m));
         const itemsToOrder = lowItems.length > 0 ? lowItems : medicines;
+        const regMobile = String(userAccount.mobile || '').replace(/\D/g, '');
 
-        let msg = `*MEDICINE ORDER LIST*\nPatient: ${userAccount.name}\nRegistered Mobile: ${userAccount.mobile}\n\nRequired Medicines:\n`;
+        let msg = `*MEDICINE ORDER LIST*\nPatient: ${userAccount.name}\nRegistered Mobile: ${regMobile ? '+' + regMobile : '-'}\n\nRequired Medicines:\n`;
         itemsToOrder.forEach((m, idx) => {
-            msg += `${idx + 1}. *${m.name}* (Remaining: ${m.stock} tablets)\n`;
+            msg += `${idx + 1}. *${m.name}* (Remaining: ${m.stock} ${stockUnit(m)})\n`;
         });
 
-        const targetPhone = userAccount.caregiverPhone || userAccount.mobile;
-        const phoneParam = targetPhone ? `phone=${encodeURIComponent(targetPhone)}&` : '';
-        const url = `https://api.whatsapp.com/send?${phoneParam}text=${encodeURIComponent(msg)}`;
-        window.open(url, '_blank');
+        // Direct send: country code + leading "+" so WhatsApp reads it as an international number.
+        const target = whatsappNumber(userAccount.caregiverPhone || userAccount.mobile || '');
+        const phoneParam = target ? `phone=${encodeURIComponent('+' + target)}&` : '';
+        window.open(`https://api.whatsapp.com/send?${phoneParam}text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     // SAVES LOCALLY AND SYNC TO GOOGLE FIREBASE
+    let lastLocalChange = 0;
     function saveAndRefresh() {
+        lastLocalChange = Date.now();
         if (userAccount.mobile) {
             localStorage.setItem('medicines_' + userAccount.mobile, JSON.stringify(medicines));
             pushToFirebaseCloud();
         }
         renderAll();
     }
+
+    // ===== Required-field notification =====
+    function medTr(key) { const l = (MED_FORM_TRANSLATIONS[getAppLanguage()] || MED_FORM_TRANSLATIONS.en); return l[key] || MED_FORM_TRANSLATIONS.en[key] || key; }
+    let toastTimer = null;
+    function showRequiredToast(missingList) {
+        let t = document.getElementById('appToast');
+        if (!t) { t = document.createElement('div'); t.id = 'appToast'; t.setAttribute('role', 'alert'); document.body.appendChild(t); }
+        t.textContent = '⚠️ ' + medTr('requiredToast') + (missingList && missingList.length ? ': ' + missingList.join(', ') : '');
+        t.style.display = 'block';
+        try { if (navigator.vibrate) navigator.vibrate(120); } catch (e) {}
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { t.style.display = 'none'; }, 4500);
+    }
+
+    // ===== Medicine name suggestions (built-in list + live online search) =====
+    const MED_DB = "Dolo 650|Dolo 500|Crocin 500|Crocin Advance|Calpol 500|Calpol 650|Paracetamol|Paracetamol 500mg|Paracetamol 650mg|Combiflam|Brufen 400|Ibuprofen|Aspirin|Ecosprin 75|Ecosprin 150|Ecosprin AV 75|Ecosprin Gold 10|Disprin|Aceclofenac|Zerodol P|Zerodol SP|Hifenac P|Voveran 50|Voveran SR 100|Diclofenac|Nise|Nimesulide|Naproxen|Ultracet|Tramadol|Sumo|Meftal Spas|Meftal P|Mefenamic Acid|Cetzine 10|Cetirizine|Levocetirizine|Levocet|Allegra 120|Allegra 180|Fexofenadine|Montair LC|Montek LC|Montelukast|Avil 25|Okacet|Sinarest|Vicks Action 500|Wikoryl|Alex Syrup|Ascoril LS|Ascoril D|Grilinctus|Benadryl|Corex DX|Phensedyl|Digene|Gelusil|Eno|Pudin Hara|Cyclopam|Spasmonil|Drotaverine|Drotin DS|Buscopan|Meftal|Pantop 40|Pan 40|Pan D|Pantocid 40|Pantoprazole|Pantoprazole 40mg|Omez 20|Omeprazole|Rantac 150|Ranitidine|Zinetac 150|Aciloc 150|Aciloc 300|Famotidine|Rabeprazole|Razo 20|Razo D|Rablet 20|Esomeprazole|Nexpro 40|Nexpro RD|Emanzen D|Domstal|Domperidone|Ondem 4|Ondansetron|Vomikind|Perinorm|Digeplex|Zifi 200|Cefixime|Taxim O 200|Cefpodoxime|Monocef|Ceftriaxone|Azithral 500|Azee 500|Azithromycin|Zithromax|Augmentin 625|Augmentin 1000|Amoxicillin|Mox 500|Moxikind CV|Clavam 625|Cifran 500|Ciplox 500|Ciprofloxacin|Levofloxacin|Levoflox 500|Ofloxacin|Oflox OZ|Norflox TZ|Norfloxacin|Metrogyl 400|Metronidazole|Flagyl 400|Doxycycline|Doxy 1|Cefuroxime|Zocef 500|Cephalexin|Sporidex 500|Linezolid|Nitrofurantoin|Norflox|Albendazole|Zentel 400|Ivermectin|Ivermectol|Fluconazole|Candid|Clotrimazole|Betnovate|Soframycin|Betadine|Volini|Moov|Iodex|Thyronorm 25|Thyronorm 50|Thyronorm 75|Thyronorm 100|Eltroxin 50|Eltroxin 100|Levothyroxine|Telma 20|Telma 40|Telma 80|Telma H|Telma AM|Telmisartan|Telmisartan 40mg|Telmikind 40|Losar 50|Losartan|Losar H|Repace 50|Amlodipine|Amlodipine 5mg|Amlong 5|Amlokind 5|Amlokind AT|Stamlo 5|Stamlo Beta|Amlip 5|Atenolol|Aten 50|Tenormin|Metoprolol|Metolar 25|Metolar XL 50|Met XL 25|Met XL 50|Betaloc|Concor 2.5|Concor 5|Bisoprolol|Nebicard 5|Nebivolol|Carvedilol|Cardivas 6.25|Ramipril|Cardace 2.5|Cardace 5|Enalapril|Envas 5|Lisinopril|Olmesartan|Olmezest 20|Olsar 40|Cilnidipine|Cilacar 10|Nicardia|Nifedipine|Prazosin|Minipress XL|Clonidine|Arkamin|Hydrochlorothiazide|Chlorthalidone|Thalitone|Furosemide|Lasix 40|Lasix|Torsemide|Dytor 10|Spironolactone|Aldactone 25|Eplerenone|Isosorbide Mononitrate|Monotrate OD 40|Ismo 20|Sorbitrate 5|Nitroglycerin|Sustac 2.6|Nikoran 5|Ranolazine|Ranozex 500|Trimetazidine|Vastarel MR|Clopidogrel|Clopilet 75|Clopitab 75|Plavix 75|Prasugrel|Ticagrelor|Brilinta 90|Warfarin|Warf 5|Acitrom 2|Rivaroxaban|Xarelto 20|Apixaban|Eliquis 5|Digoxin|Lanoxin|Atorvastatin|Atorva 10|Atorva 20|Atorva 40|Storvas 10|Storvas 20|Lipvas 10|Rosuvastatin|Rosuvas 10|Rosuvas 20|Rozavel 10|Rosulip 10|Lipicure|Fenofibrate|Lipicard 160|Ezetimibe|Ezedoc 10|Metformin|Metformin 500mg|Glycomet 500|Glycomet 850|Glycomet GP 1|Glycomet GP 2|Glycomet SR 500|Glucophage|Obimet 500|Gluconorm PG|Glimepiride|Amaryl 1|Amaryl 2|Amaryl M|Glimestar M|Glizid M|Gliclazide|Diamicron XR|Glyciphage|Janumet 50/500|Januvia 100|Zita 50|Zita Met|Istavel Met|Sitagliptin|Vildagliptin|Galvus Met|Jalra M|Zomelis|Teneligliptin|Tenglyn M|Linagliptin|Trajenta 5|Gemer 2|Gemer P|Dapagliflozin|Forxiga 10|Dapa 10|Empagliflozin|Jardiance 10|Canagliflozin|Pioglitazone|Pioz 15|Piopen G|Repaglinide|Voglibose|Volibo 0.3|Acarbose|Insulin Glargine|Lantus|Basalog|Toujeo|Insulin Mixtard|Human Mixtard 30/70|Huminsulin 30/70|Insulin Aspart|Novorapid|Insulin Lispro|Humalog|Tresiba|Calcium Carbonate|Shelcal 500|Shelcal CT|Calcimax|Calcirol|Cipcal 500|Vitamin D3|Vitamin D3 60000 IU|Uprise D3 60k|D Rise 60K|Vitamin B12|Methylcobalamin|Methycobal 500|Neurobion Forte|Neurobion|Becosules|Becosules Z|Zincovit|Supradyn|Limcee|Vitamin C|Revital H|Folic Acid|Folvite 5|Ferrous Sulphate|Dexorange|Autrin|Fefol|Ferium XT|Orofer XT|Iron Sucrose|Ensure|Glucon D|Pregabalin|Pregalin M|Nervz|Gabapentin|Gabapin NT|Duloxetine|Duzela 20|Amitriptyline|Tryptomer 10|Nortriptyline|Sensival|Escitalopram|Nexito 10|Sertraline|Daxid 50|Serta 50|Fluoxetine|Prozac|Paroxetine|Mirtazapine|Mirtaz 15|Alprazolam|Alprax 0.25|Restyl 0.25|Clonazepam|Clonotril 0.5|Rivotril|Lorazepam|Ativan|Zolpidem|Zolfresh 10|Melatonin|Quetiapine|Qutipin 25|Olanzapine|Olanex 5|Risperidone|Risdone 2|Aripiprazole|Arip MT 10|Lithium|Lithosun|Levetiracetam|Levipil 500|Keppra 500|Phenytoin|Eptoin 100|Carbamazepine|Tegretol|Zeptol 200|Valproate|Encorate Chrono 500|Divalproex|Oxcarbazepine|Oxetol 300|Lamotrigine|Lamitor 50|Topiramate|Tiza|Syndopa Plus|Syndopa 110|Levodopa Carbidopa|Pramipexole|Pexola 0.25|Ropinirole|Ropark 0.5|Donepezil|Donep 5|Memantine|Admenta 10|Rivastigmine|Exelon|Betahistine|Vertin 16|Vertin 8|Stugeron|Cinnarizine|Flunarizine|Sibelium|Piracetam|Nootropil 800|Cerebroliv|Citicoline|Ceretone|Allopurinol|Zyloric 100|Febuxostat|Febutaz 40|Colchicine|Colchicine 0.5mg|Alendronate|Fosamax|Risedronate|Raloxifene|Evista|Calcitriol|Methotrexate|Hydroxychloroquine|HCQS 200|Sulfasalazine|Prednisolone|Wysolone 10|Omnacortil 10|Deflazacort|Defcort 6|Dexamethasone|Dexona|Methylprednisolone|Medrol 16|Hydrocortisone|Budesonide|Budecort|Foracort|Seroflo|Salbutamol|Asthalin|Asthalin Inhaler|Levolin|Ipratropium|Duolin|Tiotropium|Tiova 18|Theophylline|Deriphyllin|Formonide|Tamsulosin|Urimax 0.4|Veltam|Dutasteride|Dutas T|Finasteride|Finast 5|Silodosin|Silodal 8|Tolterodine|Detrusitol|Solifenacin|Solinaf|Oxybutynin|Uro Tone|Cystone|Neeri|Sildenafil|Tadalafil|Famotidine 20mg|Lactulose|Duphalac|Cremaffin|Isabgol|Sat Isabgol|Bisacodyl|Dulcolax|Loperamide|Eldoper|Racecadotril|Redotil|ORS|Electral|Enterogermina|Sporlac|Vizylac|Econorm|Probiotic|Mesalamine|Mesacol|Ursodeoxycholic Acid|Udiliv 300|Silymarin|Liv 52|Liv 52 DS|Hepamerz|Rifaximin|Rifagut 400|Xifaxan|Lactobacillus|Tranexamic Acid|Pause 500|Mefenamic Acid Tranexamic|Norethisterone|Regestrone 5|Primolut N|Progesterone|Susten 200|Duphaston|Letrozole|Letoval 2.5|Clomiphene|Siphene 50|Folic Acid 5mg|Isotretinoin|Clindamycin|Clindac A|Minoxidil|Tugain 5|Latanoprost|Xalatan|Timolol|Brimonidine|Carboxymethylcellulose|Refresh Tears|Moxifloxacin Eye Drops|Vigamox|Ciplox Eye Drops|Betadine Gargle|Chlorhexidine|Hexidine|Chyawanprash|Ashwagandha|Giloy|Triphala|Tulsi Drops|Isabgol Husk|Dolo 250|Dolo 1000|Crocin Pain Relief|Crocin Cold & Flu|Calpol 250|Paracip 500|P-500|Pacimol 650|Febrex Plus|Saridon|Anacin|Zerodol 100|Zerodol MR|Zerodol TH 4|Hifenac MR|Hifenac SP|Dolonex 20|Piroxicam|Etoricoxib|Etoshine 90|Nucoxia 90|Nucoxia MR|Arcoxia 90|Etody 60|Celecoxib|Celact 200|Ketorol DT|Ketorolac|Combiflam Plus|Ibugesic Plus|Ibuprofen 400mg|Flexon MR|Myospaz|Myospaz Forte|Thiocolchicoside|Tizanidine|Sirdalud 2|Tizan 2|Chlorzoxazone|Cyclopam Tablet|Meftal Forte|Tramazac|Tramadol 50mg|Zerodol Gel|Diclofenac Gel|Omnigel|Relispray|Volini Gel|Moov Spray|Pain Balm|Zandu Balm|Amrutanjan|Tiger Balm|Sinarest New|Sinarest AF|D Cold Total|Cheston Cold|Cheston Cold DS|Coldact|Coldarin|Solvin Cold|Vicks Vaporub|Vicks Cough Drops|Otrivin Nasal Drops|Otrivin Nasal Spray|Nasivion|Nasoclear|Xylometazoline|Fluticasone Nasal Spray|Flomist|Nasonex|Avamys|Nasal Saline Drops|Ambrodil|Ambroxol|Ambrolite|Mucolite|Mucinac 600|Acetylcysteine|N-Acetylcysteine|Bromhexine|Bisolvon|Dextromethorphan|Tixylix|Chericof|Chlorpheniramine|CPM 4|Cetrizine 10|Cetrizine|Cetzine|Okacet Cold|Alerid|Alerid D|Xyzal 5|Levocetirizine 5mg|Lcz|Lcz 5|Allegra M|Montair 10|Montair FX|Montek|Monticope|Montelukast 10mg|Montelukast Levocetirizine|Hydroxyzine|Atarax 10|Atarax 25|Deslor|Desloratadine|Bilastine|Bilaxten|Rupatadine|Rupanex|Wikoryl AF|Sinex|Strepsils|Vicks Cough Syrup|Honitus|Dabur Honitus|Sitopaladi|Zandu Pancharishta|Kofol|Himalaya Koflet|Koflet|Tusq|Tusq D|Tusq DX|Tossex|Tossex Syrup|Benadryl DR|Chericof Syrup|Cofsils|Cofsils Orange|Gelusil MPS|Digene Gel|Mucaine Gel|Sucralfate|Sucral|Sucral O|Pantop D|Pantop DSR|Pan DSR|Pantocid DSR|Pantocid D|Panto 40|Pantodac 40|Pantodac DSR|Pantoprazole DSR|Pantoprazole Domperidone|Lansoprazole|Lanzol 30|Lanzol|Lansoprazole 30mg|Omez D|Omez DSR|Omeprazole 20mg|Ocid 20|Prilosec|Esomeprazole 40mg|Nexium 40|Nexpro 20|Rabeprazole 20mg|Rabicip 20|Rabicip D|Rabium 20|Razo 40|Razo DSR|Rablet D|Rantac|Rantac 300|Zinetac|Zinetac 300|Ranitidine 150mg|Famocid 20|Famocid 40|Famotidine 40mg|Pepcid|Misoprostol|Cytolog|Sompraz 40|Sompraz D|Ilaprazole|Ilapro 10|Domstal 10|Domstal MD|Domperidone 10mg|Perinorm 10|Metoclopramide|Reglan|Ondansetron 4mg|Ondem MD|Emeset 4|Vomistop|Vomistop MD|Stemetil|Prochlorperazine|Stemetil MD|Avomine|Promethazine|Phenergan|Meclizine|Itopride|Ganaton 50|Ganaton Total|Itomed|Mosapride|Moza 5|Mosid MR|Gasex|Gas-O-Fast|Colicaid|Simethicone|Mylanta|Sizodon|Sompraz|Digene Tablet|Digene Syrup|Gelusil Syrup|Eno Lemon|Eno Orange|Cremaffin Plus|Cremaffin Fresh|Syrup Cremaffin|Looz|Looz Syrup|Lactulose Syrup|Duphalac Syrup|Peglec|Polyethylene Glycol|PEG 3350|Pegmove|Laxopeg|Dulcolax Tablet|Bisacodyl 5mg|Senna|Sat Isabgol Husk|Isabgol Powder|Fybogel|Metamucil|Naturolax|Kayam Churna|Triphala Churna|Haritaki|Hingwashtak Churna|Avipattikar Churna|Pudin Hara Pearls|Pudin Hara Liquid|Imodium|Loperamide 2mg|Lopamide|Eldoper 2|Redotil 100|Racecadotril 100mg|Diarlet|Nitazoxanide|Nitazox|Alinia|Oflox|Ofloxacin Ornidazole|Oflox OZ Tablet|Ornidazole|Ornof|Tinidazole|Tiniba 500|Secnidazole|Metrogyl DG|Metrogyl 200|Flagyl 200|Flagyl 400mg|Metronidazole 400mg|Metronidazole Gel|Norflox TZ Tablet|Cifran OD|Ciplox TZ|Ciprofloxacin 500mg|Ciprofloxacin 250mg|Levofloxacin 500mg|Levofloxacin 750mg|Lebofox|Levoflox 750|Tavanic|Moxifloxacin|Moxif 400|Avelox|Gatifloxacin|Gatiquin|Nitrofurantoin 100mg|Niftran|Fosfomycin|Monurol|Cotrimoxazole|Septran DS|Bactrim DS|Trimethoprim|Cefixime 200mg|Cefixime 100mg|Taxim O|Taxim O 100|Zifi 100|Zifi CV|Cefim 200|Cefpodoxime 200mg|Cefpodoxime Clavulanic|Cepodem 200|Cepodem XP|Doxime 200|Cefdinir|Omnicef|Cefadroxil|Cefadroxil 500mg|Droxyl 500|Cefaclor|Keflor|Cefuroxime 500mg|Ceftum 500|Zocef 250|Cefuroxime Axetil|Ceftriaxone 1g|Monocef 1g|Cefotaxime|Taxim 1g|Cefoperazone Sulbactam|Magnex Forte|Sulbactomax|Piperacillin Tazobactam|Pipzo|Tazact|Meropenem|Merocris|Meronem|Ertapenem|Invanz|Imipenem|Amoxicillin 500mg|Amoxicillin 250mg|Amoxycillin|Novamox 500|Mox 250|Amoxyclav|Amoxyclav 625|Augmentin Duo|Augmentin 375|Augmentin DDS|Moxikind CV 625|Clavam 375|Clavam 1000|Amoxicillin Clavulanate|Ampicillin|Ampoxin|Cloxacillin|Dicloxacillin|Penicillin V|Benzathine Penicillin|Azithromycin 500mg|Azithromycin 250mg|Azithral 250|Azithral 200|Azee 250|Azee 200|Azax 500|Zathrin 500|Clarithromycin|Claribid 500|Clarithral 500|Erythromycin|Althrocin 250|Roxithromycin|Roxid 150|Doxycycline 100mg|Doxycycline Lactobacillus|Doxy 1 LDR|Doxt SL|Minocycline|Minolox|Tetracycline|Clindamycin 300mg|Dalacin C 300|Clindamycin 150mg|Linezolid 600mg|Linox 600|Zyvox|Vancomycin|Vancocin|Rifampicin|R-Cin 450|Rifampin|Isoniazid|INH 300|Ethambutol|Myambutol 800|Pyrazinamide|PZA 750|Akurit 4|Akt 4|HRZE|Forecox|Streptomycin|Dapsone|Fluconazole 150mg|Fluconazole 200mg|Forcan 150|Zocon 150|Flucos 150|Itraconazole|Itaspor 100|Sporanox|Terbinafine|Terbicip 250|Lamisil|Griseofulvin|Grisovin 500|Clotrimazole Cream|Candid Cream|Candid B|Candid Powder|Candid V Gel|Clocip|Ketoconazole|Nizoral|Ketoconazole Shampoo|Keto Shampoo|Ketomac|Luliconazole|Lulifin|Luliconazole Cream|Sertaconazole|Zoloskin|Miconazole|Surfaz SN|Fourderm|Quadriderm|Betnovate N|Betnovate C|Betnovate GM|Clobetasol|Clop|Tenovate|Halox|Mometasone Cream|Elocon|Momate|Momate F|Hydrocortisone Cream|Cortisone|Eumosone|Fusidic Acid|Fucidin|Fucibet|Mupirocin|T-Bact|Bactroban|Soframycin Cream|Neosporin|Neosporin Powder|Povidone Iodine|Betadine Ointment|Betadine Solution|Dettol|Savlon|Boroline|Calamine Lotion|Calosoft|Caladryl|Silverex|Silver Sulfadiazine|Burnol|Thrombophob|Hirudoid|Moov Cream|Itch Guard|Permethrin|Permite|Scabper|Scabex|Ivermectin 12mg|Ivermectin 6mg|Ivermectin 3mg|Albendazole 400mg|Zentel|Albendazole Syrup|Bandy 400|Mebendazole|Vermox|Pyrantel|Combantrin|Praziquantel|Chloroquine|Lariago|Hydroxychloroquine 200mg|Hydroxychloroquine 400mg|Primaquine|Artesunate|Arthemether Lumefantrine|Lumerax|Falcigo|Quinine|Doxycycline Malaria|Acyclovir|Acyclovir 400mg|Zovirax|Acivir 400|Valacyclovir|Valtrex|Valcivir 500|Famciclovir|Oseltamivir|Fluvir 75|Tamiflu|Paxlovid|Favipiravir|Fabiflu|Molnupiravir|Molulife|Ranbaxy Pantoprazole|Sitagliptin 100mg|Sitagliptin Metformin|Janumet|Janumet XR|Januvia|Zita Plus|Zituvimet|Zituvio|Vildagliptin 50mg|Vildagliptin Metformin|Galvus|Vysov|Vysov M|Jalra|Zomelis Met|Teneligliptin 20mg|Tenepia|Tenepia M|Teneli M|Linagliptin 5mg|Linares|Trajenta Duo|Saxagliptin|Onglyza|Alogliptin|Dapagliflozin 10mg|Dapagliflozin Metformin|Dapazin|Oxra 10|Gibtulio|Empagliflozin 10mg|Empagliflozin 25mg|Empagliflozin Metformin|Jardiance 25|Jardiance Duo|Gibtulio Met|Canagliflozin 100mg|Invokana|Ertugliflozin|Gliptin|Glimepiride 1mg|Glimepiride 2mg|Glimepiride Metformin|Glimy M1|Glimy M2|Glimestar 1|Glimestar 2|Glimestar M1|Glimestar M2|Amaryl M1|Amaryl M2|Zoryl M1|Zoryl M2|Glycomet GP 0.5|Glycomet GP 3|Glycomet 500 SR|Glycomet 1000 SR|Glycomet 1000|Glycomet SR 1000|Glycomet SR 850|Glycomet GP|Metformin SR|Metformin 1000mg|Metformin 850mg|Metformin 500mg SR|Metformin Glimepiride|Metformin Glipizide|Metformin Pioglitazone|Metformin Voglibose|Glucophage SR|Gluconorm|Gluconorm G1|Gluconorm G2|Gluconorm PG 1|Gluconorm PG 2|Gluconorm PG 3|Glyciphage SR|Glyciphage G1|Glyciphage G2|Obimet SR|Obimet GP 1|Obimet GP 2|Obimet PG 1|Obimet PG 2|Cetapin 500|Cetapin XR|Riomet|Riomet ER|Bigomet|Bigomet SR|Starformin|Starformin SR|Starformin PGM|Walaphage|Diaformin|Diaformin SR|Diabetmin|Gliclazide 80mg|Gliclazide 40mg|Gliclazide MR|Glizid|Glizid 80|Glizid M 80|Diamicron MR 60|Reclide 80|Reclimet|Reclimet 500|Glipizide|Glynase|Glibenclamide|Daonil|Daonil 5|Euglucon|Glyburide|Glucored|Pioglitazone 15mg|Pioglitazone 30mg|Pioglitazone Glimepiride|Pioglar|Pioglar 15|Pioglar M|Pioglar GM|Pioz MF|Piodar|Triglitaz|Repaglinide 1mg|Repaglinide 2mg|Eurepa|Eurepa M|Voglibose 0.2mg|Voglibose 0.3mg|Vobose|Volix 0.2|Volix 0.3|Glucobay|Acarbose 50mg|Insulin|Insulin Regular|Actrapid|Human Actrapid|Insulatard|Human Insulatard|Mixtard 30|Mixtard 50|Huminsulin R|Huminsulin N|Humulin 30/70|Humulin R|Humulin N|Basalog One|Glaritus|Glaritus 100|Lantus Solostar|Toujeo Solostar|Levemir|Insulin Detemir|Tresiba Flextouch|Insulin Degludec|Ryzodeg|Novomix 30|Novomix 50|Novorapid Flexpen|Fiasp|Apidra|Insulin Glulisine|Humalog Mix 25|Humalog Mix 50|Liraglutide|Victoza|Semaglutide|Ozempic|Wegovy|Rybelsus|Dulaglutide|Trulicity|Exenatide|Byetta|Tirzepatide|Mounjaro|Telmisartan 20mg|Telmisartan 80mg|Telmisartan Amlodipine|Telmisartan Hydrochlorothiazide|Telmikind H|Telmikind AM|Telmikind 20|Telmikind 80|Telma 40 H|Telma AM 40|Telma CT|Telma CT 40|Telmisartan Chlorthalidone|Telsartan 40|Telsartan H|Telsartan AM|Tazloc 40|Tazloc H|Tazloc Trio|Telvas 40|Telvas AM|Telvas H|Cresar 40|Cresar H|Cresar AM|Losartan 25mg|Losartan 50mg|Losartan 100mg|Losartan Hydrochlorothiazide|Losartan Amlodipine|Losacar 50|Losacar H|Losacar AM|Losar 25|Losar 100|Losar AM|Losar Plus|Repace H|Repace AM|Repace 25|Covance 50|Covance H|Losakind 50|Losakind H|Cozaar|Cozaar 50|Valsartan|Valsartan 80mg|Valsartan 160mg|Valsartan Amlodipine|Valsartan Hydrochlorothiazide|Valzaar 80|Valzaar 160|Valzaar H|Valzaar AM|Diovan 80|Diovan 160|Valent 80|Valent 160|Irbesartan|Irbesartan 150mg|Irbesartan 300mg|Irbesartan Hydrochlorothiazide|Irovel 150|Irovel 300|Irovel H|Avapro|Candesartan|Candesartan 8mg|Candesartan 16mg|Candesartan Hydrochlorothiazide|Candesar 8|Candesar 16|Candesar H|Atacand|Olmesartan 20mg|Olmesartan 40mg|Olmesartan Amlodipine|Olmesartan Hydrochlorothiazide|Olmesartan Amlodipine Hydrochlorothiazide|Olmezest 40|Olmezest H|Olmezest AM|Olmezest Trio|Olmy 20|Olmy 40|Olmy AM|Olmy H|Olsar H|Olsar AM|Olsar Plus|Benitec|Azilsartan|Azilsartan Medoxomil|Azilsartan Chlorthalidone|Edarbi|Azusa 40|Azusa CH|Edarbyclor|Sacubitril Valsartan|Sacubitril|Entresto|Entresto 50|Entresto 100|Vymada|Vymada 50|Vymada 100|Ramipril 2.5mg|Ramipril 5mg|Ramipril 10mg|Ramipril Amlodipine|Ramipril Hydrochlorothiazide|Ramipril Telmisartan|Cardace 10|Cardace H|Cardace AM|Cardace Plus|Ramistar 5|Ramistar 2.5|Ramistar H|Ramace|Ramace 5|Hope 5|Enalapril 5mg|Enalapril 10mg|Enalapril Hydrochlorothiazide|Envas 2.5|Envas 10|Envas H|Enace|Vasotec|Lisinopril 5mg|Lisinopril 10mg|Lisinopril Hydrochlorothiazide|Lisinopril Amlodipine|Listril 5|Listril 10|Listril Plus|Lipril 5|Lipril 10|Lipril Plus|Zestril|Zestril 5|Zestril 10|Prinivil|Captopril|Captopril 25mg|Capoten|Angiopril|Angiopril 25|Perindopril|Perindopril Amlodipine|Perindopril Indapamide|Coversyl|Coversyl 4|Coversyl Plus|Covance AM|Quinapril|Accupril|Fosinopril|Monopril|Trandolapril|Mavik|Benazepril|Lotensin|Amlodipine 2.5mg|Amlodipine 10mg|Amlodipine Atenolol|Amlodipine Metoprolol|Amlodipine Lisinopril|Amlodipine Valsartan|Amlodipine Olmesartan|Amlodipine Losartan|Amlodipine Telmisartan|Amlodipine Enalapril|Amlodipine Benazepril|Amlodipine Ramipril|Amlokind 2.5|Amlokind 10|Amlokind L|Amlokind M|Amlokind AT 50|Amlong 2.5|Amlong 10|Amlong A|Amlong MA|Amlong AT|Amlong L|Amlip 2.5|Amlip 10|Amlip AT|Amlip M|Amlip L|Amlovas 5|Amlovas 2.5|Amlovas 10|Stamlo 2.5|Stamlo 10|Stamlo M|Stamlo Beta 50|Stamlo Beta 25|Stamlo T|Stamlo L|Stamlo Pro|Amtas 5|Amtas 2.5|Amtas 10|Amtas AT|Amtas M|Amtas L|Amtas 5 Tablet|Amlopres 5|Amlopres AT|Amlopres L|Amlopres M|Amlopres 10|Amlopres 2.5|Norvasc|Norvasc 5|Norvasc 10|Istin|Istin 5|Istin 10|Istin 2.5|Nifedipine 10mg|Nifedipine 20mg|Nifedipine 30mg|Nifedipine SR|Nifedipine Retard|Depin|Depin 5|Depin 10|Depin Retard|Calcigard|Calcigard Retard|Calcigard 10|Nicardia Retard|Nicardia XL|Nicardia 10|Nicardia 20|Nicardia 30|Adalat|Adalat 10|Adalat Retard|Adalat XL|Adalat LA|Felodipine|Plendil|Lercanidipine|Lerez 10|Lerez 20|Lerez H|Lerez AM|Lercan|Lercan 10|Lercan 20|Lercanidipine 10mg|Lercanidipine 20mg|Lercanidipine Telmisartan|Lercanidipine Olmesartan|Lercanidipine Losartan|Zanidip|Zanidip 10|Zanidip 20|Cilnidipine 5mg|Cilnidipine 10mg|Cilnidipine 20mg|Cilnidipine Telmisartan|Cilnidipine Olmesartan|Cilnidipine Metoprolol|Cilnidipine Atenolol|Cilnidipine Valsartan|Cilnidipine Losartan|Cilnidipine Ramipril|Cilnidipine Enalapril|Cilnidipine Hydrochlorothiazide|Cilaheart 10|Cilaheart 5|Cilaheart 20|Cilaheart AT|Cilaheart M|Cilaheart T|Cilaheart L|Cilaheart O|Cilaheart V|Cilaheart R|Cilaheart E|Cilaheart H|Cilacar 5|Cilacar 20|Cilacar T|Cilacar M|Cilacar AT|Cilacar L|Cilacar O|Cilacar V|Cilacar R|Cilacar E|Cilacar H|Cinod 10|Cinod 5|Cinod 20|Cinod T|Cinod M|Cinod AT|Cinod L|Cinod O|Cinod V|Cinod R|Cinod E|Cinod H|Diltiazem|Diltiazem 30mg|Diltiazem 60mg|Diltiazem 90mg|Diltiazem 120mg|Diltiazem 180mg|Diltiazem 240mg|Diltiazem SR|Diltiazem CD|Diltiazem ER|Dilzem|Dilzem 30|Dilzem 60|Dilzem 90|Dilzem SR|Dilzem CD|Dilzem ER|Dilzem 120|Dilzem 180|Dilzem 240|Verapamil|Verapamil 40mg|Verapamil 80mg|Verapamil 120mg|Verapamil 240mg|Verapamil SR|Verapamil ER|Calaptin|Calaptin 40|Calaptin 80|Calaptin SR|Calaptin 120|Calaptin 240|Isoptin|Isoptin 40|Isoptin 80|Isoptin SR|Atenolol 25mg|Atenolol 50mg|Atenolol 100mg|Atenolol Amlodipine|Atenolol Chlorthalidone|Atenolol Hydrochlorothiazide|Aten 25|Aten 100|Aten H|Aten AM|Atenova 25|Atenova 50|Atenova 100|Atenova AM|Atenova H|Betacard 25|Betacard 50|Betacard 100|Betacard AM|Betacard H|Tenormin 25|Tenormin 50|Tenormin 100|Tenolol|Tenolol 25|Tenolol 50|Tenolol 100|Metoprolol 25mg|Metoprolol 50mg|Metoprolol 100mg|Metoprolol Succinate|Metoprolol Succinate 25mg|Metoprolol Succinate 50mg|Metoprolol Succinate 100mg|Metoprolol Tartrate|Metoprolol Tartrate 25mg|Metoprolol Tartrate 50mg|Metoprolol Tartrate 100mg|Metoprolol Amlodipine|Metoprolol Hydrochlorothiazide|Metoprolol Telmisartan|Metolar 50|Metolar 100|Metolar XR|Metolar XR 25|Metolar XR 50|Metolar XR 100|Metolar AM|Metolar H|Met XL 100|Met XL AM|Met XL H|Met XL T|Met XL 25 Tablet|Betaloc 25|Betaloc 50|Betaloc 100|Betaloc XL|Betaloc XL 25|Betaloc XL 50|Betaloc XL 100|Betaloc AM|Betaloc H|Lopressor|Lopressor 25|Lopressor 50|Lopressor 100|Toprol XL|Toprol XL 25|Toprol XL 50|Toprol XL 100|Bisoprolol 2.5mg|Bisoprolol 5mg|Bisoprolol 10mg|Bisoprolol Amlodipine|Bisoprolol Hydrochlorothiazide|Bisoprolol Telmisartan|Concor 10|Concor AM|Concor H|Concor Cor|Concor Cor 2.5|Concor Cor 5|Concor Cor 10|Bisocar 2.5|Bisocar 5|Bisocar 10|Bisocar AM|Bisocar H|Corbis 2.5|Corbis 5|Corbis 10|Corbis AM|Corbis H|Nebivolol 2.5mg|Nebivolol 5mg|Nebivolol 10mg|Nebivolol Amlodipine|Nebivolol Hydrochlorothiazide|Nebivolol Telmisartan|Nebivolol Valsartan|Nebicard 2.5|Nebicard 10|Nebicard AM|Nebicard H|Nebicard T|Nebicard V|Nebistar 2.5|Nebistar 5|Nebistar 10|Nebistar AM|Nebistar H|Nebistar T|Nebistar V|Nebilet|Nebilet 2.5|Nebilet 5|Nebilet 10|Nebilet AM|Nebilet H|Nebilet T|Nebilet V|Carvedilol 3.125mg|Carvedilol 6.25mg|Carvedilol 12.5mg|Carvedilol 25mg|Cardivas 3.125|Cardivas 12.5|Cardivas 25|Carca 3.125|Carca 6.25|Carca 12.5|Carca 25|Carloc 3.125|Carloc 6.25|Carloc 12.5|Carloc 25|Coreg|Coreg 3.125|Coreg 6.25|Coreg 12.5|Coreg 25|Propranolol|Propranolol 10mg|Propranolol 20mg|Propranolol 40mg|Propranolol 80mg|Propranolol SR|Propranolol LA|Propranolol ER|Ciplar 10|Ciplar 20|Ciplar 40|Ciplar 80|Ciplar LA|Ciplar LA 40|Ciplar LA 80|Ciplar LA 120|Inderal|Inderal 10|Inderal 20|Inderal 40|Inderal 80|Inderal LA|Inderal LA 40|Inderal LA 80|Inderal LA 120|Labetalol|Labetalol 50mg|Labetalol 100mg|Labetalol 200mg|Labetalol 300mg|Labetalol 400mg|Labetalol 800mg|Labetalol ER|Labetalol SR|Labetalol XL|Labetalol CR|Normodyne|Trandate|Methyldopa|Methyldopa 250mg|Methyldopa 500mg|Aldomet|Aldomet 250|Aldomet 500|Alphadopa|Alphadopa 250|Alphadopa 500|Hydralazine|Hydralazine 25mg|Hydralazine 50mg|Apresoline|Prazosin 1mg|Prazosin 2mg|Prazosin 5mg|Minipress|Minipress 1|Minipress 2|Minipress 5|Minipress XL 2.5|Minipress XL 5|Doxazosin|Doxazosin 1mg|Doxazosin 2mg|Doxazosin 4mg|Doxazosin 8mg|Doxazosin XL|Cardura|Cardura 1|Cardura 2|Cardura 4|Cardura 8|Cardura XL|Terazosin|Terazosin 1mg|Terazosin 2mg|Terazosin 5mg|Terazosin 10mg|Hytrin|Hytrin 1|Hytrin 2|Hytrin 5|Hytrin 10|Clonidine 0.1mg|Clonidine 0.2mg|Clonidine 0.3mg|Catapres|Catapres 0.1|Catapres 0.2|Catapres 0.3|Arkamin 0.1|Moxonidine|Moxonidine 0.2mg|Moxonidine 0.3mg|Moxonidine 0.4mg|Moxovas|Moxovas 0.2|Moxovas 0.3|Moxovas 0.4|Physiotens|Physiotens 0.2|Physiotens 0.3|Physiotens 0.4|Hydrochlorothiazide 12.5mg|Hydrochlorothiazide 25mg|Aquazide|Aquazide 12.5|Aquazide 25|Chlorthalidone 12.5mg|Chlorthalidone 25mg|Chlorthalidone 50mg|Thalitone 12.5|Thalitone 25|Indapamide|Indapamide 1.5mg|Indapamide 2.5mg|Lorvas|Lorvas SR|Natrilix|Natrilix SR|Natrilix 1.5|Furosemide 20mg|Furosemide 40mg|Furosemide 80mg|Lasix 20|Lasix 80|Lasix Retard|Frusemide|Frusenex|Torsemide 5mg|Torsemide 10mg|Torsemide 20mg|Torsemide 40mg|Dytor 5|Dytor 20|Dytor 40|Dytor Plus|Dytor Plus 5|Dytor Plus 10|Dytor Plus 20|Dytor Plus 40|Torsinex|Torsinex 10|Torsinex 20|Torsinex 40|Spironolactone 25mg|Spironolactone 50mg|Spironolactone 100mg|Aldactone 50|Aldactone 100|Aldactazide|Aldactazide 25|Aldactazide 50|Aldactazide 100|Eplerenone 25mg|Eplerenone 50mg|Inspra|Inspra 25|Inspra 50|Amiloride|Amiloride 5mg|Midamor|Triamterene|Dyazide|Acetazolamide|Diamox|Diamox 250|Mannitol|Isosorbide Dinitrate|Isosorbide Dinitrate 5mg|Isosorbide Dinitrate 10mg|Isosorbide Dinitrate 20mg|Sorbitrate 10|Sorbitrate 20|Isordil|Isordil 5|Isordil 10|Isordil 20|Isosorbide Mononitrate 20mg|Isosorbide Mononitrate 30mg|Isosorbide Mononitrate 40mg|Isosorbide Mononitrate 60mg|Isosorbide Mononitrate 120mg|Monotrate 20|Monotrate 30|Monotrate 60|Monotrate 120|Imdur|Imdur 30|Imdur 60|Imdur 120|Ismo 40|Ismo 60|Ismo 120|Nitroglycerin 2.6mg|Nitroglycerin 6.4mg|Nitroglycerin SL|Sorbitrate SL|Nitrostat|Angispan|Angispan TR|Angispan TR 2.5|Angispan TR 6.4|Glyceryl Trinitrate|Nitrocontin|Nitrocontin 2.6|Nitrocontin 6.4|Nicorandil 5mg|Nicorandil 10mg|Nicorandil 20mg|Nikoran 10|Nikoran 20|Ikorel|Ikorel 10|Ikorel 20|Ranolazine 500mg|Ranolazine 1000mg|Ranolazine ER|Ranozex 1000|Ranozex 750|Ranexa|Ranexa 500|Ranexa 1000|Trimetazidine 20mg|Trimetazidine 35mg|Trimetazidine MR|Trimetazidine MR 35mg|Vastarel 20|Vastarel 35|Vastarel MR 35|Tridil|Trimetabol|Trimetabol MR|Ivabradine|Ivabradine 5mg|Ivabradine 7.5mg|Ivabradine 2.5mg|Ivabrad 5|Ivabrad 7.5|Ivabrad 2.5|Corlanor|Corlanor 5|Corlanor 7.5|Ivabid 5|Ivabid 7.5|Ivabid 2.5|Procoralan|Procoralan 5|Procoralan 7.5|Digoxin 0.25mg|Digoxin 0.125mg|Digoxin 0.5mg|Lanoxin 0.25|Lanoxin 0.125|Lanoxin 0.5|Digitek|Amiodarone|Amiodarone 100mg|Amiodarone 200mg|Amiodarone 400mg|Cordarone|Cordarone 200|Tachyra|Tachyra 100|Tachyra 200|Pacerone|Pacerone 100|Pacerone 200|Pacerone 400|Sotalol|Sotalol 40mg|Sotalol 80mg|Sotalol 120mg|Sotalol 160mg|Sotagard|Sotagard 40|Sotagard 80|Sotagard 120|Sotagard 160|Betapace|Betapace 80|Betapace 120|Betapace 160|Flecainide|Flecainide 50mg|Flecainide 100mg|Tambocor|Propafenone|Propafenone 150mg|Propafenone 300mg|Rythmol|Dronedarone|Multaq|Dofetilide|Tikosyn|Aspirin 75mg|Aspirin 150mg|Aspirin 325mg|Aspirin 81mg|Aspirin 100mg|Aspirin 150|Ecosprin 325|Ecosprin 81|Ecosprin 100|Ecosprin AV 150|Ecosprin AV 75 Tablet|Ecosprin Gold 20|Ecosprin Gold 40|Ecosprin Gold 10 Tablet|Ecosprin Gold 20 Tablet|Ecosprin Gold 40 Tablet|Ecosprin AV 75/10|Ecosprin AV 75/20|Ecosprin AV 75/40|Ecosprin AV 150/10|Ecosprin AV 150/20|Ecosprin AV 150/40|Ecosprin 75 Tablet|Ecosprin 150 Tablet|Loprin 75|Loprin 150|Loprin 75 Tablet|Delisprin 75|Delisprin 150|Delisprin 75 Tablet|Aspent 75|Aspent 150|Aspent 75 Tablet|Clopidogrel 75mg|Clopidogrel 150mg|Clopidogrel 300mg|Clopidogrel Aspirin|Clopidogrel Aspirin Atorvastatin|Clopidogrel Aspirin Rosuvastatin|Clopilet A 75|Clopilet A 150|Clopilet AS 75|Clopilet AS 150|Clopilet 150|Clopilet 300|Clopitab A 75|Clopitab A 150|Clopitab AS 75|Clopitab AS 150|Clopitab 150|Clopitab 300|Plavix 150|Plavix 300|Plavix 75 Tablet|Deplatt 75|Deplatt A 75|Deplatt A 150|Deplatt AS 75|Deplatt AS 150|Deplatt 150|Deplatt 300|Deplatt CV|Deplatt CV 75|Deplatt CV 150|Deplatt CV 300|Prasugrel 5mg|Prasugrel 10mg|Prasugrel 60mg|Effient|Effient 5|Effient 10|Prasita|Prasita 5|Prasita 10|Ticagrelor 60mg|Ticagrelor 90mg|Ticagrelor 180mg|Brilinta 60|Brilinta 180|Brilinta 90 Tablet|Ticagrel|Ticagrel 60|Ticagrel 90|Ticagrel 180|Cilostazol|Cilostazol 50mg|Cilostazol 100mg|Pletal|Pletal 50|Pletal 100|Cilodoc 50|Cilodoc 100|Cilostan 50|Cilostan 100|Dipyridamole|Dipyridamole 25mg|Dipyridamole 75mg|Dipyridamole SR|Persantin|Persantin 25|Persantin 75|Persantin SR|Aggrenox|Pentoxifylline|Pentoxifylline 400mg|Pentoxifylline SR|Trental|Trental 400|Pentoxil 400|Pentoxil SR|Warfarin 1mg|Warfarin 2mg|Warfarin 3mg|Warfarin 5mg|Warfarin 7.5mg|Warfarin 10mg|Warf 1|Warf 2|Warf 3|Warf 7.5|Warf 10|Acitrom 1|Acitrom 3|Acitrom 4|Acenocoumarol|Acenocoumarol 1mg|Acenocoumarol 2mg|Acenocoumarol 4mg|Sintrom|Sintrom 1|Sintrom 2|Sintrom 4|Coumadin|Coumadin 1|Coumadin 2|Coumadin 3|Coumadin 5|Coumadin 7.5|Coumadin 10|Jantoven|Rivaroxaban 2.5mg|Rivaroxaban 10mg|Rivaroxaban 15mg|Rivaroxaban 20mg|Xarelto 2.5|Xarelto 10|Xarelto 15|Rivaflo 2.5|Rivaflo 10|Rivaflo 15|Rivaflo 20|Apixaban 2.5mg|Apixaban 5mg|Eliquis 2.5|Apigat 2.5|Apigat 5|Dabigatran|Dabigatran 75mg|Dabigatran 110mg|Dabigatran 150mg|Pradaxa|Pradaxa 75|Pradaxa 110|Pradaxa 150|Dabiwin 75|Dabiwin 110|Dabiwin 150|Edoxaban|Edoxaban 15mg|Edoxaban 30mg|Edoxaban 60mg|Lixiana|Lixiana 15|Lixiana 30|Lixiana 60|Savaysa|Savaysa 15|Savaysa 30|Savaysa 60|Enoxaparin|Enoxaparin 20mg|Enoxaparin 40mg|Enoxaparin 60mg|Enoxaparin 80mg|Clexane|Clexane 20|Clexane 40|Clexane 60|Clexane 80|Lovenox|Lovenox 30|Lovenox 40|Lovenox 60|Lovenox 80|Heparin|Heparin 5000 IU|Fondaparinux|Arixtra|Atorvastatin 5mg|Atorvastatin 10mg|Atorvastatin 20mg|Atorvastatin 40mg|Atorvastatin 80mg|Atorvastatin Aspirin|Atorvastatin Clopidogrel|Atorvastatin Fenofibrate|Atorvastatin Ezetimibe|Atorvastatin Amlodipine|Atorvastatin Telmisartan|Atorva 5|Atorva 80|Atorva Gold|Atorva Gold 10|Atorva Gold 20|Atorva Gold 40|Atorva Gold 80|Atorva Gold 10 Tablet|Atorva Gold 20 Tablet|Atorva Gold 40 Tablet|Atorva Gold 80 Tablet|Atorva Gold Tablet|Atorva Gold Capsule|Lipitor|Lipitor 10|Lipitor 20|Lipitor 40|Lipitor 80|Storvas 5|Storvas 40|Storvas 80|Storvas CV|Storvas CV 10|Storvas CV 20|Storvas CV 40|Storvas CV 80|Storvas EZ|Storvas EZ 10|Storvas EZ 20|Storvas EZ 40|Storvas EZ 80|Lipvas 5|Lipvas 20|Lipvas 40|Lipvas 80|Lipvas Gold|Lipvas Gold 10|Lipvas Gold 20|Lipvas Gold 40|Lipvas Gold 80|Tonact 10|Tonact 20|Tonact 40|Tonact 80|Tonact TG|Tonact TG 10|Tonact TG 20|Tonact TG 40|Tonact TG 80|Tonact Gold|Tonact Gold 10|Tonact Gold 20|Tonact Gold 40|Tonact Gold 80|Rosuvastatin 5mg|Rosuvastatin 10mg|Rosuvastatin 20mg|Rosuvastatin 40mg|Rosuvastatin Aspirin|Rosuvastatin Clopidogrel|Rosuvastatin Fenofibrate|Rosuvastatin Ezetimibe|Rosuvastatin Amlodipine|Rosuvastatin Telmisartan|Rosuvas 5|Rosuvas 40|Rosuvas Gold|Rosuvas Gold 10|Rosuvas Gold 20|Rosuvas Gold 40|Rosuvas F|Rosuvas F 10|Rosuvas F 20|Rosuvas F 40|Rosuvas EZ|Rosuvas EZ 10|Rosuvas EZ 20|Rosuvas EZ 40|Rosuvas CV|Rosuvas CV 10|Rosuvas CV 20|Rosuvas CV 40|Crestor|Crestor 5|Crestor 10|Crestor 20|Crestor 40|Rozavel 5|Rozavel 20|Rozavel 40|Rozavel F|Rozavel F 10|Rozavel F 20|Rozavel F 40|Rozavel EZ|Rozavel EZ 10|Rozavel EZ 20|Rozavel EZ 40|Rozavel Gold|Rozavel Gold 10|Rozavel Gold 20|Rozavel Gold 40|Rozavel CV|Rozavel CV 10|Rozavel CV 20|Rozavel CV 40|Rosulip 5|Rosulip 20|Rosulip 40|Rosulip F|Rosulip F 10|Rosulip F 20|Rosulip F 40|Rosulip EZ|Rosulip EZ 10|Rosulip EZ 20|Rosulip EZ 40|Rosulip Gold|Rosulip Gold 10|Rosulip Gold 20|Rosulip Gold 40|Rosulip CV|Rosulip CV 10|Rosulip CV 20|Rosulip CV 40|Simvastatin|Simvastatin 10mg|Simvastatin 20mg|Simvastatin 40mg|Simvastatin 80mg|Simvas 10|Simvas 20|Simvas 40|Simvas 80|Simcard 10|Simcard 20|Simcard 40|Simcard 80|Zocor|Zocor 10|Zocor 20|Zocor 40|Zocor 80|Pravastatin|Pravastatin 10mg|Pravastatin 20mg|Pravastatin 40mg|Pravastatin 80mg|Pravachol|Pravachol 10|Pravachol 20|Pravachol 40|Pravachol 80|Pitavastatin|Pitavastatin 1mg|Pitavastatin 2mg|Pitavastatin 4mg|Livalo|Livalo 1|Livalo 2|Livalo 4|Pitava 1|Pitava 2|Pitava 4|Pitavas 1|Pitavas 2|Pitavas 4|Lovastatin|Lovastatin 10mg|Lovastatin 20mg|Lovastatin 40mg|Mevacor|Mevacor 10|Mevacor 20|Mevacor 40|Fluvastatin|Fluvastatin 20mg|Fluvastatin 40mg|Fluvastatin 80mg|Lescol|Lescol 20|Lescol 40|Lescol 80|Lescol XL|Lescol XL 80|Fenofibrate 145mg|Fenofibrate 160mg|Fenofibrate 200mg|Fenofibrate 267mg|Fenofibrate 300mg|Fenofibrate 48mg|Fenofibrate 54mg|Fenofibrate 67mg|Fenofibrate 134mg|Fenofibrate 35mg|Fenofibrate 105mg|Fenofibrate 120mg|Fenofibrate 130mg|Fenofibrate 150mg|Fenofibrate 180mg|Fenofibrate 250mg|Fenofibrate 350mg|Fenofibrate 400mg|Lipicard 145|Lipicard 200|Lipicard 300|Lipicard 267|Lipicard 134|Lipicard 67|Lipicard 54|Lipicard 48|Lipicard 35|Lipicard 105|Lipicard 120|Lipicard 130|Lipicard 150|Lipicard 180|Lipicard 250|Lipicard 350|Lipicard 400|Tricor|Tricor 48|Tricor 145|Tricor 54|Tricor 160|Lipofen|Lipofen 50|Lipofen 150|Triglide|Triglide 160|Triglide 50|Fenoglide|Fenoglide 40|Fenoglide 120|Trilipix|Trilipix 45|Trilipix 135|Gemfibrozil|Gemfibrozil 300mg|Gemfibrozil 600mg|Lopid|Lopid 600|Lopid 300|Normolip|Normolip 300|Normolip 600|Ezetimibe 10mg|Ezetimibe Simvastatin|Ezetimibe Atorvastatin|Ezetimibe Rosuvastatin|Zetia|Zetia 10|Vytorin|Vytorin 10/10|Vytorin 10/20|Vytorin 10/40|Vytorin 10/80|Ezedoc 10 Tablet|Ezedoc Plus|Ezedoc Plus 10/10|Ezedoc Plus 10/20|Ezedoc Plus 10/40|Ezedoc Plus 10/80|Ezetrol|Ezetrol 10|Niacin|Niacin 500mg|Niacin 750mg|Niacin 1000mg|Niaspan|Niaspan 500|Niaspan 750|Niaspan 1000|Omega 3|Omega 3 Fatty Acids|Omega 3 1000mg|Omega 3 Capsule|Omega 3 Softgel|Fish Oil|Fish Oil Capsule|Fish Oil 1000mg|Maxepa|Maxepa Capsule|Omacor|Omacor Capsule|Lovaza|Lovaza Capsule|Epanova|Epanova Capsule|Vascepa|Vascepa Capsule|Cholestyramine|Questran|Questran Light|Colestipol|Colestid|Colesevelam|Welchol|Welchol 625|Welchol 3.75|Bempedoic Acid|Nexletol|Nexletol 180|Nexlizet|Nexlizet 180/10|Alirocumab|Praluent|Evolocumab|Repatha|Inclisiran|Leqvio|Levothyroxine 25mcg|Levothyroxine 50mcg|Levothyroxine 75mcg|Levothyroxine 88mcg|Levothyroxine 100mcg|Levothyroxine 112mcg|Levothyroxine 125mcg|Levothyroxine 137mcg|Levothyroxine 150mcg|Levothyroxine 175mcg|Levothyroxine 200mcg|Levothyroxine 300mcg|Thyronorm 88|Thyronorm 112|Thyronorm 125|Thyronorm 137|Thyronorm 150|Thyronorm 175|Thyronorm 200|Thyronorm 12.5|Thyronorm 37.5|Eltroxin 25|Eltroxin 75|Eltroxin 88|Eltroxin 112|Eltroxin 125|Eltroxin 137|Eltroxin 150|Eltroxin 175|Eltroxin 200|Eltroxin 12.5|Eltroxin 37.5|Thyrox 25|Thyrox 50|Thyrox 75|Thyrox 100|Thyrox 125|Thyrox 150|Thyrox 12.5|Thyrox 37.5|Synthroid|Synthroid 25|Synthroid 50|Synthroid 75|Synthroid 88|Synthroid 100|Synthroid 112|Synthroid 125|Synthroid 137|Synthroid 150|Synthroid 175|Synthroid 200|Synthroid 300|Levoxyl|Levoxyl 25|Levoxyl 50|Levoxyl 75|Levoxyl 88|Levoxyl 100|Levoxyl 112|Levoxyl 125|Levoxyl 137|Levoxyl 150|Levoxyl 175|Levoxyl 200|Unithroid|Unithroid 25|Unithroid 50|Unithroid 75|Unithroid 88|Unithroid 100|Unithroid 112|Unithroid 125|Unithroid 137|Unithroid 150|Unithroid 175|Unithroid 200|Unithroid 300|Euthyrox|Euthyrox 25|Euthyrox 50|Euthyrox 75|Euthyrox 88|Euthyrox 100|Euthyrox 112|Euthyrox 125|Euthyrox 137|Euthyrox 150|Euthyrox 175|Euthyrox 200|Euthyrox 300|Liothyronine|Liothyronine 5mcg|Liothyronine 25mcg|Liothyronine 50mcg|Cytomel|Cytomel 5|Cytomel 25|Cytomel 50|Armour Thyroid|Armour Thyroid 15|Armour Thyroid 30|Armour Thyroid 60|Armour Thyroid 90|Armour Thyroid 120|Carbimazole|Carbimazole 5mg|Carbimazole 10mg|Carbimazole 20mg|Neomercazole|Neomercazole 5|Neomercazole 10|Neomercazole 20|Neo Mercazole|Neo Mercazole 5|Neo Mercazole 10|Neo Mercazole 20|Methimazole|Methimazole 5mg|Methimazole 10mg|Methimazole 20mg|Tapazole|Tapazole 5|Tapazole 10|Tapazole 20|Propylthiouracil|Propylthiouracil 50mg|Propylthiouracil 100mg|PTU|PTU 50|PTU 100|Calcium|Calcium 500mg|Calcium Citrate|Calcium Gluconate|Calcium Lactate|Calcium Vitamin D3|Calcium D3|Shelcal HD|Shelcal XT|Shelcal 500 Tablet|Shelcal Gold|Shelcal M|Shelcal Plus|Shelcal CT Tablet|Gemcal|Gemcal Tablet|Gemcal Gold|Gemcal M|Gemcal Plus|Gemcal CT|Gemcal D3|Gemcal 500|Gemcal Max|Gemcal Forte|Cipcal|Cipcal 250|Cipcal Tablet|Cipcal D3|Cipcal Plus|Cipcal M|Cipcal CT|Cipcal Gold|Cipcal Max|Cipcal Forte|Cipcal 500 Tablet|Calcimax Forte|Calcimax P|Calcimax 500|Calcimax Plus|Calcimax D3|Calcimax Gold|Calcimax M|Calcimax CT|Calcimax Max|Calcimax Tablet|Calcimax 250|Calcium Sandoz|Calcium Sandoz Syrup|Calcium Sandoz Forte|Calcium Sandoz Tablet|Osteocare|Osteocare Tablet|Osteocare Syrup|Osteocare Plus|Osteocare M|Osteocare Max|Osteocare Forte|Osteocare Gold|Osteocare CT|Osteocare D3|Osteocare 500|Osteocare 250|Vitamin D|Vitamin D 1000 IU|Vitamin D 2000 IU|Vitamin D 5000 IU|Vitamin D 50000 IU|Vitamin D 60000 IU|Vitamin D3 1000 IU|Vitamin D3 2000 IU|Vitamin D3 5000 IU|Vitamin D3 50000 IU|Cholecalciferol|Cholecalciferol 60000 IU|Cholecalciferol Sachet|Cholecalciferol Capsule|Cholecalciferol Tablet|Cholecalciferol Drops|D3 Must|D3 Must Capsule|D3 Must Sachet|D3 Must Tablet|D3 Must Drops|D3 Must 60K|D Rise Capsule|D Rise Sachet|D Rise Tablet|D Rise Drops|D Rise 60000|Uprise D3 Capsule|Uprise D3 Sachet|Uprise D3 Tablet|Uprise D3 Drops|Uprise D3 60000|Tayo 60K|Tayo 60K Capsule|Tayo 60K Sachet|Tayo 60K Tablet|Tayo 60K Drops|Calcirol Sachet|Calcirol Capsule|Calcirol Granules|Calcirol 60000|Calcirol D3|Calcirol Nano Shots|Calcirol Tablet|Arachitol|Arachitol 6L|Arachitol Injection|Arachitol Nano|Arachitol Nano Shots|Arachitol Sachet|Arachitol Capsule|Arachitol Tablet|Alfacalcidol|Alfacalcidol 0.25mcg|Alfacalcidol 0.5mcg|Alfacalcidol 1mcg|One Alpha|One Alpha 0.25|One Alpha 0.5|One Alpha 1|Alfa D3|Alfa D3 0.25|Alfa D3 0.5|Alfa D3 1|Calcitriol 0.25mcg|Calcitriol 0.5mcg|Rocaltrol|Rocaltrol 0.25|Rocaltrol 0.5|Calcibon|Calcibon 0.25|Calcibon 0.5|Vitamin B Complex|B Complex|B Complex Capsule|B Complex Tablet|B Complex Syrup|Becosules Capsule|Becosules Syrup|Becosules Forte|Becosules Plus|Becosules Z Capsule|Becosules Z Tablet|Becosules Max|Becosules Gold|Becosules CT|Becosules D3|Becosules 500|Becosules 250|Becadexamin|Becadexamin Capsule|Becadexamin Syrup|Becadexamin Plus|Becadexamin Forte|Becadexamin Max|Becadexamin Gold|Becadexamin CT|Becadexamin D3|Neurobion Forte Tablet|Neurobion Injection|Neurobion Plus|Neurobion Max|Neurobion Gold|Neurobion CT|Neurobion D3|Neurobion 500|Neurobion 250|Neurobion Tablet|Neurobion 5000|Methylcobalamin 500mcg|Methylcobalamin 1500mcg|Methylcobalamin 750mcg|Methylcobalamin 1000mcg|Methylcobalamin Tablet|Methylcobalamin Capsule|Methylcobalamin Injection|Methylcobalamin Alpha Lipoic Acid|Methylcobalamin Pregabalin|Methylcobalamin Gabapentin|Methylcobalamin Folic Acid|Methylcobalamin Vitamin B6|Methycobal 1500|Methycobal 750|Methycobal 1000|Methycobal Tablet|Methycobal Injection|Methycobal Plus|Methycobal Forte|Methycobal Max|Methycobal Gold|Methycobal CT|Methycobal D3|Nervijen|Nervijen Tablet|Nervijen Injection|Nervijen Plus|Nervijen Forte|Nervijen Max|Nervijen Gold|Nervijen CT|Nervijen D3|Nervijen 500|Nervijen 1500|Nervijen 750|Nervijen 1000|Gabapentin Methylcobalamin|Gabapentin Nortriptyline|Gabapentin 100mg|Gabapentin 300mg|Gabapentin 400mg|Gabapentin 600mg|Gabapentin 800mg|Gabapin|Gabapin 100|Gabapin 300|Gabapin 400|Gabapin 600|Gabapin 800|Gabapin Plus|Gabapin NT Tablet|Gabapin NT 100|Gabapin NT 300|Gabapin Me|Gabapin Me 100|Gabapin Me 300|Gabantin|Gabantin 100|Gabantin 300|Gabantin 400|Gabantin 600|Gabantin 800|Gabantin NT|Gabantin NT 100|Gabantin NT 300|Gabantin Me|Gabantin Me 100|Gabantin Me 300|Neurontin|Neurontin 100|Neurontin 300|Neurontin 400|Neurontin 600|Neurontin 800|Pregabalin 25mg|Pregabalin 50mg|Pregabalin 75mg|Pregabalin 150mg|Pregabalin 300mg|Pregabalin Methylcobalamin|Pregabalin Nortriptyline|Pregabalin Duloxetine|Pregabalin Etoricoxib|Pregabalin Diclofenac|Pregabalin Paracetamol|Pregabalin Tramadol|Pregabalin Aceclofenac|Pregabalin Celecoxib|Pregalin 75|Pregalin 150|Pregalin 300|Pregalin 50|Pregalin 25|Pregalin M 75|Pregalin M 150|Pregalin M 300|Pregalin M 50|Pregalin M 25|Pregalin NT|Pregalin NT 75|Pregalin NT 150|Pregalin NT 300|Pregalin NT 50|Pregalin NT 25|Pregabid|Pregabid 75|Pregabid 150|Pregabid 300|Pregabid 50|Pregabid 25|Pregabid M|Pregabid M 75|Pregabid M 150|Pregabid M 300|Pregabid M 50|Pregabid M 25|Pregabid NT|Pregabid NT 75|Pregabid NT 150|Pregabid NT 300|Pregabid NT 50|Pregabid NT 25|Lyrica|Lyrica 25|Lyrica 50|Lyrica 75|Lyrica 150|Lyrica 300|Lyrica CR|Lyrica CR 82.5|Lyrica CR 165|Lyrica CR 330|Alpha Lipoic Acid|Alpha Lipoic Acid 100mg|Alpha Lipoic Acid 200mg|Alpha Lipoic Acid 300mg|Alpha Lipoic Acid 600mg|ALA|ALA 100|ALA 200|ALA 300|ALA 600|Thioctic Acid|Thioctic Acid 600mg|Thiocare|Thiocare 600|Thiocare Plus|Thiocare Forte|Thiocare Max|Thiocare Gold|Thiocare CT|Thiocare D3|Thiocare 300|Thiocare 200|Thiocare 100|Thiocare 500|Thiocare 250|Thiocare 1500|Thiocare 750|Thiocare 1000|Epalrestat|Epalrestat 50mg|Epalrestat 150mg|Eparest|Eparest 50|Eparest 150|Eparest Plus|Eparest Forte|Eparest Max|Eparest Gold|Eparest CT|Eparest D3|Eparest 500|Eparest 250|Eparest 1500|Eparest 750|Eparest 1000|Ginkgo Biloba|Ginkgo Biloba Capsule|Ginkgo Biloba Tablet|Ginkgo Biloba 40mg|Ginkgo Biloba 60mg|Ginkgo Biloba 120mg|Ginkgo Biloba 240mg|Ginkgo Biloba Extract|Memory Booster|Brahmi|Brahmi Capsule|Brahmi Tablet|Brahmi Syrup|Brahmi Ghrita|Brahmi Vati|Mentat|Mentat Tablet|Mentat Syrup|Mentat DS|Mentat Plus|Mentat Forte|Mentat Max|Mentat Gold|Mentat CT|Mentat D3|Shankhpushpi|Shankhpushpi Syrup|Shankhpushpi Tablet|Shankhpushpi Capsule|Medhya|Medhya Rasayana|Jyotishmati|Jyotishmati Oil|Vacha|Vacha Powder|Mandookaparni|Mandookaparni Powder|Guduchi|Guduchi Powder|Guduchi Tablet|Guduchi Capsule|Guduchi Satva|Guduchi Ghan Vati|Amla|Amla Juice|Amla Tablet|Amla Capsule|Amla Powder|Amla Candy|Amla Churna|Amla Murabba|Amla Chyawanprash|Chyawanprash Sugar Free|Dabur Chyawanprash|Patanjali Chyawanprash|Baidyanath Chyawanprash|Zandu Chyawanprash|Himalaya Chyawanprash|Sri Sri Chyawanprash|Kerala Ayurveda Chyawanprash|Vicco Chyawanprash|Hamdard Chyawanprash|Organic India Chyawanprash|Dhootapapeshwar Chyawanprash|Ashwagandha Tablet|Ashwagandha Capsule|Ashwagandha Powder|Ashwagandha Churna|Ashwagandha 300mg|Ashwagandha 500mg|Ashwagandha 600mg|Ashwagandha Root Extract|Shilajit|Shilajit Capsule|Shilajit Tablet|Shilajit Resin|Shilajit Gold|Shilajit Plus|Shilajit Forte|Shilajit Max|Safed Musli|Safed Musli Capsule|Safed Musli Tablet|Safed Musli Powder|Musli Pak|Musli Power|Musli Power Extra|Himalaya Confido|Confido|Confido Tablet|Himalaya Speman|Speman|Speman Tablet|Himalaya Liv 52|Liv 52 Tablet|Liv 52 Syrup|Liv 52 Drops|Liv 52 HB|Liv 52 Protec|Liv 52 DS Tablet|Himalaya Rumalaya|Rumalaya|Rumalaya Forte|Rumalaya Gel|Rumalaya Tablet|Himalaya Geriforte|Geriforte|Geriforte Tablet|Geriforte Syrup|Geriforte Aqua|Himalaya Septilin|Septilin|Septilin Tablet|Septilin Syrup|Himalaya Cystone|Cystone Tablet|Cystone Syrup|Himalaya Diabecon|Diabecon|Diabecon Tablet|Himalaya Evecare|Evecare|Evecare Capsule|Evecare Syrup|Himalaya Mentat|Himalaya Koflet H|Koflet H|Himalaya Ashvagandha|Himalaya Guduchi|Himalaya Amalaki|Himalaya Triphala|Himalaya Neem|Himalaya Tulasi|Himalaya Brahmi|Himalaya Shatavari|Himalaya Gokshura|Himalaya Arjuna|Himalaya Pippali|Himalaya Mulethi|Himalaya Haridra|Himalaya Karela|Himalaya Jamun|Himalaya Methi|Himalaya Amla|Arjuna|Arjuna Tablet|Arjuna Capsule|Arjuna Powder|Arjuna Bark|Arjuna Churna|Arjuna Chhal|Arjunarishta|Arjunarishta Syrup|Arjunarishta Liquid|Karela|Karela Juice|Karela Tablet|Karela Capsule|Karela Powder|Jamun|Jamun Juice|Jamun Tablet|Jamun Capsule|Jamun Powder|Jamun Seed Powder|Jamun Vinegar|Methi|Methi Seeds|Methi Powder|Methi Tablet|Methi Capsule|Methi Dana|Fenugreek|Fenugreek Seeds|Fenugreek Powder|Fenugreek Tablet|Fenugreek Capsule|Gudmar|Gudmar Powder|Gudmar Tablet|Gudmar Capsule|Gurmar|Gurmar Powder|Gurmar Tablet|Gurmar Capsule|Madhunashini|Madhunashini Tablet|Madhunashini Capsule|Madhunashini Powder|Madhumehari|Madhumehari Tablet|Madhumehari Capsule|Madhumehari Powder|Madhumeh|Madhumeh Tablet|Madhumeh Capsule|Madhumeh Powder|Nisha Amalaki|Nisha Amalaki Tablet|Nisha Amalaki Capsule|Nisha Amalaki Powder|Chandraprabha Vati|Chandraprabha|Gokshuradi Guggulu|Gokshuradi|Punarnava|Punarnava Mandur|Punarnavadi Kashayam|Punarnavasava|Kanchanar Guggulu|Kanchanar|Triphala Guggulu|Yograj Guggulu|Yograj|Maharasnadi Kwath|Maharasnadi|Rasnadi Guggulu|Rasnadi|Simhanada Guggulu|Simhanada|Laksha Guggulu|Laksha|Gandharva Haritaki|Gandharva|Abhayarishta|Abhayarishta Syrup|Drakshasava|Drakshasava Syrup|Ashokarishta|Ashokarishta Syrup|Dashmularishta|Dashmularishta Syrup|Balarishta|Balarishta Syrup|Lohasava|Lohasava Syrup|Kumaryasava|Kumaryasava Syrup|Saraswatarishta|Saraswatarishta Syrup|Jeerakadyarishta|Jeerakadyarishta Syrup|Kutajarishta|Kutajarishta Syrup|Kutaj|Kutaj Ghan Vati|Kutaj Churna|Bilva|Bilva Churna|Bilva Tablet|Bilva Capsule|Bael|Bael Churna|Bael Tablet|Bael Capsule|Bael Juice|Bael Murabba|Bael Sharbat|Isabgol Tablet|Isabgol Capsule|Psyllium Husk|Psyllium Husk Powder|Psyllium Husk Capsule|Psyllium Husk Tablet|Psyllium Husk Sachet|Psyllium Husk Fibre|Fibre Supplement|Fibre Powder|Fibre Capsule|Fibre Tablet|Fibre Sachet|Prebiotic|Prebiotic Powder|Prebiotic Capsule|Prebiotic Tablet|Prebiotic Sachet|Probiotic Capsule|Probiotic Tablet|Probiotic Sachet|Probiotic Powder|Probiotic Sachet Sporlac|Probiotic Sachet Econorm|Probiotic Sachet Vizylac|Probiotic Sachet Enterogermina|Probiotic Capsule Sporlac|Probiotic Capsule Econorm|Probiotic Capsule Vizylac|Probiotic Capsule Enterogermina|Bifilac|Bifilac Capsule|Bifilac Sachet|Bifilac Tablet|Bifilac HP|Bifilac HP Capsule|Bifilac HP Sachet|Bifilac HP Tablet|Bifilac AT|Bifilac AT Capsule|Bifilac AT Sachet|Bifilac AT Tablet|Darolac|Darolac Capsule|Darolac Sachet|Darolac Tablet|Darolac Plus|Darolac Plus Capsule|Darolac Plus Sachet|Darolac Plus Tablet|Lactobacillus Sporogenes|Lactobacillus Acidophilus|Lactobacillus Rhamnosus|Lactobacillus Reuteri|Lactobacillus Plantarum|Lactobacillus Casei|Lactobacillus Bulgaricus|Bifidobacterium|Bifidobacterium Longum|Bifidobacterium Breve|Bifidobacterium Infantis|Bifidobacterium Lactis|Saccharomyces Boulardii|Saccharomyces Boulardii Capsule|Saccharomyces Boulardii Sachet|Saccharomyces Boulardii Tablet|Saccharomyces Boulardii Powder|Bacillus Clausii|Bacillus Clausii Capsule|Bacillus Clausii Sachet|Bacillus Clausii Tablet|Bacillus Clausii Powder|Bacillus Coagulans|Bacillus Coagulans Capsule|Bacillus Coagulans Sachet|Bacillus Coagulans Tablet|Bacillus Coagulans Powder|Multivitamin|Multivitamin Tablet|Multivitamin Capsule|Multivitamin Syrup|Multivitamin Drops|Multivitamin Gummies|Multivitamin Sachet|Multivitamin Powder|Multivitamin Multimineral|Multivitamin Multimineral Tablet|Multivitamin Multimineral Capsule|Multivitamin Multimineral Syrup|Zincovit Tablet|Zincovit Syrup|Zincovit Drops|Zincovit CL|Zincovit CL Tablet|Zincovit CL Syrup|Zincovit Plus|Zincovit Forte|Zincovit Max|Zincovit Gold|Zincovit D3|Supradyn Tablet|Supradyn Syrup|Supradyn Drops|Supradyn Plus|Supradyn Forte|Supradyn Max|Supradyn Gold|Supradyn D3|Supradyn Daily|Supradyn Daily Tablet|Supradyn Daily Syrup|Supradyn Daily Drops|Supradyn Daily Plus|Supradyn Daily Forte|Supradyn Daily Max|Supradyn Daily Gold|Supradyn Daily D3|Revital|Revital Capsule|Revital Tablet|Revital Syrup|Revital H Capsule|Revital H Tablet|Revital H Syrup|Revital Women|Revital Women Capsule|Revital Women Tablet|Revital Men|Revital Men Capsule|Revital Men Tablet|Revital Senior|Revital Senior Capsule|Revital Senior Tablet|Centrum|Centrum Tablet|Centrum Capsule|Centrum Silver|Centrum Silver Tablet|Centrum Silver Capsule|Centrum Women|Centrum Women Tablet|Centrum Women Capsule|Centrum Men|Centrum Men Tablet|Centrum Men Capsule|Centrum Performance|Centrum Performance Tablet|Centrum Performance Capsule|Becozinc|Becozinc Capsule|Becozinc Tablet|Becozinc Syrup|Becozinc Plus|Becozinc Forte|Becozinc Max|Becozinc Gold|Becozinc D3|Cobadex CZS|Cobadex Forte|Cobadex Plus|Cobadex Max|Cobadex Gold|Cobadex D3|Mvadol|Mvadol Capsule|Mvadol Tablet|Mvadol Syrup|Mvadol Plus|Mvadol Forte|Mvadol Max|Mvadol Gold|Mvadol D3|Vitamin A|Vitamin A Capsule|Vitamin A Tablet|Vitamin A Syrup|Vitamin A Drops|Vitamin A 25000 IU|Vitamin A 50000 IU|Vitamin A 100000 IU|Vitamin A 200000 IU|Vitamin E|Vitamin E Capsule|Vitamin E Tablet|Vitamin E 200mg|Vitamin E 400mg|Vitamin E 600mg|Vitamin E 800mg|Evion|Evion 400|Evion LC|Evion Capsule|Evion 200|Evion 600|Evion 800|Evion Forte|Evion Plus|Evion Max|Evion Gold|Evion D3|Vitamin K|Vitamin K Tablet|Vitamin K Injection|Vitamin K1|Vitamin K2|Vitamin K2 Capsule|Vitamin K2 Tablet|Vitamin K2 MK7|Vitamin K2 MK7 Capsule|Vitamin K2 MK7 Tablet|Menaquinone|Menaquinone 7|Menaquinone 7 Capsule|Menaquinone 7 Tablet|Vitamin C 500mg|Vitamin C 1000mg|Vitamin C Tablet|Vitamin C Chewable|Vitamin C Effervescent|Vitamin C Syrup|Vitamin C Drops|Vitamin C Sachet|Limcee Chewable|Limcee 500|Limcee 1000|Limcee Tablet|Limcee Syrup|Limcee Drops|Limcee Plus|Limcee Forte|Limcee Max|Limcee Gold|Limcee D3|Celin|Celin 500|Celin Tablet|Celin Syrup|Celin Drops|Celin Plus|Celin Forte|Celin Max|Celin Gold|Celin D3|Zinc|Zinc Tablet|Zinc Capsule|Zinc Syrup|Zinc Drops|Zinc Sulphate|Zinc Sulphate Tablet|Zinc Sulphate Syrup|Zinc Sulphate Drops|Zinc Gluconate|Zinc Gluconate Tablet|Zinc Gluconate Syrup|Zinc Gluconate Drops|Zinc Acetate|Zinc Acetate Tablet|Zinc Acetate Syrup|Zinc Acetate Drops|Zinconia|Zinconia Tablet|Zinconia Syrup|Zinconia Drops|Zinconia Plus|Zinconia Forte|Zinconia Max|Zinconia Gold|Zinconia D3|Zincovit 500|Zinc 20mg|Zinc 50mg|Magnesium|Magnesium Tablet|Magnesium Capsule|Magnesium Syrup|Magnesium Citrate|Magnesium Glycinate|Magnesium Oxide|Magnesium Sulphate|Magnesium Hydroxide|Magnesium Chloride|Magnesium Gluconate|Magnesium Lactate|Magnesium Malate|Magnesium Taurate|Magnesium Threonate|Magnesium 250mg|Magnesium 400mg|Magnesium 500mg|Mag Citrate|Mag Glycinate|Mag Oxide|Potassium|Potassium Tablet|Potassium Capsule|Potassium Syrup|Potassium Chloride|Potassium Chloride Tablet|Potassium Chloride Syrup|Potassium Chloride ER|Potassium Citrate|Potassium Citrate Tablet|Potassium Citrate Syrup|Potassium Gluconate|Potassium Gluconate Tablet|Potassium Gluconate Syrup|Potassium Bicarbonate|Potassium Bicarbonate Tablet|Potassium Bicarbonate Effervescent|Kcl|Kcl Syrup|Kcl Tablet|Kcl ER|Kcl 10|Kcl 20|Kcl 600|Kcl 750|Kcl 1500|Sodium Bicarbonate|Sodium Bicarbonate Tablet|Sodium Bicarbonate 500mg|Sodium Bicarbonate 650mg|Sodium Bicarbonate 1000mg|Baking Soda|Sodium Chloride|Sodium Chloride Tablet|Sodium Chloride 1g|Salt Tablet|Iron|Iron Tablet|Iron Capsule|Iron Syrup|Iron Drops|Iron Sachet|Iron Folic Acid|Iron Folic Acid Tablet|Iron Folic Acid Capsule|Iron Folic Acid Syrup|Iron Folic Acid Drops|IFA|IFA Tablet|IFA Red|IFA Blue|Ferrous Fumarate|Ferrous Fumarate Tablet|Ferrous Fumarate Syrup|Ferrous Fumarate Drops|Ferrous Ascorbate|Ferrous Ascorbate Tablet|Ferrous Ascorbate Syrup|Ferrous Ascorbate Drops|Ferrous Bisglycinate|Ferrous Bisglycinate Tablet|Ferrous Bisglycinate Capsule|Ferrous Bisglycinate Syrup|Ferrous Bisglycinate Drops|Ferrous Gluconate|Ferrous Gluconate Tablet|Ferrous Gluconate Syrup|Ferrous Gluconate Drops|Ferrous Sulphate Tablet|Ferrous Sulphate Syrup|Ferrous Sulphate Drops|Ferrous Sulphate 200mg|Ferrous Sulphate 325mg|Ferrous Sulfate|Ferrous Sulfate Tablet|Ferrous Sulfate Syrup|Ferrous Sulfate Drops|Ferrous Sulfate 200mg|Ferrous Sulfate 325mg|Livogen|Livogen Capsule|Livogen Z|Livogen Z Capsule|Livogen Plus|Livogen Forte|Livogen Max|Livogen Gold|Livogen D3|Tonoferon|Tonoferon Syrup|Tonoferon Drops|Tonoferon Tablet|Tonoferon Plus|Tonoferon Forte|Tonoferon Max|Tonoferon Gold|Tonoferon D3|Dexorange Syrup|Dexorange Capsule|Dexorange Tablet|Dexorange Plus|Dexorange Forte|Dexorange Max|Dexorange Gold|Dexorange D3|Orofer|Orofer S|Orofer Syrup|Orofer Drops|Orofer Tablet|Orofer Plus|Orofer Forte|Orofer Max|Orofer Gold|Orofer D3|Orofer FCM|Orofer FCM 500|Orofer FCM 1000|Orofer XT Tablet|Orofer XT Syrup|Orofer XT Drops|Orofer XT Plus|Orofer XT Forte|Orofer XT Max|Orofer XT Gold|Orofer XT D3|Ferium|Ferium Tablet|Ferium Syrup|Ferium Drops|Ferium Plus|Ferium Forte|Ferium Max|Ferium Gold|Ferium D3|Ferium XT Tablet|Ferium XT Syrup|Ferium XT Drops|Ferium XT Plus|Ferium XT Forte|Ferium XT Max|Ferium XT Gold|Ferium XT D3|Hemfer|Hemfer Tablet|Hemfer Syrup|Hemfer Drops|Hemfer Plus|Hemfer Forte|Hemfer Max|Hemfer Gold|Hemfer D3|Feronia XT|Feronia XT Tablet|Feronia XT Syrup|Feronia XT Drops|Feronia XT Plus|Feronia XT Forte|Feronia XT Max|Feronia XT Gold|Feronia XT D3|Folic Acid 1mg|Folic Acid 400mcg|Folic Acid 5mg Tablet|Folic Acid Tablet|Folic Acid Capsule|Folic Acid Syrup|Folic Acid Drops|Folvite|Folvite 1|Folvite Tablet|Folvite Syrup|Folvite Drops|Folvite Plus|Folvite Forte|Folvite Max|Folvite Gold|Folvite D3|Vitamin B1|Vitamin B1 Tablet|Vitamin B1 Injection|Vitamin B1 100mg|Thiamine|Thiamine Tablet|Thiamine Injection|Thiamine 100mg|Thiamine 300mg|Benfotiamine|Benfotiamine Tablet|Benfotiamine Capsule|Benfotiamine 150mg|Benfotiamine 300mg|Vitamin B2|Vitamin B2 Tablet|Riboflavin|Riboflavin Tablet|Riboflavin 100mg|Vitamin B3|Vitamin B3 Tablet|Niacinamide|Niacinamide Tablet|Niacinamide 500mg|Nicotinamide|Nicotinamide Tablet|Nicotinamide 500mg|Vitamin B5|Vitamin B5 Tablet|Pantothenic Acid|Pantothenic Acid Tablet|Calcium Pantothenate|Calcium Pantothenate Tablet|Dexpanthenol|Dexpanthenol Tablet|Dexpanthenol Cream|Vitamin B6|Vitamin B6 Tablet|Vitamin B6 Injection|Pyridoxine|Pyridoxine Tablet|Pyridoxine Injection|Pyridoxine 10mg|Pyridoxine 40mg|Pyridoxine 50mg|Pyridoxine 100mg|Vitamin B7|Vitamin B7 Tablet|Biotin|Biotin Tablet|Biotin Capsule|Biotin 5mg|Biotin 10mg|Biotin 5000mcg|Biotin 10000mcg|Biotin Gummies|Biotin Hair Skin Nails|Hair Skin Nails|Hair Skin Nails Tablet|Hair Skin Nails Capsule|Vitamin B9|Vitamin B9 Tablet|Folate|Folate Tablet|Methylfolate|Methylfolate Tablet|Methylfolate 1mg|Methylfolate 5mg|L-Methylfolate|L-Methylfolate Tablet|L-Methylfolate 1mg|L-Methylfolate 5mg|Vitamin B12 Tablet|Vitamin B12 Injection|Vitamin B12 500mcg|Vitamin B12 1000mcg|Vitamin B12 1500mcg|Cyanocobalamin|Cyanocobalamin Tablet|Cyanocobalamin Injection|Cyanocobalamin 500mcg|Cyanocobalamin 1000mcg|Cyanocobalamin 1500mcg|Hydroxocobalamin|Hydroxocobalamin Tablet|Hydroxocobalamin Injection|Hydroxocobalamin 500mcg|Hydroxocobalamin 1000mcg|Hydroxocobalamin 1500mcg|Adenosylcobalamin|Adenosylcobalamin Tablet|Adenosylcobalamin 500mcg|Adenosylcobalamin 1000mcg|Adenosylcobalamin 1500mcg|Coenzyme Q10|Coenzyme Q10 Capsule|Coenzyme Q10 Tablet|Coenzyme Q10 100mg|Coenzyme Q10 200mg|Coenzyme Q10 300mg|CoQ10|CoQ10 Capsule|CoQ10 Tablet|CoQ10 100mg|CoQ10 200mg|CoQ10 300mg|Ubiquinone|Ubiquinone Capsule|Ubiquinone Tablet|Ubiquinol|Ubiquinol Capsule|Ubiquinol Tablet|L-Carnitine|L-Carnitine Tablet|L-Carnitine Capsule|L-Carnitine Syrup|L-Carnitine 500mg|L-Carnitine 1000mg|Levocarnitine|Levocarnitine Tablet|Levocarnitine Syrup|Levocarnitine 500mg|Levocarnitine 1000mg|Glucosamine|Glucosamine Tablet|Glucosamine Capsule|Glucosamine 500mg|Glucosamine 1500mg|Glucosamine Sulphate|Glucosamine Sulphate Tablet|Glucosamine Sulphate 500mg|Glucosamine Sulphate 1500mg|Glucosamine Chondroitin|Glucosamine Chondroitin Tablet|Glucosamine Chondroitin Capsule|Glucosamine Chondroitin MSM|Glucosamine Chondroitin MSM Tablet|Glucosamine Chondroitin MSM Capsule|Chondroitin|Chondroitin Tablet|Chondroitin Capsule|Chondroitin 400mg|Chondroitin Sulphate|Chondroitin Sulphate Tablet|Chondroitin Sulphate 400mg|MSM|MSM Tablet|MSM Capsule|MSM 500mg|MSM 1000mg|Methylsulfonylmethane|Methylsulfonylmethane Tablet|Methylsulfonylmethane Capsule|Diacerein|Diacerein 50mg|Diacerein Capsule|Diatec|Diatec 50|Diatec Capsule|Diacerein Aceclofenac|Diacerein Glucosamine|Diacerein Etoricoxib|Collagen|Collagen Tablet|Collagen Capsule|Collagen Powder|Collagen Peptides|Collagen Peptides Powder|Collagen Type 2|Collagen Type 2 Capsule|Undenatured Collagen Type 2|UC-II|UC-II Capsule|Hyaluronic Acid|Hyaluronic Acid Tablet|Hyaluronic Acid Capsule|Hyaluronic Acid Injection|Hyaluronic Acid 100mg|Hyaluronic Acid 200mg|Sodium Hyaluronate|Sodium Hyaluronate Tablet|Sodium Hyaluronate Capsule|Sodium Hyaluronate Injection|Sodium Hyaluronate Eye Drops|Curcumin|Curcumin Tablet|Curcumin Capsule|Curcumin 500mg|Curcumin 1000mg|Curcumin Piperine|Curcumin Piperine Tablet|Curcumin Piperine Capsule|Turmeric|Turmeric Tablet|Turmeric Capsule|Turmeric Powder|Turmeric 500mg|Turmeric 1000mg|Turmeric Milk|Turmeric Milk Powder|Haldi|Haldi Powder|Haldi Tablet|Haldi Capsule|Haldi Doodh|Boswellia|Boswellia Tablet|Boswellia Capsule|Boswellia 300mg|Boswellia 500mg|Boswellia Serrata|Boswellia Serrata Tablet|Boswellia Serrata Capsule|Shallaki|Shallaki Tablet|Shallaki Capsule|Joint Care|Joint Care Tablet|Joint Care Capsule|Joint Care Syrup|Joint Care Oil|Joint Care Gel|Joint Care Cream|Joint Care Balm|Joint Care Spray|Joint Care Roll On|Joint Pain Oil|Joint Pain Gel|Joint Pain Cream|Joint Pain Balm|Joint Pain Spray|Joint Pain Roll On|Mahanarayan Oil|Mahanarayan Tel|Mahanarayan Taila|Dhanwantaram Oil|Dhanwantaram Tel|Dhanwantaram Taila|Kottamchukkadi Oil|Kottamchukkadi Tel|Kottamchukkadi Taila|Rheumatil|Rheumatil Gel|Rheumatil Oil|Rheumatil Tablet|Rheumatil Capsule|Rheumatil Syrup|Rheumatil Cream|Rheumatil Balm|Rheumatil Spray|Rheumatil Roll On|Pain Oil|Pain Gel|Pain Cream|Pain Spray|Pain Roll On|Pain Relief Gel|Pain Relief Cream|Pain Relief Balm|Pain Relief Spray|Pain Relief Roll On|Pain Relief Oil|Pain Relief Patch|Pain Patch|Diclofenac Patch|Lidocaine Patch|Lidocaine|Lidocaine Gel|Lidocaine Cream|Lidocaine Spray|Lidocaine Ointment|Lidocaine Patch 5%|Lox 2%|Lox Jelly|Xylocaine|Xylocaine Jelly|Xylocaine Gel|Xylocaine Spray|Xylocaine Ointment|Xylocaine Patch|Capsaicin|Capsaicin Cream|Capsaicin Gel|Capsaicin Patch|Capsaicin Ointment|Capsaicin 0.025%|Capsaicin 0.075%|Capsaicin 8%|Menthol|Menthol Cream|Menthol Gel|Menthol Balm|Menthol Spray|Menthol Roll On|Menthol Patch|Methyl Salicylate|Methyl Salicylate Cream|Methyl Salicylate Gel|Methyl Salicylate Balm|Methyl Salicylate Spray|Methyl Salicylate Roll On|Methyl Salicylate Patch|Hot Water Bag|Heating Pad|Cold Pack|Ice Pack|Knee Cap|Knee Support|Back Support|Lumbar Belt|Cervical Collar|Walking Stick|Walker|Wheelchair|Crutches|Commode Chair|Bed Pan|Urinal|Diaper|Adult Diaper|Adult Diapers|Pull Ups|Under Pads|Bed Sheet|Air Bed|Water Bed|Air Mattress|Pressure Mattress|Anti Bedsore Mattress|BP Monitor|BP Machine|Blood Pressure Monitor|Blood Pressure Machine|Digital BP Monitor|Digital BP Machine|Glucometer|Glucose Meter|Blood Glucose Meter|Blood Sugar Machine|Blood Sugar Monitor|Glucometer Strips|Glucose Strips|Blood Glucose Strips|Blood Sugar Strips|Lancets|Lancet|Pen Needles|Insulin Pen Needles|Insulin Syringes|Syringes|Syringe|Needles|Needle|Cotton|Cotton Roll|Cotton Balls|Cotton Swabs|Gauze|Gauze Roll|Gauze Pads|Bandage|Bandage Roll|Crepe Bandage|Elastic Bandage|Adhesive Bandage|Band Aid|Band-Aid|Plaster|Surgical Tape|Micropore|Micropore Tape|Medical Tape|Thermometer|Digital Thermometer|Infrared Thermometer|Pulse Oximeter|Oximeter|Nebulizer|Nebuliser|Nebulizer Machine|Nebuliser Machine|Nebulizer Mask|Nebuliser Mask|Spacer|Spacer Device|Inhaler Spacer|Peak Flow Meter|Steam Inhaler|Vaporizer|Humidifier|Oxygen Concentrator|Oxygen Cylinder|Oxygen Mask|Oxygen Cannula|CPAP|CPAP Machine|CPAP Mask|BiPAP|BiPAP Machine|BiPAP Mask|Hearing Aid|Hearing Aids|Hearing Aid Batteries|Spectacles|Eye Glasses|Reading Glasses|Contact Lenses|Contact Lens Solution|Eye Drops|Eye Ointment|Ear Drops|Ear Ointment|Nasal Drops|Nasal Spray|Nasal Ointment|Throat Spray|Throat Lozenges|Mouth Wash|Mouthwash|Gargle|Toothpaste|Tooth Brush|Toothbrush|Denture Cleaner|Denture Adhesive|Denture Tablets|Dentures|Dental Floss|Interdental Brush|Tongue Cleaner|Tongue Scraper".split('|');
+    const MED_DB_MORE = "Ascoril Expectorant|Ascoril C|Ascoril LS Syrup|Ascoril D Plus|Grilinctus BM|Grilinctus LS|Grilinctus Syrup|Corex Cough Syrup|Benadryl Cough Formula|Benadryl Syrup|Alex Cough Syrup|Alex Lozenges|Zedex Cough Syrup|Zedex Syrup|Bro-Zedex|Bro-Zedex LS|Brozeet|Brozeet LS|Solvin Expectorant|Solvin Cold Syrup|Mucaine Syrup|Codeine Phosphate Syrup|Codeine Linctus|Phensedyl Cough Linctus|Recodex|Torex Cough Syrup|Kofarest|Kofarest LS|Lupihist|Montair Syrup|Montair LC Syrup|Montek LC Syrup|Montek LC Kid|Cetzine Syrup|Cetirizine Syrup|Levocetirizine Syrup|Levocet Syrup|Allegra Syrup|Allegra 30 Suspension|Alerid Syrup|Avil Syrup|Atarax Syrup|Cheston Cold Syrup|Sinarest Syrup|Sinarest Gold|Wikoryl Syrup|Vicks Inhaler|Amrutanjan Inhaler|Nasal Inhaler|Calpol Syrup|Calpol 250 Suspension|Calpol Drops|Crocin Syrup|Crocin Drops|Crocin DS|Dolo 250 Suspension|Dolo Syrup|Dolo Drops|Paracetamol Syrup|Paracetamol Suspension|Paracetamol Drops|Paracetamol 120mg/5ml|Paracetamol 250mg/5ml|Ibugesic Plus Suspension|Ibugesic Suspension|Brufen Suspension|Brufen Syrup|Ibuprofen Suspension|Ibuprofen Syrup|Meftal P Suspension|Meftal P Syrup|Meftal Drops|Meftal Spas Syrup|Mefenamic Acid Suspension|Nimesulide Suspension|Nise Suspension|Digene Syrup|Digene Gel|Gelusil Liquid|Gaviscon|Gaviscon Advance|Gaviscon Liquid|Sucralfate Suspension|Sucral Suspension|Mucaine Gel Syrup|Cremaffin Syrup|Looz Syrup|Syp Lactulose|Lactihep|Lactihep Syrup|Ranitidine Syrup|Zinetac Syrup|Rantac Syrup|Domperidone Suspension|Domstal Suspension|Domstal Drops|Ondem Syrup|Emeset Syrup|Vomikind Syrup|Perinorm Syrup|Pudin Hara Syrup|Eno Powder|ORS Powder|Electral Powder|Electral Liquid|Zinc ORS|Metrogyl Syrup|Flagyl Suspension|Metronidazole Suspension|Norflox TZ Suspension|Cyclopam Suspension|Cyclopam Drops|Colicaid Drops|Aristozyme Syrup|Aristozyme|Digeplex Syrup|Pancreatin|Unienzyme|Unienzyme Tablet|Creon|Creon 10000|Creon 25000|Silybon 70|Silymarin Syrup|Udiliv Syrup|Liv 52 Syrup Himalaya|Hepatoprotect|Augmentin Duo Suspension|Augmentin DS Syrup|Augmentin ES|Clavam DS|Clavam Dry Syrup|Moxikind CV Dry Syrup|Mox Dry Syrup|Novamox DS|Novamox Dry Syrup|Azithral Syrup|Azithral 200 Suspension|Azee Syrup|Azee Dry Syrup|Zithromax Suspension|Zifi Dry Syrup|Zifi 50 Dry Syrup|Taxim O Dry Syrup|Cefakind DS|Cefakind Dry Syrup|Cepodem Dry Syrup|Cepodem Syrup|Doxim O Dry Syrup|Ceftum Dry Syrup|Zocef Dry Syrup|Sporidex DS|Sporidex Dry Syrup|Droxyl DT|Droxyl Dry Syrup|Cifran Suspension|Ciprofloxacin Suspension|Ofloxacin Suspension|Erythromycin Suspension|Althrocin Syrup|Nitrofurantoin Suspension|Cotrimoxazole Syrup|Septran Syrup|Bactrim Suspension|Albendazole Suspension|Zentel Suspension|Bandy Suspension|Mebendazole Suspension|Ivermectin Syrup|Fluconazole Suspension|Nystatin Oral Drops|Nystatin Drops|Nilstat Drops|Mycostatin|Candid Mouth Paint|Miconazole Oral Gel|Daktarin Gel|Vitamin D3 Drops|D3 Drops|Calcirol Drops|Shelcal Syrup|Calcimax Syrup|Cipcal Syrup|Polybion|Polybion Syrup|Polybion LC|Polybion SF|Bevon|Bevon Syrup|Becosules Drops|Zincovit Drops Kids|Protinex|Protinex Gold|Protinex Diabetes|Horlicks|Horlicks Diabetes Plus|Complan|Boost|Bournvita|Ensure Diabetes Care|Glucerna|Nutramul|Nutramul Syrup|Dabur Glucose D|Glucose D Powder|Fefol Z|Raricap|Raricap Syrup|Autrin Syrup|Ferium Syrup|Tonoferon Syrup|Orofer S Syrup|Livogen Syrup|Feronia XT Syrup|Hajmola|Hajmola Regular|Hajmola Chatpata|Pachak|Anardana Goli|Kayam Churna|Zandu Pancharishta Syrup|Draksharishta|Amrutarishta|Vasarishta|Vasaka Syrup|Talisadi Churna|Talisadi|Sitopaladi Churna|Tulsi Syrup|Giloy Juice|Giloy Ghan Vati|Aloe Vera Juice|Karela Jamun Juice|Triphala Juice|Wheatgrass Juice|Amla Juice Patanjali|Divya Swasari Kwath|Swasari Vati|Divya Medha Vati|Divya Mukta Vati|Madhunashini Vati|Divya Peya|Immunity Kadha|Tulsi Kadha|Kadha|Kwath|Dabur Honitus Syrup|Zandu Kofol Syrup|Baidyanath Kofol|Asthalin Inhaler 100mcg|Foracort 200 Inhaler|Foracort 400 Rotacap|Foracort Rotacap|Budecort Inhaler|Budecort Respules|Budecort 200 Rotacap|Seroflo 125|Seroflo 250|Seroflo Rotacap|Duolin Inhaler|Duolin Respules|Combihale|Combihale FF|Ipravent|Ipravent Respules|Tiova Rotacap|Tiova Inhaler|Levolin Inhaler|Levolin Respules|Asthalin Respules|Asthalin Rotacap|Salbutamol Inhaler|Salbutamol Syrup|Asthalin Syrup|Salbutamol Tablet|Formoterol Budesonide|Symbicort|Seretide|Seretide Accuhaler|Pulmicort|Pulmicort Respules|Atrovent|Ventolin|Ventolin Inhaler|Nebulizer Solution|Budesonide Respules|Ipratropium Respules|Ciplox D|Ciplox D Eye Ear Drops|Ofloxacin Ear Drops|Waxol Ear Drops|Otogesic Ear Drops|Otogesic|Otorex Ear Drops|Clotrimazole Ear Drops|Candid Ear Drops|Tobramycin Eye Drops|Tobrex|Tobradex|Zymar|Gatifloxacin Eye Drops|Ofloxacin Eye Drops|Ciprofloxacin Eye Drops|Systane|Systane Ultra|Optive|Lacrigel|Genteal|Genteal Gel|Cyclomune|Restasis|Travoprost|Travatan|Bimatoprost|Lumigan|Combigan|Dorzolamide|Trusopt|Cosopt|Brinzolamide|Azopt|Betoptic|Pilocarpine|Pilocar|Lutein|Lutein Capsule|Cipladine Ointment|Vaseline|Glycerin|Zinc Oxide Ointment|Nizral Shampoo|Selsun|Selsun Shampoo|Scalpe Shampoo|Pacitane|Trihexyphenidyl|Amantadine|Tidomet Forte|Tidomet Plus|Stalevo|Entacapone|Comtan|Rasagiline|Azilect|Selegiline|Urimax D|Veltam Plus|Flotral|Alfuzosin|Alfusin D|Uroflo|Mirabegron|Betmiga|Myrbetriq|Mirabeg 25|Mirabeg 50|Zoledronic Acid|Reclast|Denosumab|Prolia|Teriparatide|Forteo|Ibandronate|Bonviva|Osteofos|Fosamax Plus|Eszopiclone|Nitrazepam|Nitrest|Clobazam|Frisium|Zonisamide|Lacosamide|Vimpat|Brivaracetam|Primidone|Mysoline|Phenobarbitone|Gardenal|Mebeverine|Colospa|Colospa Retard|Colimex|Hyoscine Butylbromide|Dicyclomine|Dicyclomine Hcl|Dicyclomine Syrup|Vonoprazan|Meprate|Medroxyprogesterone|Dydrogesterone|Shatavari|Shatavari Churna|Menopace|I Pill|Unwanted 72|Mala D|Mala N|Isoxsuprine|Duvadilan|Cabergoline|Dostinex|Bromocriptine|Parlodel|Benzoyl Peroxide|Persol AC|Persol Forte|Panoxyl|Adapalene|Differin|Adaferin|Retino A|Tretinoin|Tretinoin Cream|Tazarotene|Salicylic Acid|Saslic|Hydroquinone|Kojic Acid|Sunscreen|Sunscreen SPF 50|Moisturizer|Cetaphil|Cetaphil Lotion|Cetaphil Cleanser|Sebamed|Physiogel|Lacto Calamine|Candid Dusting Powder|Clotrimazole Powder|Ring Guard|Ringworm Cream|Elidel|Pimecrolimus|Tacrolimus|Protopic|Tacroz|Tacroz Forte|Neurobion Syrup|Bonjela|Bonjela Gel|Kenacort|Kenacort Mouth Paste|Triamcinolone|Orabase|Dentogel|Anabel Gel|Hexigel|Hexidine Mouthwash|Listerine|Colgate Sensitive|Sensodyne|Sensodyne Repair|Pepsodent|Clove Oil|Laung Oil|Ajwain|Ajwain Arq|Jeera|Saunf|Elaichi|Mulethi|Mulethi Churna|Mulethi Tablet|Adrak|Ginger|Ginger Tablet|Ginger Tea|Honey|Honey Tulsi|Tulsi Drops Himalaya|Tulsi Tablet|Neem|Neem Tablet|Neem Capsule|Neem Oil|Eucalyptus Oil|Nilgiri Oil|Camphor|Karpoor|Kapoor|Sarson Tel|Til Ka Tel|Nariyal Tel|Coconut Oil|Badam Rogan|Badam|Akhrot|Anjeer|Kishmish|Khajoor|Dalchini|Dalchini Powder|Lauki Juice|Methi Dana Powder|Cinnamon|Cinnamon Capsule|Apple Cider Vinegar|Apple Cider Vinegar Gummies|Spirulina|Spirulina Tablet|Chlorella|Moringa|Moringa Powder|Moringa Tablet|Sahijan|Sahijan Powder|Sahijan Capsule|Kalonji|Kalonji Oil|Kalonji Capsule|Flax Seeds|Alsi|Chia Seeds|Pumpkin Seeds|Sunflower Seeds|Oats|Daliya|Dalia|Ragi|Ragi Malt|Ragi Powder|Barley|Jau|Jau Atta|Multigrain Atta|Diabetic Atta|Sugar Free|Sugar Free Gold|Sugar Free Natura|Sugar Free Green|Sweetener|Stevia|Stevia Drops|Stevia Tablet|Saccharin|Aspartame|Equal|Equal Sweetener|Splenda|Zerocal|Zero Cal".split('|');
+    (function(){ const seen = new Set(MED_DB.map(x => x.toLowerCase())); MED_DB_MORE.forEach(n => { if (!seen.has(n.toLowerCase())) { seen.add(n.toLowerCase()); MED_DB.push(n); } }); })();
+    const MED_DB_MORE2 = "Zeet|Zeet Syrup|Fultos|Fultos Syrup|Febrex|Cofrest|Tuspel|Ambrodil S|Ambrodil Syrup|Ambrolite Syrup|Mucosolvan|Otrivin Oxy|Aceclo Plus|Dolokind Plus|Dolokind|Nicip Plus|Nicip|Nimulid|Nimulid Suspension|Nimulid MD|Nimulid Gel|Hifenac Gel|Voveran Emulgel|Voveran Gel|Dynapar|Dynapar QPS|Dynapar Gel|Cefix|Cefix O|Mahacef|Mahacef Syrup|Orcef|Orcef CV|Aciloc RD|Digene Mint|Zytee Gel|Zytee RB Gel|Zofer|Zofer MD|Sanzyme|Sanzyme Syrup|Zymplex|Zymplex Syrup|Panlipase|Spasmo Proxyvon|Spasmo Proxyvon Plus|Proxyvon|Ulgel|Ulgel Syrup|Sucrafil O Gel|Sucrafil|Pepfiz|Pepfiz Tablet|Pepfiz Syrup|Nurokind|Nurokind Plus|Nurokind LC|Nurokind OD|Nurokind Gold|Pregeb|Pregeb M|Pregeb NT|Pregeb 75|Dulane|Dulane 20|Dulane 30|Dulane 60|Cymbalta|Veniz XR|Venlafaxine|Venlor XR|Lonazep|Lonazep MD|Lonazep 0.25|Zapiz|Zapiz 0.25|Moxicip|Moxicip Eye Drops|Moxicip D|Ocupol|Ocupol D|Tobrabact|Refresh Liquigel|Refresh Plus|Tears Naturale|Lacrinorm|Lubrex|Thealoz Duo|Hylo Comod|Levosalbutamol|Levosalbutamol Syrup|Montelukast Syrup|Ambroxol Syrup|Terbutaline|Terbutaline Syrup|Bricanyl|Guaifenesin|Bromhexine Syrup|Dextromethorphan Syrup|Phenylephrine|Pseudoephedrine|Diphenhydramine|Cetirizine Drops|Ondansetron Syrup|Domperidone Syrup|Sodium Alginate|Aluminium Hydroxide|Magnesium Hydroxide Suspension|Milk of Magnesia|Liquid Paraffin|Lactulose Solution|Zinc Syrup|Iron Syrup|Calcium Syrup|Vitamin D Syrup|Amoxicillin Syrup|Azithromycin Syrup|Cefixime Syrup|Cefpodoxime Syrup|Paracetamol Infant Drops|Ibuprofen Paracetamol Suspension|Nimesulide Paracetamol|Dicyclomine Simethicone|Cough Syrup|Cold Syrup|Fever Syrup|Antacid Syrup|Antacid Gel|Laxative Syrup|Digestive Syrup|Appetite Syrup|Liver Syrup|Tonic|Health Tonic|Iron Tonic|Calcium Tonic|Vitamin Tonic|Digestive Tonic|Ayurvedic Syrup|Ayurvedic Tonic|Homeopathy|Homeopathic Drops|Mother Tincture|Arnica|Arnica 30|Arnica 200|Nux Vomica|Nux Vomica 30|Nux Vomica 200|Bryonia|Rhus Tox|Belladonna|Pulsatilla|Calcarea Carb|Sulphur 30|Sulphur 200|Arsenicum Album|Arsenicum Album 30|Arsenicum Album 200|Biochemic|Bio Combination|Bio Combination 1|Bio Combination 2|Bio Combination 3|Bio Combination 4|Bio Combination 5|Bio Combination 6|Bio Combination 7|Bio Combination 8|Bio Combination 9|Bio Combination 10|Bio Combination 11|Bio Combination 12|Bio Combination 13|Bio Combination 14|Bio Combination 15|Bio Combination 16|Bio Combination 17|Bio Combination 18|Bio Combination 19|Bio Combination 20|Bio Combination 21|Bio Combination 22|Bio Combination 23|Bio Combination 24|Bio Combination 25|Bio Combination 26|Bio Combination 27|Bio Combination 28".split('|');
+    // Names the user typed earlier are remembered on this phone and shown in suggestions from now on.
+    function addToMedDb(list) { const seen = new Set(MED_DB.map(x => x.toLowerCase())); list.forEach(n => { n = String(n || '').trim(); if (n && !seen.has(n.toLowerCase())) { seen.add(n.toLowerCase()); MED_DB.push(n); } }); }
+    addToMedDb(MED_DB_MORE2);
+    try { addToMedDb(JSON.parse(localStorage.getItem('dawa_custom_meds') || '[]')); } catch (e) {}
+    function rememberMedName(name) { try { const list = JSON.parse(localStorage.getItem('dawa_custom_meds') || '[]'); if (!list.some(x => x.toLowerCase() === name.toLowerCase())) { list.push(name); localStorage.setItem('dawa_custom_meds', JSON.stringify(list)); } addToMedDb([name]); } catch (e) {} }
+    function localMedMatches(q) {
+        const squash = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const ql = q.toLowerCase().trim().replace(/\bsyp\b/g, 'syrup').replace(/\bsusp\b/g, 'suspension'), qs = squash(ql), starts = [], words = [], has = [];
+        for (const n of MED_DB) {
+            const l = n.toLowerCase();
+            if (l.startsWith(ql)) starts.push(n);
+            else if (l.split(/[\s\/\-]+/).some(w => w.startsWith(ql))) words.push(n);
+            else if (l.includes(ql) || (qs.length >= 2 && squash(n).includes(qs))) has.push(n);
+        }
+        return starts.concat(words, has).slice(0, 15);
+    }
+    function attachMedSuggest(inputId) {
+        const input = document.getElementById(inputId);
+        if (!input || input.dataset.suggest) return;
+        input.dataset.suggest = '1';
+        input.setAttribute('autocomplete', 'off');
+        const box = document.createElement('div');
+        box.className = 'med-suggest';
+        input.parentNode.style.position = 'relative';
+        input.parentNode.appendChild(box);
+        let timer = null, seq = 0, ctrl = null;
+
+        function pick(name) { input.value = name; input.classList.remove('field-error'); box.style.display = 'none'; input.dispatchEvent(new Event('medpicked')); }
+        function render(items) {
+            box.innerHTML = '';
+            if (!items.length) { box.style.display = 'none'; return; }
+            items.forEach(it => {
+                const row = document.createElement('div');
+                row.className = 'med-suggest-item';
+                const span = document.createElement('span'); span.textContent = it.name; row.appendChild(span);
+                if (it.online) { const sm = document.createElement('small'); sm.textContent = 'online'; row.appendChild(sm); }
+                if (it.custom) { span.textContent = '➕ "' + it.name + '" add karo'; row.style.color = '#2874f0'; }
+                row.addEventListener('pointerdown', e => { e.preventDefault(); pick(it.name); });
+                box.appendChild(row);
+            });
+            box.style.display = 'block';
+        }
+        async function onlineSearch(q, mySeq, local) {
+            try {
+                if (ctrl) ctrl.abort();
+                ctrl = new AbortController();
+                const to = setTimeout(() => ctrl.abort(), 4000);
+                const res = await fetch('https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?maxList=8&terms=' + encodeURIComponent(q), { signal: ctrl.signal });
+                clearTimeout(to);
+                if (!res.ok || mySeq !== seq) return;
+                const data = await res.json();
+                const seen = new Set(local.map(x => x.name.toLowerCase()));
+                const extra = [];
+                (data[3] || []).forEach(row => {
+                    const nm = String(Array.isArray(row) ? row[0] : row).replace(/\s*\(.*\)\s*$/, '').trim();
+                    if (nm && !seen.has(nm.toLowerCase())) { seen.add(nm.toLowerCase()); extra.push({ name: nm, online: true }); }
+                });
+                if (mySeq === seq && extra.length) { const typed = local.some(x => x.name.toLowerCase() === q.toLowerCase()) ? [] : [{ name: q, custom: true }]; render(local.concat(extra.slice(0, 6), typed)); }
+            } catch (e) { /* offline or blocked: built-in list still works */ }
+        }
+        function onType() {
+            const q = input.value.trim();
+            const mySeq = ++seq;
+            clearTimeout(timer);
+            if (!q) { box.style.display = 'none'; return; }
+            const local = localMedMatches(q).map(n => ({ name: n }));
+            const asTyped = local.some(x => x.name.toLowerCase() === q.toLowerCase()) ? [] : [{ name: q, custom: true }];
+            render(local.concat(asTyped));
+            if (q.length >= 3) timer = setTimeout(() => onlineSearch(q, mySeq, local), 350);
+        }
+        input.addEventListener('input', onType);
+        input.addEventListener('focus', () => { if (input.value.trim()) onType(); });
+        input.addEventListener('blur', () => setTimeout(() => { box.style.display = 'none'; }, 150));
+    }
+    attachMedSuggest('addName');
+    attachMedSuggest('editName');
+    (function () {
+        const nm = document.getElementById('addName'), ty = document.getElementById('addType');
+        if (!nm || !ty) return;
+        ty.addEventListener('change', () => { ty.dataset.manual = '1'; });
+        const auto = () => {
+            if (ty.dataset.manual) return;
+            const v = SYRUP_RE.test(nm.value) ? 'syrup' : 'tablet';
+            if (ty.value !== v) { ty.value = v; toggleAddType(); }
+        };
+        nm.addEventListener('input', auto);
+        nm.addEventListener('medpicked', auto);
+        nm.addEventListener('blur', () => setTimeout(auto, 200));
+    })();
 
     // App Initialization
     applyAppTheme();
@@ -2738,7 +3003,7 @@
     // Refresh cloud data periodically so changes from another phone appear automatically.
     // Avoid refreshing while the user is typing in a form field.
     setInterval(async () => {
-        if (!document.hidden && userAccount.isLoggedIn && userAccount.mobile &&
+        if (!document.hidden && userAccount.isLoggedIn && userAccount.mobile && (Date.now() - lastLocalChange > 30000) &&
             !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
             const before = JSON.stringify(medicines);
             const loaded = await fetchFromFirebaseCloud(userAccount.mobile);
